@@ -1,13 +1,10 @@
 import json
-import configparser as cp
+
 
 class Read_json(object):
 
     def __init__(self, campaign_id, data_path=r'C:\Users\C5293427\Desktop\MA\campaign_data\data.json'):
-        
-        #读取配置文件
-        config = cp.ConfigParser()
-        config.read('config.ini', 'UTF-8')  
+         
         self.other_link = []
         self.campaign_id = campaign_id
         self.path = data_path

@@ -6,7 +6,7 @@ from DataSpider import DataSpider
 from Operation import Report, Tracker
 from Read_json import Read_json
 import warnings
-import configparser as cp
+import json
 import importlib,sys
 import os
 
@@ -18,14 +18,14 @@ class Module(object):
     def __init__(self, location='local_path'):
 
         #read config file
-        config = cp.ConfigParser()
-        config.read('config.ini', 'UTF-8')
+        with open("config.json", "r", encoding='utf-8') as f:
+            config = json.loads(f.read())    # load的传入参数为字符串类型
 
         #read path from config file
-        self.tracker_path = config[location]['tracker_path']
-        self.simple_tracker_path = config[location]['simple_tracker_path']
-        self.report_template = config[location]['report_template']
-        self.report_save = config[location]['report_save']
+        self.tracker_path = config['local_path']['tracker_path']
+        self.simple_tracker_path = config['local_path']['simple_tracker_path']
+        self.report_template = config['local_path']['report_template']
+        self.report_save = config['local_path']['report_save']
 
         # get dataframe
         edm = EDM(self.tracker_path)
@@ -253,7 +253,7 @@ class Conversation(Module):
                 print('您这campaign id是空白啊，咋填？！')
                 continue
             
-            self.catch_data_from_web(campaign_id, overwrite=False)
+            self.catch_data_from_web(campaign_id, overwrite=True)
             print('Catch data from Internet successfully!')
             self.write_data_in_tracker(campaign_id)
             print('Write data in main tracker successfully!')

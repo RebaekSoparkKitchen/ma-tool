@@ -6,13 +6,7 @@ import pandas as pd
 from Clean_df import EDM 
 import datetime as dt
 
-config = cp.ConfigParser()
-config.read('config.ini', 'UTF-8')
-
-t_path = r'C:\Users\C5293427\Desktop\MA\Request_Tracker.xlsx'
-s_path = r'C:\Users\C5293427\Desktop\MA\Simple_Tracker_V3.xlsx'
-EDM_file = EDM(t_path)
-df = EDM_file.clean_date()
-df['Event Date'].dropna(inplace=True)
-print(df['Event Date'].max())
+with open("config.json", "r", encoding='utf-8') as f:
+    config = json.loads(f.read())    # load的传入参数为字符串类型
+print(config)
 

@@ -7,7 +7,7 @@ import selenium
 import time
 import re
 import json
-import configparser as cp
+
 
 
 
@@ -19,8 +19,9 @@ class DataSpider(object):
         :param campaign_id: 以campaign_id为key来连接系统和本地
         '''
         #读取配置文件
-        config = cp.ConfigParser()
-        config.read('config.ini', 'UTF-8')  
+        #read config file
+        with open("config.json", "r", encoding='utf-8') as f:
+            config = json.loads(f.read())    # load的传入参数为字符串类型
 
         self.campaign_id = campaign_id
         box_list = []
@@ -47,7 +48,7 @@ class DataSpider(object):
 
         driver.delete_all_cookies()
         self.driver = driver
-        self.other_link = list(config['other click index']['other_link'])  #从配置文件中读取其他link的名字
+        self.other_link = config['other_link'] #从配置文件中读取其他link的名字
 
     def get_campaign_id(self):
         '''
