@@ -140,8 +140,8 @@ class Display(object):
        
         today = dt.date.today()
 
-        the_date = today + dt.timedelta(days=-6)  # 计算6天前的日期
-        the_date_for_friday = today + dt.timedelta(days=-4)  # 如果是周五，那实际上应该计算4天前的日期
+        the_date = today + dt.timedelta(days=-4)  # 计算6天前的日期
+        the_date_for_friday = today + dt.timedelta(days=-2)  # 如果是周五，那实际上应该计算4天前的日期
 
         if today.weekday() == 4:
             df = df[(df['Launch Date'] == the_date_for_friday)]  # 筛选出4天前布置的campaign
