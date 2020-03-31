@@ -220,6 +220,52 @@ class Module(object):
         
         return 
 
+    def __write_campaign_id_core(self, target_df, tracker):
+        '''
+        write_campaign_id的辅助方法
+        '''
+        target_df = target_df[target_df['Campaign ID'].isnull().values==True]
+        t = tracker
+        for index, row in target_df.iterrows(): #对于要写campaign_id的df遍历行
+            print(row)
+            campaign_id = input("Please enter the campaign id for this one, yeah!")
+            if campaign_id == "next":
+                continue
+            elif campaign_id == "exit":
+                break
+            t.write_campaign_id(index,campaign_id)
+        return 
+
+
+    def write_campaign_id(self, target="check"):
+        '''
+        为已有的item，没有campaign id的地方写campaign id
+        '''
+        t = Tracker(tracker_df= self.get_vanilla_df(), tracker_path=self.get_tracker_path())
+
+        df = self.get_clean_df()
+        d = Display(df)
+
+        if target == "report":
+            target_df = d.report()
+            self.__write_campaign_id_core(target_df, t)
+        
+        elif target == "check":
+            target_df = d.check()
+            target_df.sort_values(by='Launch Date',ascending=False, inplace=True) 
+            self.__write_campaign_id_core(target_df, t)
+
+        #以免出现tracker没关的错误
+        while True:
+            try:
+                t.save_data()
+                break
+            except PermissionError:
+                print("快把tracker excel关了啊喂！")
+        return
+
+
+
 class Conversation(Module):
 
     def say_hi(self):
@@ -241,6 +287,9 @@ class Conversation(Module):
             elif ('man' or '人工') in order:
                 campaign_id = input('Pls tell me the campaign id, you are the best!')
 
+            elif "write campaign id" in order:
+                self.write_campaign_id(target="check")
+
             elif 'no' or '否' in order:
                 print("Ciao Ciao ~~")
                 break
@@ -253,7 +302,7 @@ class Conversation(Module):
                 print('您这campaign id是空白啊，咋填？！')
                 continue
             
-            self.catch_data_from_web(campaign_id, overwrite=True)
+            self.catch_data_from_web(campaign_id, overwrite=False)
             print('Catch data from Internet successfully!')
             self.write_data_in_tracker(campaign_id)
             print('Write data in main tracker successfully!')
@@ -269,11 +318,8 @@ if __name__ == '__main__':
 
     campaign_id = [4804,4793]
     i = Module()
-    i.show()
-    i.catch_data_from_web(campaign_id, overwrite=False)
-    i.create_simple_tracker()
-    i.write_data_in_tracker(campaign_id)
-    i.create_report_excel(campaign_id_input=campaign_id)
+    
+    i.write_campaign_id(target="check")
 
 
 

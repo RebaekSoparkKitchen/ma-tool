@@ -3,6 +3,7 @@ import pandas as pd
 from openpyxl.styles import Font, colors, Alignment, PatternFill, Border, Side
 import sys
 from collections.abc import Iterable
+from Clean_df import EDM
 
 
 
@@ -254,6 +255,17 @@ class Tracker(object):
         self.tracker_template_ws = ws
         return
 
+    def write_campaign_id(self, index, campaign_id):
+        '''
+        给定行号，写入campaign id
+        '''
+        ws = self.get_tracker_template_ws()
+        row_num = index + 2
+        ws['K'+str(row_num)] = int(campaign_id)
+
+        return
+
+
     def save_data(self):
         path = self.get_tracker_path()
         wb = self.get_tracker_template_wb()
@@ -262,30 +274,30 @@ class Tracker(object):
 
 
 if __name__ == '__main__':
-    campaign_id = 4463
-    df = pd.read_excel(r'C:\Users\C5293427\Desktop\MA\Request_Tracker20190523V2.xlsx', sheet_name='Tracker', encoding = 'utf-8')
-    tracker_path = r'C:\Users\C5293427\Desktop\MA\Request_Tracker20190523V2.xlsx'
+    campaign_id = 8237328
+    df = pd.read_excel(r'C:\Users\C5293427\Desktop\MA\Request_Tracker.xlsx', sheet_name='Tracker', encoding = 'utf-8')
+    tracker_path = r'C:\Users\C5293427\Desktop\MA\Request_Tracker.xlsx'
     report_template = r'C:\Users\C5293427\Desktop\MA\report\Report_template.xlsx'
     report_save = 'C:/Users/C5293427/Desktop/MA/report/'
     edm = EDM(tracker_path)
     df1 = edm.get_dataframe1()
 
-    spider = DataSpider(campaign_id)
-    spider.scratch_data()
+    # spider = DataSpider(campaign_id)
+    # spider.scratch_data()
 
-    main_click_list = spider.get_main_click_list()
-    other_click_list = spider.get_other_click_list()
-    data_dic = spider.get_data_dic()
+    # main_click_list = spider.get_main_click_list()
+    # other_click_list = spider.get_other_click_list()
+    # data_dic = spider.get_data_dic()
 
-    r = Report(df=df1, campaign_id=campaign_id, template_path=report_template)
-    r.excute_report(data_dic=data_dic,
-                    main_click_list=main_click_list,
-                    other_click_list=other_click_list,
-                    save_path=report_save)
+    # r = Report(df=df1, campaign_id=campaign_id, template_path=report_template)
+    # r.excute_report(data_dic=data_dic,
+    #                 main_click_list=main_click_list,
+    #                 other_click_list=other_click_list,
+    #                 save_path=report_save)
 
-    #t = Tracker(tracker_df=df, tracker_path=tracker_path, campaign_id=4308)
-    #t.write_data(data_dic=data_dic)
-    #t.save_data()
+    t = Tracker(tracker_df=df, tracker_path=tracker_path)
+    t.write_campaign_id(561,campaign_id)
+    t.save_data()
 
 
 

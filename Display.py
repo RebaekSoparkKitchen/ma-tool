@@ -106,10 +106,11 @@ class Display(object):
         today = dt.date.today()
 
         df = df[df['Launch Date'] <= today]  # 按时间筛选出今天以后的时间
+        df = df[df['Launch Date'] >= dt.date(2020, 1, 1)]
 
         df = df.sort_values(by='Launch Date')  # 按顺序排列
         df = df[df['Campaign ID'].isnull().values == True]
-        df = df.reset_index(drop=True)
+        
 
         return df[['Campaign Name', 'Owner ', 'Launch Date', 'Campaign ID']]
 
