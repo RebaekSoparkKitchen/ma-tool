@@ -1,4 +1,5 @@
 import time
+import datetime as dt
 from Clean_df import EDM
 from Calender import Calender, Simple_tracker
 from Display import Display
@@ -134,7 +135,7 @@ class Module(object):
         return
 
 
-    def catch_data_from_web(self, campaign_id_input, overwrite=True):
+    def catch_data_from_web(self, campaign_id_input, overwrite=False):
         '''
         campaign_id_input: 这是直接从input函数或其他list接过来的
         overwrite:指是否重新抓取数据，覆盖原数据
@@ -264,7 +265,24 @@ class Module(object):
                 print("快把tracker excel关了啊喂！")
         return
 
+    def write_blank(self):
+        '''
+        对于有campaign id但没有performance数据进行填补
+        '''
 
+        df = self.get_clean_df()
+        df = df[(df['Campaign ID'].isnull().values==False) & (df['Sent'].isnull().values==True) & (df['Launch Date'] >= dt.date(2020, 1, 1))]
+        for campaign_id in list(df['Campaign ID']):
+            try:
+                self.catch_data_from_web(campaign_id, overwrite=False)
+                self.write_data_in_tracker(campaign_id)
+                print(str(campaign_id), "write blank successfully!")
+            except KeyError:
+                print(str(campaign_id), "记错了吧")
+                continue
+
+        return
+    
 
 class Conversation(Module):
 
@@ -289,6 +307,9 @@ class Conversation(Module):
 
             elif "write campaign id" in order:
                 self.write_campaign_id(target="check")
+
+            elif "write blank" in order:
+                self.write_blank()
 
             elif 'no' or '否' in order:
                 print("Ciao Ciao ~~")
@@ -319,7 +340,7 @@ if __name__ == '__main__':
     campaign_id = [4804,4793]
     i = Module()
     
-    i.write_campaign_id(target="check")
+    print(i.write_blank())
 
 
 
