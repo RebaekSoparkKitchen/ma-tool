@@ -4,7 +4,8 @@ from openpyxl.styles import Font, colors, Alignment, PatternFill, Border, Side
 import sys
 from collections.abc import Iterable
 from Clean_df import EDM
-
+from Analytics import Analytics
+from Read_json import Read_json
 
 
 class Report(object):
@@ -22,6 +23,20 @@ class Report(object):
         self.campaign_id = campaign_id
             
         self.main_end_row = None
+
+        j = Read_json(campaign_id)
+        data_dic = j.get_data_dic()
+        self.main_click_list = j.get_main_click_list()
+        self.main_click_list.insert(0,('Count', 'Main Link Name'))  #这样的好处是，在json里数据是干净好看的，做其他的事情时候拿到operation这边来加工
+        self.other_click_list = j.get_other_click_list()
+        self.other_click_list.insert(0,('Count', 'Other Link Name'))
+
+
+        a = Analytics(self.get_campaign_id())
+
+        self.analytics_list = a.data_package()
+        self.analytics_list.insert(0,('Value', 'Attribute'))
+
 
     def get_dataframe2(self):
         return self.dataframe2
@@ -41,9 +56,19 @@ class Report(object):
     def get_main_end_row(self):
         return self.main_end_row
 
+    def get_main_click_list(self):
+        return self.main_click_list
+
+    def get_other_click_list(self):
+        return self.other_click_list
+
+    def get_analytics_list(self):
+        return self.analytics_list
+
     def get_num(self, df, feature):
         id = self.get_campaign_id()
         return df[df['Campaign ID'] == id].loc[:, feature].iloc[0]
+
 
     def report_dic(self):
 
@@ -118,7 +143,7 @@ class Report(object):
 
   
 
-    def write_clicks(self, click_list, start_row = 8):
+    def write_details(self, click_list, start_row = 8):
         '''
         这个方法是爬虫直接从网站上爬下来click的数据，也就是click_list作为接口，然后写在底下那里
         :param dic:
@@ -126,7 +151,7 @@ class Report(object):
         '''
         ws = self.get_report()
         num = len(click_list)
-        end = start_row + 1 + num #计算结尾的行数，本应-1，但因为range函数最后一个不算，也就不减了，+1是因为start_row是表头的行号
+        end = start_row + num #计算结尾的行数，本应-1，但因为range函数最后一个不算，也就不减了，+1是因为start_row是表头的行号
 
         thin_border = Border(left=Side(border_style='thin', color='000000'),
                         right=Side(border_style='thin', color='000000'),
@@ -140,13 +165,6 @@ class Report(object):
 
         title_fill = PatternFill('solid', fgColor="F0AB00")
 
-        #先做一个表头
-        if self.get_main_end_row() is None:  #判断是否是main链接
-            ws['A' + str(start_row)] = 'Main Link Name'
-            ws['E' + str(start_row)] = 'Count'
-        else:
-            ws['A' + str(start_row)] = 'Other Link Name'
-            ws['E' + str(start_row)] = 'Count'
 
         title_font = Font(name='Calibri', bold=True)
 
@@ -157,14 +175,19 @@ class Report(object):
             ws.merge_cells(start_row=start_row, start_column=1, end_row=start_row, end_column=4)
 
 
-        for i in range(start_row + 1, end):
-            index = i - (start_row + 1)
+        for i in range(start_row, end):
+            index = i - start_row
             ws['A'+str(i)] = click_list[index][1]  #因为列表已经按照倒序排列好了，所以直接按顺序排进来
             ws['E'+str(i)] = click_list[index][0]
 
             ws.merge_cells(start_row=i, start_column=1, end_row=i, end_column=4)   #合并单元格
             ws['A' + str(i)].alignment = Alignment(horizontal='left', vertical='bottom')  #设置对齐方式：左对齐
             ws['E' + str(i)].alignment = Alignment(horizontal='left', vertical='bottom')
+
+            if click_list[0][1] == 'Attribute':
+                if i != start_row:
+                    ws['A'+str(i)].number_format = '0.00%'
+                    ws['E'+str(i)].number_format = '0.00%'
 
             for j in ['A','B','C','D','E']:     #设置边框
                 ws[j + str(i)].border = thin_border
@@ -174,16 +197,23 @@ class Report(object):
         return ws
 
 
-    def excute_report(self, data_dic, main_click_list,other_click_list, save_path = "\\\cnshag101.sha.global.corp.sap\\Restricted\\Marketing\\Marketing_Automation\\report\\"):
+    def excute_report(self, data_dic,save_path = "\\\cnshag101.sha.global.corp.sap\\Restricted\\Marketing\\Marketing_Automation\\report\\", attribute=True):
         '''
         :param save_path: 指的是report产出的地址
         :return:
         '''
+
+        main_click_list = self.get_main_click_list()
+        other_click_list = self.get_other_click_list()
+        analytics_list = self.get_analytics_list()
             
         wb = self.get_report_template_wb()
         self.write_data(spider_dic=data_dic, type='spider')
-        self.write_clicks(main_click_list, start_row=8)
-        self.write_clicks(other_click_list, start_row=self.get_main_end_row())
+        self.write_details(main_click_list, start_row=8)
+        self.write_details(other_click_list, start_row=self.get_main_end_row())
+        if attribute:
+            self.write_details(analytics_list, start_row=self.get_main_end_row())
+    
         ws = self.get_report()
         dic = self.report_dic()
         path = save_path + dic['Name'] + '.xlsx'
@@ -274,8 +304,8 @@ class Tracker(object):
 
 
 if __name__ == '__main__':
-    campaign_id = 8237328
-    df = pd.read_excel(r'C:\Users\C5293427\Desktop\MA\Request_Tracker.xlsx', sheet_name='Tracker', encoding = 'utf-8')
+    campaign_id = 5509
+    # df = pd.read_excel(r'C:\Users\C5293427\Desktop\MA\Request_Tracker.xlsx', sheet_name='Tracker', encoding = 'utf-8')
     tracker_path = r'C:\Users\C5293427\Desktop\MA\Request_Tracker.xlsx'
     report_template = r'C:\Users\C5293427\Desktop\MA\report\Report_template.xlsx'
     report_save = 'C:/Users/C5293427/Desktop/MA/report/'
@@ -289,15 +319,13 @@ if __name__ == '__main__':
     # other_click_list = spider.get_other_click_list()
     # data_dic = spider.get_data_dic()
 
-    # r = Report(df=df1, campaign_id=campaign_id, template_path=report_template)
-    # r.excute_report(data_dic=data_dic,
-    #                 main_click_list=main_click_list,
-    #                 other_click_list=other_click_list,
-    #                 save_path=report_save)
+    r = Report(df=df1, campaign_id=campaign_id, template_path=report_template)
+    print(r.get_main_click_list())
+    
 
-    t = Tracker(tracker_df=df, tracker_path=tracker_path)
-    t.write_campaign_id(561,campaign_id)
-    t.save_data()
+    # t = Tracker(tracker_df=df, tracker_path=tracker_path)
+    # t.write_campaign_id(561,campaign_id)
+    # t.save_data()
 
 
 

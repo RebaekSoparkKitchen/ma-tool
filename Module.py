@@ -189,8 +189,7 @@ class Module(object):
 
         j = Read_json(campaign_id)
         data_dic = j.get_data_dic()
-        main_click_list = j.get_main_click_list()
-        other_click_list = j.get_other_click_list()
+        
         df = self.get_clean_df()
         report_template = self.get_report_template()
         report_save = self.get_report_save()
@@ -199,8 +198,6 @@ class Module(object):
         while True:
             try:
                 r.excute_report(data_dic=data_dic,
-                                main_click_list=main_click_list,
-                                other_click_list=other_click_list,
                                 save_path=report_save)
                 print('Campaign', str(campaign_id), 'report created successfully!')
                 break
