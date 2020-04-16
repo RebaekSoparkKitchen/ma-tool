@@ -5,8 +5,12 @@ import json
 import pandas as pd
 from Clean_df import EDM 
 import datetime as dt
+from pandas import Series
 
-b = [1,2,3,4]
-b.insert(0,9)
-print(b)
+dic = {1:'x',2:'xs'}
+a= 1
+if a in dic.keys():
+    dic.pop(a)
 
+
+print(dic)

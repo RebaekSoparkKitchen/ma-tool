@@ -1,4 +1,5 @@
 import pandas as pd
+from pandas import Series
 from Clean_df import EDM
 import datetime as dt
 
@@ -13,8 +14,14 @@ class Analytics(object):
 
         self.campaign_id = int(campaign_id)
         df1 = df.set_index(["Campaign ID"], False) #方便我提取各种数据
+
         self.mu = df1.loc[campaign_id, 'MU']
+        if type(self.mu) == pd.core.series.Series:  #以免出现多个campaign_id的情况
+            self.mu = self.mu.iloc[-1]
+
         self.team = df1.loc[campaign_id, 'Team']
+        if type(self.team) == pd.core.series.Series:
+            self.team = self.team.iloc[-1]
 
     
     def get_df(self):
@@ -75,7 +82,8 @@ class Analytics(object):
 
 
 if __name__ == "__main__":
-    a = Analytics(5641)
-    print(a.data_package())
+    a = Analytics(5756)
+    print(a.mu)
+    print(a.team)
 
     

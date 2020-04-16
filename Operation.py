@@ -67,7 +67,7 @@ class Report(object):
 
     def get_num(self, df, feature):
         id = self.get_campaign_id()
-        return df[df['Campaign ID'] == id].loc[:, feature].iloc[0]
+        return df[df['Campaign ID'] == id].loc[:, feature].iloc[-1]
 
 
     def report_dic(self):
@@ -79,12 +79,12 @@ class Report(object):
 
         feature_list = ['Sent', 'Delivered', 'Opened', 'Click', 'Unique Click', 'Launch Date']
         for feature in feature_list:
-            if pd.isnull(df_id.loc[:, feature].iloc[0]):
+            if pd.isnull(df_id.loc[:, feature].iloc[-1]):
                 dic[feature] = 0
             try:
-                dic[feature] = int(df_id.loc[:,feature].iloc[0])
+                dic[feature] = int(df_id.loc[:,feature].iloc[-1])
             except:
-                dic[feature] = df_id.loc[:,feature].iloc[0]
+                dic[feature] = df_id.loc[:,feature].iloc[-1]
 
         dic['Name'] = self.get_num(df, 'Campaign Name')
         dic['Campaign_id'] = campaign_id

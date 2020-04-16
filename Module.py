@@ -119,7 +119,7 @@ class Module(object):
         report_list = [int(x) for x in report_list]
         return report_list
 
-    def scratch(self, campaign_id, overwrite=False):
+    def scratch(self, campaign_id, overwrite=True):
         '''
         catch_data_from_web的辅助函数
         '''
@@ -135,7 +135,7 @@ class Module(object):
         return
 
 
-    def catch_data_from_web(self, campaign_id_input, overwrite=False):
+    def catch_data_from_web(self, campaign_id_input, overwrite=True):
         '''
         campaign_id_input: 这是直接从input函数或其他list接过来的
         overwrite:指是否重新抓取数据，覆盖原数据
@@ -271,7 +271,7 @@ class Module(object):
         df = df[(df['Campaign ID'].isnull().values==False) & (df['Sent'].isnull().values==True) & (df['Launch Date'] >= dt.date(2020, 1, 1))]
         for campaign_id in list(df['Campaign ID']):
             try:
-                self.catch_data_from_web(campaign_id, overwrite=False)
+                self.catch_data_from_web(campaign_id, overwrite=True)
                 self.write_data_in_tracker(campaign_id)
                 print(str(campaign_id), "write blank successfully!")
             except KeyError:
@@ -320,7 +320,7 @@ class Conversation(Module):
                 print('您这campaign id是空白啊，咋填？！')
                 continue
             
-            self.catch_data_from_web(campaign_id, overwrite=False)
+            self.catch_data_from_web(campaign_id, overwrite=True)
             print('Catch data from Internet successfully!')
             self.write_data_in_tracker(campaign_id)
             print('Write data in main tracker successfully!')
