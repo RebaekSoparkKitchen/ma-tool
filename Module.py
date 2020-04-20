@@ -320,7 +320,7 @@ class Conversation(Module):
                 print('您这campaign id是空白啊，咋填？！')
                 continue
             
-            self.catch_data_from_web(campaign_id, overwrite=True)
+            self.catch_data_from_web(campaign_id, overwrite=False)
             print('Catch data from Internet successfully!')
             self.write_data_in_tracker(campaign_id)
             print('Write data in main tracker successfully!')

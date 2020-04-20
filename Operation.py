@@ -1,5 +1,6 @@
 import openpyxl
 import pandas as pd
+import time
 from openpyxl.styles import Font, colors, Alignment, PatternFill, Border, Side
 import sys
 from collections.abc import Iterable
@@ -299,7 +300,14 @@ class Tracker(object):
     def save_data(self):
         path = self.get_tracker_path()
         wb = self.get_tracker_template_wb()
-        wb.save(path)
+        while True:
+            try:
+                wb.save(path)
+                break
+            except PermissionError:
+                print("同学您好，请关闭request tracker，我们将在5秒钟后重试~~")
+                time.sleep(5)
+
         return
 
 
