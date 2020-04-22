@@ -2,7 +2,7 @@ import openpyxl
 import pandas as pd
 import datetime as dt
 from openpyxl.styles import Font, colors, Alignment, Border, Side, PatternFill
-from time import time
+import time
 from Clean_df import EDM
 import numpy as np
 
@@ -125,15 +125,26 @@ class Calender(object):
 
         df = self.add_other_date_in_dataframe()
         df1 = df.rename(columns={"weekday": "Weekday"})
-        df1.to_excel(self.get_path(), index = False)
+        #notice: while true...try...except PermissionError这个结构就是防止文件已打开的情况下报错
+        while True:
+            try:
+                df1.to_excel(self.get_path(), index = False)
+                break
+            except:
+                print('请关闭simple tracker，程序将于5 seconds后重试~~')
+                time.sleep(5)
         return
 
 
 class Simple_tracker(object):
 
     def __init__(self):
-        self.wb = openpyxl.load_workbook(r'C:\Users\C5293427\Desktop\MA\Simple_Tracker_V3.xlsx')
+        self.path = r"C:\Users\C5293427\Desktop\MA\Simple_Tracker_V3.xlsx"
+        self.wb = openpyxl.load_workbook(self.path)
         self.ws = self.wb.active
+
+    def get_path(self):
+        return self.path
 
     def get_ws(self):
         return self.ws
@@ -292,7 +303,7 @@ class Simple_tracker(object):
         self.set_align()
         self.set_border()
         self.set_color()
-        wb.save(r'C:\Users\C5293427\Desktop\MA\Simple_Tracker_V3.xlsx')
+        wb.save(self.path)
 
 if __name__ == '__main__':
     t_path = r'C:\Users\C5293427\Desktop\MA\Request_Tracker20190523.xlsx'

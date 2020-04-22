@@ -23,6 +23,8 @@ class Analytics(object):
         if type(self.team) == pd.core.series.Series:
             self.team = self.team.iloc[-1]
 
+        self.ytd_data = self.df[self.df['Launch Date'] > dt.date(2020,1,1)]
+
     
     def get_df(self):
         return self.df
@@ -76,6 +78,9 @@ class Analytics(object):
             (self.team_open_rate(), 'Your team average open rate')]
         
         return package
+
+    def get_ytd_data(self):
+        return self.ytd_data
 
 
 

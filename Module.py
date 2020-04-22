@@ -254,12 +254,7 @@ class Module(object):
             self.__write_campaign_id_core(target_df, t)
 
         #以免出现tracker没关的错误
-        while True:
-            try:
-                t.save_data()
-                break
-            except PermissionError:
-                print("快把tracker excel关了啊喂！")
+        t.save_data()
         return
 
     def write_blank(self):
@@ -294,39 +289,39 @@ class Conversation(Module):
 
         while True:
 
-            order = input("What we gonna do? Get today's report automatically?")
+            order = input("Let's create something here > ")
 
-            if ('yes' or '是') in order:
+            if order == "report today":
                 campaign_id = self.today_report_list()
+                self.catch_data_from_web(campaign_id, overwrite=False)
+                print('Catch data from Internet successfully!')
+                self.write_data_in_tracker(campaign_id)
+                print('Write data in main tracker successfully!')
+                self.create_report_excel(campaign_id_input=campaign_id)
+                print('Create report excel successfully!')
 
-            elif ('man' or '人工') in order:
+            elif order == "report manually":
                 campaign_id = input('Pls tell me the campaign id, you are the best!')
+                self.catch_data_from_web(campaign_id, overwrite=False)
+                print('Catch data from Internet successfully!')
+                self.write_data_in_tracker(campaign_id)
+                print('Write data in main tracker successfully!')
+                self.create_report_excel(campaign_id_input=campaign_id)
+                print('Create report excel successfully!')
 
-            elif "write campaign id" in order:
+            elif order == "write campaign id":
                 self.write_campaign_id(target="check")
 
-            elif "write blank" in order:
+            elif order == "write blank performance":
                 self.write_blank()
 
-            elif 'no' or '否' in order:
+            elif order == "exit":
                 print("Ciao Ciao ~~")
                 break
             
             else:
-                print('也听不懂你丫在说啥啊，整点儿明白话！')
+                print(order, "is not a valid command.")
                 continue
-
-            if campaign_id == []:
-                print('您这campaign id是空白啊，咋填？！')
-                continue
-            
-            self.catch_data_from_web(campaign_id, overwrite=False)
-            print('Catch data from Internet successfully!')
-            self.write_data_in_tracker(campaign_id)
-            print('Write data in main tracker successfully!')
-            self.create_report_excel(campaign_id_input=campaign_id)
-            print('Create report excel successfully!')
-
 
         return 
 
