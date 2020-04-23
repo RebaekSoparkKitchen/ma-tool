@@ -1,0 +1,11 @@
+{
+    "fileheader.tpl": "''' @Author: {author}  * @Date: {createTime}  * @Last Modified by:   {lastModifiedBy}  * @Last Modified time: {updateTime}  '''",
+    "fileheader.Author": "Flying.RedPig",
+    "fileheader.LastModifiedBy": "Flying.RedPig",
+    "python.linting.flake8Enabled": false,
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.dataScience.jupyterCommandLineArguments": [],
+    "python.venvPath": "C:\\Users\\C5293427\\Desktop\\research\\EDM\\venv",
+    "python.pythonPath": "C:\\ProgramData\\Anaconda3\\python.exe"
+}
