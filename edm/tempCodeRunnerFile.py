@@ -1,1 +1,1 @@
-order_report()
+print(list(a))

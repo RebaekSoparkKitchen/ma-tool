@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-07 12:22:06
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-04-24 15:48:04
+@LastEditTime: 2020-04-26 11:54:20
 @FilePath: \EDM\edm\Analytics.py
 '''
 
@@ -203,7 +203,7 @@ class Analytics(Request_Tracker):
         df = self.getVanillaDf()
         df = df[(df['Launch Date'].apply(lambda x: isinstance(x, str)))]
 
-        return df[['Campaign Name', 'Owner ', 'Launch Date']]
+        return df[['Launch Date', 'Campaign Name', 'Owner ']]
 
     def communicationLimitHint(self):
         '''
@@ -235,14 +235,7 @@ class Analytics(Request_Tracker):
 
         return df[['Campaign Name', 'Launch Date', 'weekday', 'Campaign ID']]
 
-    def total_open_rate(self):
-        '''
-        计算所有campaign的平均open rate
-        '''
-        df = self.get_df()
-        return df['Opened'].sum() / df['Sent'].sum()
-
 
 if __name__ == "__main__":
     a = Analytics(1234, 2312, 3212)
-    print(a.futureWork())
+    print(a.waitWork())

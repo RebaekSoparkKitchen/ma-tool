@@ -5,13 +5,14 @@
 @Author: FlyingRedPig
 @Date: 2020-04-23 10:31:20
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-04-24 14:51:57
+@LastEditTime: 2020-04-26 17:31:52
 @FilePath: \EDM\edm\RequestTracker.py
 '''
 
 import pandas as pd
 import datetime as dt
 import warnings
+import time
 
 
 class Request_Tracker(object):
@@ -40,12 +41,13 @@ class Request_Tracker(object):
         辅助函数，从excel读成dataframe的时候是时间戳，需要转换为time.date类型
         这个函数的精彩之处在于：能转date类型转过去，转不过去的仍保留原值，这就使"待定" "取消"等词得以保留
         '''
+
         try:
             return x.date()
         except AttributeError:
             return x
 
-    def __turnWeekday(self, x):
+    def turnWeekday(self, x):
         '''
         help function
         根据日期添加星期一列
@@ -74,7 +76,7 @@ class Request_Tracker(object):
         warnings.filterwarnings('ignore')
         # 此函数会报 pandas warning: SettingWithCopyWaring, 经查证，这是一个pandas的bug
         # 即：foo = df['Launch Date']
-        #     foo['weekday'] = 'Mon'
+        #     foo['Weekday'] = 'Mon'
         # 形如此类则会被判断为此Warning，文档声称这是设计中的一个bug
 
         df = self.getVanillaDf()  # 获取数据
@@ -85,14 +87,11 @@ class Request_Tracker(object):
 
         df = df[df['Launch Date'].apply(
             lambda x: isinstance(x, dt.date))]  #待定 取消等词均被删掉，只留下有Lauch Date日期的行
-        df['weekday'] = df['Launch Date'].apply(lambda x: self.__turnWeekday(x))
+        df['Weekday'] = df['Launch Date'].apply(lambda x: self.turnWeekday(x))
 
         return df
 
 
 if __name__ == '__main__':
-    t_path = r'C:\Users\C5293427\Desktop\MA\Request_Tracker.xlsx'
-    r = Request_Tracker(t_path, 6140)
-    print(r.getCleanDf())
-    print(len(r.getCampaignId()))
-    #print(df['Event Date'].max())
+
+    r = Request_Tracker(6140)

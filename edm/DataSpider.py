@@ -9,8 +9,6 @@ import re
 import json
 
 
-
-
 class DataSpider(object):
 
     def __init__(self, campaign_id):
@@ -21,34 +19,42 @@ class DataSpider(object):
         #读取配置文件
         #read config file
         with open("config.json", "r", encoding='utf-8') as f:
-            config = json.loads(f.read())    # load的传入参数为字符串类型
+            config = json.loads(f.read())  # load的传入参数为字符串类型
 
         self.campaign_id = campaign_id
         box_list = []
         for i in range(12):
-            box_list.append('__box7-'+str(i))
+            box_list.append('__box7-' + str(i))
         self.box_list = box_list
-        self.index = ['Sent', 'Hard Bounces', 'Soft Bounces', 'Delivered', 'Opened', 'Unique Click', 'Click']
-        self.rate_list = ['Bounce Rate', 'Opened Messages in %', 'CTR', 'Unique CTR', 'Click-To-Open Rate']
+        self.index = [
+            'Sent', 'Hard Bounces', 'Soft Bounces', 'Delivered', 'Opened',
+            'Unique Click', 'Click'
+        ]
+        self.rate_list = [
+            'Bounce Rate', 'Opened Messages in %', 'CTR', 'Unique CTR',
+            'Click-To-Open Rate'
+        ]
         self.data_dic = {}
-        self.total_click_list = []    #所有link的数据及名称
-        self.main_click_list = []     #主要link的数据及名称
-        self.other_click_list = []    #其他link的数据及名称
+        self.total_click_list = []  #所有link的数据及名称
+        self.main_click_list = []  #主要link的数据及名称
+        self.other_click_list = []  #其他link的数据及名称
         self.overall_data = {}
         #初始化driver
         desired_capabilities = DesiredCapabilities().CHROME
         desired_capabilities['pageLoadStrategy'] = 'eager'
 
         chrome_options = Options()
-        chrome_options.add_experimental_option('excludeSwitches', ['enable-automation'])
+        chrome_options.add_experimental_option('excludeSwitches',
+                                               ['enable-automation'])
 
-        driver = webdriver.Chrome(options=chrome_options,
-                                  executable_path=r'C:\Users\C5293427\Desktop\MA\chromedriver_win32\chromedriver.exe',
-                                  desired_capabilities=desired_capabilities)  # chrome_driver的执行文件
+        driver = webdriver.Chrome(
+            options=chrome_options,
+            executable_path=r'C:\Users\C5293427\Desktop\MA\chromedriver_win32\chromedriver.exe',
+            desired_capabilities=desired_capabilities)  # chrome_driver的执行文件
 
         driver.delete_all_cookies()
         self.driver = driver
-        self.other_link = config['other_link'] #从配置文件中读取其他link的名字
+        self.other_link = config['other_link']  #从配置文件中读取其他link的名字
 
     def get_campaign_id(self):
         '''
@@ -114,7 +120,7 @@ class DataSpider(object):
         :return: url地址
         '''
         campaign_id = str(self.get_campaign_id())
-        url = r'https://my300723.s4hana.ondemand.com/ui#Initiative-manageCampaignFlow?Tab=PERFORMANCE&/CampaignObject/000000'+campaign_id+'/1'
+        url = r'https://my300723.s4hana.ondemand.com/ui#Initiative-manageCampaignFlow?Tab=PERFORMANCE&/CampaignObject/000000' + campaign_id + '/1'
         return url
 
     def catch_number(self, sentence):
@@ -123,7 +129,7 @@ class DataSpider(object):
         :param sentence: 给定一个句子，也就是相应的title
         :return: 得到index对应的数字
         '''
-        sentence = sentence.replace(',', '') #将逗号去除
+        sentence = sentence.replace(',', '')  #将逗号去除
         number = re.search('\d+', sentence).group()
         number = int(number)
         return number
@@ -185,7 +191,6 @@ class DataSpider(object):
         if count == attempt_num:
             raise RuntimeError('点击操作异常，点不到按钮，请检查点击操作！')
 
-
     def find_table_element(self):
         '''
         利用selenium直接抓取所有页面内的td元素
@@ -215,7 +220,6 @@ class DataSpider(object):
                 pass
         return item
 
-
     def single2tuple(self, old_list):
         '''
         抓click data的辅助函数
@@ -232,7 +236,7 @@ class DataSpider(object):
         for i in range(len(old_list)):
             if i % 2 == 0:
                 try:
-                    new_list.append((int(old_list[i]), old_list[i+1]))
+                    new_list.append((int(old_list[i]), old_list[i + 1]))
                 except ValueError:
                     new_list.append((old_list[i], old_list[i + 1]))
             else:
@@ -270,7 +274,7 @@ class DataSpider(object):
         :param list: 输入列表
         :return: 一个没有重复元素的列表
         '''
-        new_list=[]
+        new_list = []
         for i in list:
             if i not in new_list:
                 new_list.append(i)
@@ -285,18 +289,16 @@ class DataSpider(object):
         '''
         for j in range(1, len(list)):
             key = list[j]
-            i = j-1
+            i = j - 1
             try:
                 while i >= 0 and list[i][0] < key[0]:
-                    list[i+1] = list[i]
-                    i = i-1
-                list[i+1] = key
+                    list[i + 1] = list[i]
+                    i = i - 1
+                list[i + 1] = key
             except TypeError:
                 raise TypeError('有链接的点击数不为int，请查看！')
 
         return list
-
-
 
     def click_data_process(self, list):
         '''
@@ -341,7 +343,6 @@ class DataSpider(object):
         dic['data_dic'] = self.get_data_dic()
         self.overall_data = dic
         return
-    
 
     def save_json(self):
         '''
@@ -349,19 +350,17 @@ class DataSpider(object):
         '''
         overall_data = self.get_overall_data()
         campaign_id = int(self.get_campaign_id())
-        
+
         filename = r'C:\Users\C5293427\Desktop\MA\campaign_data\data.json'
 
         with open(filename) as f_obj:
             dic = json.load(f_obj)
-        
+
         dic[campaign_id] = overall_data
 
         with open(filename, 'w') as f_obj:
             json.dump(dic, f_obj)
         return
-
-    
 
     def scratch_data(self):
         '''
@@ -370,22 +369,23 @@ class DataSpider(object):
         :return: 得到最终的数据字典。
         '''
 
-        box_list = self.get_box_list() #这个是每个格子（box）的id列表
-        index = self.get_index()   #index的关键字
+        box_list = self.get_box_list()  #这个是每个格子（box）的id列表
+        index = self.get_index()  #index的关键字
 
-        url = self.url() #初始化url
+        url = self.url()  #初始化url
         self.driver.get(url)
 
         self.judge_load_page('__box7-0')
 
         # data_dic 这里得到基本数据
-        data_dic = {}   #初始化数据字典
+        data_dic = {}  #初始化数据字典
         for i in box_list:
             try:
-                sentence = self.driver.find_element_by_id(i).get_attribute('title')
+                sentence = self.driver.find_element_by_id(i).get_attribute(
+                    'title')
             except selenium.common.exceptions.NoSuchElementException:
                 continue
-            if self.judge_index(sentence):    #去除rate的干扰
+            if self.judge_index(sentence):  #去除rate的干扰
                 for index_item in index:
                     if index_item in sentence:  #eg:如果unique clicks在句子中，它就归为unique clicks这类,注意：unique clicks永远比clicks优先判断，之后立刻break
                         number = self.catch_number(sentence)
@@ -393,14 +393,15 @@ class DataSpider(object):
                         break
 
         #这里开始跳转页面
-        time.sleep(3)   #抓好上述数据后，留出5 seconds时间加载
-        self.try_click('success_frag--tableButton-button')   #不断点击按钮
+        time.sleep(3)  #抓好上述数据后，留出5 seconds时间加载
+        self.try_click('success_frag--tableButton-button')  #不断点击按钮
 
         #while语句在检查点击后是否成功跳转
         runtime = 0
         for i in range(30):
             try:
-                test_jump = self.driver.find_element_by_id('successTableFragment--smartSuccessTable-header-inner')
+                test_jump = self.driver.find_element_by_id(
+                    'successTableFragment--smartSuccessTable-header-inner')
             except selenium.common.exceptions.NoSuchElementException:
                 self.try_click('success_frag--tableButton-button')
                 time.sleep(3)
@@ -417,7 +418,8 @@ class DataSpider(object):
         while True:
             self.scroll_down(6)
             new_list = self.find_table_element()
-            total_list = self.absorb_element(total_list=total_list, new_list=new_list)
+            total_list = self.absorb_element(
+                total_list=total_list, new_list=new_list)
             #检验total_list的长度是否有变化，count代表上一次循环结束时total_list的长度。即判断循环何时停止。
             try:
                 if count == len(total_list):
@@ -446,17 +448,3 @@ if __name__ == '__main__':
     print(spider.get_data_dic())
     print(spider.get_main_click_list())
     print(spider.get_other_click_list())
-
-
-
-
-
-
-
-
-
-
-
-
-
-
