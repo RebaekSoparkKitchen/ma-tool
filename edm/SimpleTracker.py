@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-24 22:27:05
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-04-26 17:42:13
+@LastEditTime: 2020-04-27 10:31:57
 @FilePath: \EDM\edm\SimpleTracker.py
 '''
 from RequestTracker import *
@@ -121,22 +121,16 @@ class SimpleTracker(Request_Tracker):
         设置字体
         :return:
         '''
-        Roman_font = Font(name='Times New Roman', size=11, bold=False)
-        Yahei_font = Font(name=u'微软雅黑', size=11, bold=False)
-        first_row_font = Font(name='Times New Roman', size=11, bold=True)
-
-        for i in ws['C']:
-            i.font = Yahei_font
+        engFont = Font(name='Cambria', size=11, bold=False)
+        cnFont = Font(name=u'微软雅黑', size=11, bold=False)
+        firstRowFont = Font(name='Times New Roman', size=11, bold=True)
 
         for col in ws.columns:
             for i in col:
-                i.font = Roman_font
-
-        for i in ws['B']:
-            i.font = Yahei_font
+                i.font = engFont
 
         for i in ws['1']:
-            i.font = first_row_font
+            i.font = firstRowFont
 
         return
 
@@ -192,7 +186,8 @@ class SimpleTracker(Request_Tracker):
             if i[1].value == '星期日':
                 color = switch(color, color_list)
 
-        pattern2 = PatternFill('solid', fgColor='e67f83')  #header颜色
+        # pattern2 = PatternFill('solid', fgColor='e67f83')  #header颜色
+        pattern2 = PatternFill('solid', fgColor='f3e8c2')  #header颜色
 
         for i in ws['1']:
             i.fill = pattern2
@@ -269,6 +264,15 @@ class SimpleTracker(Request_Tracker):
 
         return
 
+    def __setFreeze(self, ws):
+        '''
+        @description:冻结首行 
+        @param {type} 
+        @return: void
+        '''
+        ws.freeze_panes = 'A2'
+        return
+
     def simpleTrackerExcel(self):
         '''
         @description: SimpleTracker类的第二个public接口，通过它更新simple tracker excel
@@ -284,15 +288,19 @@ class SimpleTracker(Request_Tracker):
         self.__setBorder(ws)  #0.037s
         self.__setColor(ws)  #0.07s
         self.__setMerge(ws)  #0.14s
-        wb.save("test.xlsx")  #0.03s
+        self.__setFreeze(ws)
+        try:
+            wb.save("test.xlsx")  #0.03s
+        except PermissionError:
+            print("请关闭simple tracker.xlsx，我将于5s后重新尝试保存~~")
+            time.sleep(5)
 
         return
 
 
 if __name__ == "__main__":
-
-    s = SimpleTracker()
     start = time.time()
+    s = SimpleTracker()
     s.simpleTrackerExcel()
     end = time.time()
-    # print(end - start)
+    print(end - start)

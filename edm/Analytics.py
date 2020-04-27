@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-07 12:22:06
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-04-26 11:54:20
+@LastEditTime: 2020-04-27 10:41:16
 @FilePath: \EDM\edm\Analytics.py
 '''
 
@@ -172,7 +172,7 @@ class Analytics(Request_Tracker):
             raise TypeError('此方法只接收两个以下参数哦~')
 
         return report_df[[
-            'Campaign Name', 'Launch Date', 'weekday', 'Campaign ID',
+            'Campaign Name', 'Launch Date', 'Weekday', 'Campaign ID',
             'Event Date', 'formal report date', 'Report Date'
         ]]
 
@@ -238,4 +238,4 @@ class Analytics(Request_Tracker):
 
 if __name__ == "__main__":
     a = Analytics(1234, 2312, 3212)
-    print(a.waitWork())
+    print(a.report())
