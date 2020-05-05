@@ -1,12 +1,12 @@
 '''
-@Description: Request_Tracker类，顾名思义，是对Request Tracker的excel表格建模。
+@Description: @Description: Request_Tracker类，顾名思义，是对Request Tracker的excel表格建模。
             但此类本身并不进行数据筛选展示也不进行写入操作，只是提供数据清洗，
             并从内部唯一接受path入口读取excel，作为父类存在。
 @Author: FlyingRedPig
-@Date: 2020-04-23 10:31:20
+@Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-04-26 17:31:52
-@FilePath: \EDM\edm\RequestTracker.py
+@LastEditTime: 2020-05-01 19:37:39
+@FilePath: \EDM\edm\Tracker\RequestTracker.py
 '''
 
 import pandas as pd

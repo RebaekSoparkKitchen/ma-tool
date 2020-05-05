@@ -1,11 +1,12 @@
 '''
 @Description: SimpleTracker类也是RequestTracker类的子类，它所提供的服务非常简单：(1) 提供一个日历形式的dataframe; (2) 提供一个日历形式的excel表格
 @Author: FlyingRedPig
-@Date: 2020-04-24 22:27:05
+@Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-04-27 10:31:57
-@FilePath: \EDM\edm\SimpleTracker.py
+@LastEditTime: 2020-05-01 19:38:06
+@FilePath: \EDM\edm\Tracker\SimpleTracker.py
 '''
+
 from RequestTracker import *
 from Analytics import *
 import datetime as dt

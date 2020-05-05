@@ -1,10 +1,10 @@
 '''
-@Description: Analytics是非常重要的类，它是继承于RequestTracker，为report以及界面展示提供服务。
+@Description: Analytics是非常重要的类，它是继承于RequestTracker，为report以及界面展示提供服务
 @Author: FlyingRedPig
-@Date: 2020-04-07 12:22:06
+@Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-04-27 10:41:16
-@FilePath: \EDM\edm\Analytics.py
+@LastEditTime: 2020-05-01 19:37:14
+@FilePath: \EDM\edm\Tracker\Analytics.py
 '''
 
 import pandas as pd

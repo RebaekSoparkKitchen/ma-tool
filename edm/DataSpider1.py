@@ -1,12 +1,3 @@
-'''
-@Description: 
-@Author: FlyingRedPig
-@Date: 2020-04-30 18:03:27
-@LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-01 12:49:35
-@FilePath: \EDM\edm\DataSpider.py
-'''
-
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.keys import Keys
@@ -20,17 +11,17 @@ import json
 
 class DataSpider(object):
 
-    def __init__(self, campaignId):
+    def __init__(self, campaign_id):
         '''
-        DataSpider对象最重要的attribute就是campaignId
-        :param campaignId: 以campaign_id为key来连接系统和本地
+        DataSpider对象最重要的attribute就是campaign_id
+        :param campaign_id: 以campaign_id为key来连接系统和本地
         '''
         #读取配置文件
         #read config file
         with open("config.json", "r", encoding='utf-8') as f:
             config = json.loads(f.read())  # load的传入参数为字符串类型
 
-        self.campaignId = campaignId
+        self.campaign_id = campaign_id
         box_list = []
         for i in range(12):
             box_list.append('__box7-' + str(i))
@@ -65,11 +56,11 @@ class DataSpider(object):
         self.driver = driver
         self.other_link = config['other_link']  #从配置文件中读取其他link的名字
 
-    def getCampaignId(self):
+    def get_campaign_id(self):
         '''
         :return: get方法
         '''
-        return self.campaignId
+        return self.campaign_id
 
     def get_box_list(self):
         '''
@@ -128,15 +119,11 @@ class DataSpider(object):
         通过campaign_id获得url
         :return: url地址
         '''
-        campaign_id = str(self.getCampaignId())
+        campaign_id = str(self.get_campaign_id())
         url = r'https://my300723.s4hana.ondemand.com/ui#Initiative-manageCampaignFlow?Tab=PERFORMANCE&/CampaignObject/000000' + campaign_id + '/1'
         return url
 
-###########################################################
-#用来判断跳转，点击的方法：
-###########################################################
-
-    def catchNumber(self, sentence):
+    def catch_number(self, sentence):
         '''
         辅助方法
         :param sentence: 给定一个句子，也就是相应的title
@@ -147,9 +134,9 @@ class DataSpider(object):
         number = int(number)
         return number
 
-    def judgeIndex(self, sentence):
+    def judge_index(self, sentence):
         '''
-        判断一个句子是不是表示index(Sent, Opened, etc)，若index，则True；若Rate，则False
+        判断一个句子是不是表示index，若index，则True；若Rate，则False
         :param sentence: 是相应的title
         :return:
         '''
@@ -160,53 +147,49 @@ class DataSpider(object):
                 return False
         return True
 
-    def ifLoadPage(self, id, attemptNum=30, intervalTime=5) -> void:
+    def judge_load_page(self, id, attempt_num=30, interval_time=5):
         '''
         :param id: 新页面特有的id，通过判断它来判断页面是否跳转了
-        :param attemptNum: 尝试次数，到达上限后放弃，并报错
-        :param intervalTime: 尝试的间隔时间
+        :param attempt_num: 尝试次数，到达上限后放弃，并报错
+        :param interval_time: 尝试的间隔时间
         :return: 若通过则无返回，若不通过则raise error
         '''
 
-        # url = self.url()
+        url = self.url()
         count = 0
 
-        while True:
+        for i in range(attempt_num):
             try:
                 self.driver.find_element_by_id(id)
                 break
             except selenium.common.exceptions.NoSuchElementException:
-                time.sleep(intervalTime)
-                # self.driver.get(url)
+                time.sleep(interval_time)
+                self.driver.get(url)
             count += 1
-            if count == attemptNum:
-                raise RuntimeError('未跳转异常，请检查跳转操作！')
+        if count == attempt_num:
+            raise RuntimeError('未跳转异常，请检查跳转操作！')
 
-    def click(self, id, attemptNum=30, intervalTime=5):
+    def try_click(self, id, attempt_num=30, interval_time=5):
         '''
 
         :param id: 要点击的按钮
-        :param attemptNum:
-        :param intervalTime:
-        :return: 原理与ifLoadPage一样，不再赘述
+        :param attempt_num:
+        :param interval_time:
+        :return: 原理与judge_load_page一样，不再赘述
         '''
-        # url = self.url()
+        url = self.url()
         count = 0
-        while True:
+        for i in range(attempt_num):
             try:
                 self.driver.find_element_by_id(id).click()
                 break
             except:
-                time.sleep(intervalTime)
-                # self.driver.get(url)
+                time.sleep(interval_time)
+                self.driver.get(url)
             count += 1
-            if count == attemptNum:
-                raise RuntimeError('点击操作异常，点不到按钮，请检查点击操作！')
 
-
-###########################################################
-#表格处理办法：
-###########################################################
+        if count == attempt_num:
+            raise RuntimeError('点击操作异常，点不到按钮，请检查点击操作！')
 
     def find_table_element(self):
         '''
@@ -274,7 +257,7 @@ class DataSpider(object):
 
         return total_list
 
-    def scroll_down(self, num=3):
+    def scroll_down(self, num=6):
         '''
         抓click data的辅助函数：为表格翻页
         :return: 不需要return
@@ -382,7 +365,7 @@ class DataSpider(object):
     def scratch_data(self):
         '''
         这是最终的组合版本，好比乐高的零件已经齐备，现在开始组装
-        :param attemptNumber: 尝试次数默认30次，每次尝试间隔5 seconds。
+        :param attempt_number: 尝试次数默认30次，每次尝试间隔5 seconds。
         :return: 得到最终的数据字典。
         '''
 
@@ -392,7 +375,7 @@ class DataSpider(object):
         url = self.url()  #初始化url
         self.driver.get(url)
 
-        self.ifLoadPage('__box7-0')
+        self.judge_load_page('__box7-0')
 
         # data_dic 这里得到基本数据
         data_dic = {}  #初始化数据字典
@@ -402,16 +385,16 @@ class DataSpider(object):
                     'title')
             except selenium.common.exceptions.NoSuchElementException:
                 continue
-            if self.judgeIndex(sentence):  #去除rate的干扰
+            if self.judge_index(sentence):  #去除rate的干扰
                 for index_item in index:
                     if index_item in sentence:  #eg:如果unique clicks在句子中，它就归为unique clicks这类,注意：unique clicks永远比clicks优先判断，之后立刻break
-                        number = self.catchNumber(sentence)
+                        number = self.catch_number(sentence)
                         data_dic[index_item] = number
                         break
 
         #这里开始跳转页面
         time.sleep(3)  #抓好上述数据后，留出5 seconds时间加载
-        self.click('success_frag--tableButton-button')  #不断点击按钮
+        self.try_click('success_frag--tableButton-button')  #不断点击按钮
 
         #while语句在检查点击后是否成功跳转
         runtime = 0
@@ -420,7 +403,7 @@ class DataSpider(object):
                 test_jump = self.driver.find_element_by_id(
                     'successTableFragment--smartSuccessTable-header-inner')
             except selenium.common.exceptions.NoSuchElementException:
-                self.click('success_frag--tableButton-button')
+                self.try_click('success_frag--tableButton-button')
                 time.sleep(3)
                 runtime += 1
                 if runtime == 30:
@@ -455,6 +438,7 @@ class DataSpider(object):
         self.driver.close()
 
         return data_dic, total_list
+
 
 if __name__ == '__main__':
 
