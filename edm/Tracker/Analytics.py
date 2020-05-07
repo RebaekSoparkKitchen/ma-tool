@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-01 19:37:14
+@LastEditTime: 2020-05-07 10:24:50
 @FilePath: \EDM\edm\Tracker\Analytics.py
 '''
 
@@ -58,7 +58,7 @@ class Analytics(Request_Tracker):
         if df.empty == True:
             return "There's no campaign in the future"
         return df[[
-            'Campaign Name', 'Owner ', 'Launch Date', 'weekday', 'Report Date'
+            'Campaign Name', 'Owner ', 'Launch Date', 'Weekday', 'Report Date'
         ]]
 
     def report(self, *args):
@@ -238,4 +238,5 @@ class Analytics(Request_Tracker):
 
 if __name__ == "__main__":
     a = Analytics(1234, 2312, 3212)
+    print(a.futureWork())
     print(a.report())

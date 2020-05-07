@@ -9,8 +9,3 @@
 
 import pandas as pd
 import datetime as dt
-
-a = [[1], [2], [3]]
-# b = {[1], [2], [3]}
-# print(b)
-print(tuple(a))

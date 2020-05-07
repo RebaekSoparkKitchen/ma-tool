@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-01 19:38:06
+@LastEditTime: 2020-05-07 10:23:41
 @FilePath: \EDM\edm\Tracker\SimpleTracker.py
 '''
 
@@ -187,7 +187,6 @@ class SimpleTracker(Request_Tracker):
             if i[1].value == '星期日':
                 color = switch(color, color_list)
 
-        # pattern2 = PatternFill('solid', fgColor='e67f83')  #header颜色
         pattern2 = PatternFill('solid', fgColor='f3e8c2')  #header颜色
 
         for i in ws['1']:

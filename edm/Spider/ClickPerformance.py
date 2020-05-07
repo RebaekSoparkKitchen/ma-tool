@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-02 11:11:05
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-05 21:55:23
+@LastEditTime: 2020-05-07 15:59:52
 @FilePath: \EDM\edm\Spider\ClickPerformance.py
 '''
 
@@ -120,6 +120,10 @@ class ClickPerformance(CampaignSpider):
                 break
             else:
                 table = list(set(table) | set(screenTable))
+
+        #做成一个json能够接受的样子
+        table.remove(self.getAttribute())
+        table = list(map(lambda x: dict(zip(self.getAttribute(), x)), table))
 
         return table
 

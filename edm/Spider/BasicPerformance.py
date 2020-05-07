@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-01 19:22:36
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-05 21:56:00
+@LastEditTime: 2020-05-07 16:50:04
 @FilePath: \EDM\edm\Spider\BasicPerformance.py
 '''
 from CampaignSpider import CampaignSpider

@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-01 17:58:32
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-05 23:08:25
+@LastEditTime: 2020-05-06 19:34:45
 @FilePath: \EDM\edm\Spider\CampaignSpider.py
 '''
 
@@ -59,6 +59,7 @@ class CampaignSpider(object):
             desired_capabilities=desired_capabilities)  # chrome_driver的执行文件
 
         driver.delete_all_cookies()
+        driver.maximize_window()
         self.driver = driver
         return
 
