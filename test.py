@@ -1,16 +1,14 @@
-import configparser as cp
-import time
-from Read_json import Read_json
-import json
-import pandas as pd
-from Clean_df import EDM 
-import datetime as dt
-from pandas import Series
+'''
+@Description: 
+@Author: FlyingRedPig
+@Date: 2020-04-23 19:22:47
+@LastEditors: FlyingRedPig
+@LastEditTime: 2020-05-07 23:10:03
+@FilePath: \EDM\test.py
+'''
 
-dic = {1:'x',2:'xs'}
-a= 1
-if a in dic.keys():
-    dic.pop(a)
+dic = {1: 'x', 2: 'xs'}
+dic2 = {3: 'ss', 1: 'xbb'}
 
-
+dic.update(dic2)
 print(dic)
