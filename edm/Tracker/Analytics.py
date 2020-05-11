@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-08 10:04:08
+@LastEditTime: 2020-05-09 15:58:45
 @FilePath: \EDM\edm\Tracker\Analytics.py
 '''
 
@@ -13,6 +13,7 @@ from pandas import Series, DataFrame
 from RequestTracker import *
 import datetime as dt
 from dateutil.parser import parse, _parser
+import warnings
 
 
 class Analytics(Request_Tracker):
@@ -235,8 +236,41 @@ class Analytics(Request_Tracker):
 
         return df[['Campaign Name', 'Launch Date', 'weekday', 'Campaign ID']]
 
+    def findCol(self, colName) -> object:
+        '''
+        @description: 通过campaign id筛选出对应的attribute，若出现多campaign id的情况，一致取最后一个
+        @param {str} 我们想要查找的列名 
+        @return: 若我们只有一个参数，则返回一个str/int，若多个，则返回一个字典
+        '''
+
+        dic = {}
+        df = self.getCleanDf()
+        if len(self.getCampaignId()) == 1:
+            return df[df['Campaign ID'] ==
+                      self.getCampaignId()][colName].iloc[-1]
+
+        for campaignId in self.getCampaignId():
+            try:
+                dic[campaignId] = df[df['Campaign ID'] ==
+                                     campaignId][colName].iloc[-1]
+            except IndexError:
+                warnings.warn(
+                    "RequestTracker中没有{}这个campaign id，请再验证，谢谢~".format(
+                        campaignId), UserWarning)
+                dic[campaignId] = None
+
+        return dic
+
+    def executionTime(self) -> object:
+
+        return self.findCol('Launch Date')
+
+    def name(self) -> object:
+
+        return self.findCol('Campaign Name')
+
 
 if __name__ == "__main__":
-    a = Analytics(1234, 2312, 3212)
-    print(a.futureWork())
-    print(a.report())
+    a = Analytics(6414, 6316, 1234)
+    print(a.name())
+    print(str(a.executionTime()[6414]))

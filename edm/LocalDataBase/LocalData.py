@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-07 16:15:45
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-08 10:50:55
+@LastEditTime: 2020-05-10 13:18:28
 @FilePath: \EDM\edm\LocalDataBase\LocalData.py
 '''
 import json
@@ -76,8 +76,33 @@ class LocalData(object):
     def length(self):
         return len(self.__data)
 
+    def metricDeliver(self, campaignId: int or str) -> int:
+        return self.search(campaignId)['basic_performance']['Delivered']
+
+    def metricSent(self, campaignId: int or str) -> int:
+        return self.search(campaignId)['basic_performance']['Sent']
+
+    def metricOpen(self, campaignId: int or str) -> int:
+        return self.search(campaignId)['basic_performance']['Opened']
+
+    def metricClick(self, campaignId: int or str) -> int:
+        return self.search(campaignId)['basic_performance']['Click']
+
+    def metricUniqueClick(self, campaignId: int or str) -> int:
+        return self.search(campaignId)['basic_performance']['Unique Click']
+
+    def metricOpenRate(self, campaignId: int or str) -> float:
+        return self.metricOpen(campaignId) / self.metricDeliver(campaignId)
+
+    def metricCTR(self, campaignId: int or str) -> float:
+        return self.metricClick(campaignId) / self.metricDeliver(campaignId)
+
+    def metricClickToOpen(self, campaignId: int or str) -> float:
+        return self.metricUniqueClick(campaignId) / self.metricOpen(campaignId)
+
 
 if __name__ == "__main__":
     l = LocalData()
-    l.save(True, 6414)
-    print(l.search(6414))
+    # l.save(True, 6414)
+    print(l.metricOpenRate(6414))
+    print(l.metricOpen(6414))

@@ -5,7 +5,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-01 19:37:39
+@LastEditTime: 2020-05-09 14:24:08
 @FilePath: \EDM\edm\Tracker\RequestTracker.py
 '''
 
@@ -13,6 +13,7 @@ import pandas as pd
 import datetime as dt
 import warnings
 import time
+from pandas.core.common import SettingWithCopyWarning
 
 
 class Request_Tracker(object):
@@ -73,7 +74,7 @@ class Request_Tracker(object):
         output: self.cleanDf
 
         '''
-        warnings.filterwarnings('ignore')
+        warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
         # 此函数会报 pandas warning: SettingWithCopyWaring, 经查证，这是一个pandas的bug
         # 即：foo = df['Launch Date']
         #     foo['Weekday'] = 'Mon'
