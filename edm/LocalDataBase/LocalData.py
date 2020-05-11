@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-07 16:15:45
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-10 13:18:28
+@LastEditTime: 2020-05-11 17:54:37
 @FilePath: \EDM\edm\LocalDataBase\LocalData.py
 '''
 import json
@@ -11,6 +11,7 @@ import sys
 sys.path.append('../Spider')
 from BasicPerformance import BasicPerformance
 from ClickPerformance import ClickPerformance
+import pandas as pd
 
 
 class LocalData(object):
@@ -100,9 +101,51 @@ class LocalData(object):
     def metricClickToOpen(self, campaignId: int or str) -> float:
         return self.metricUniqueClick(campaignId) / self.metricOpen(campaignId)
 
+    
+    def clickPerformanceDf(self, campaignId:int or str) -> pd.DataFrame :
+        '''
+        @description:将json中的click_performance转换为dataframe数据结构
+        @param {int or str} campaignId 
+        @return: pd.DataFrame
+        '''
+        dic = self.search(campaignId)['click_performance']
+        df = pd.DataFrame(dic)
+        df['Clicks'] = df['Clicks'].astype(int)
+        df = df[df['Clicks']>0]
+        df.sort_values(by="Clicks", inplace=True, ascending=False)
+        df.reset_index(drop=True)
+        return df[['Content Link Name','Clicks']]
+
+    def otherLink(self):
+        
+        f = open('../../config/config.json',encoding="utf-8")
+        configDic = json.load(f)
+        return configDic['other_link']
+
+    def mainClickPerformanceDf(self, campaignId:int or str) -> pd.DataFrame :
+        
+        df = self.clickPerformanceDf(campaignId)
+        df = df[df['Content Link Name'].apply(lambda x: x not in self.otherLink())]
+        df.rename(columns={'Content Link Name':'Main Link Name', 'Clicks':'Click Numbers'}, inplace=True)
+        df.reset_index(drop=True)
+        return df
+    
+    def otherClickPerformanceDf(self, campaignId:int or str) -> pd.DataFrame :
+        
+        df = self.clickPerformanceDf(campaignId)
+        df = df[df['Content Link Name'].apply(lambda x: x in self.otherLink())]
+        df.rename(columns={'Content Link Name':'Other Link Name', 'Clicks':'Click Numbers'}, inplace=True)
+        df.reset_index(drop=True)
+        return df
+
+    
+
 
 if __name__ == "__main__":
     l = LocalData()
     # l.save(True, 6414)
-    print(l.metricOpenRate(6414))
-    print(l.metricOpen(6414))
+    # print(l.metricOpenRate(6414))
+    # print(l.metricOpen(6414))
+    print(l.mainClickPerformanceDf(6414))
+    print(l.otherClickPerformanceDf(6414))
+
