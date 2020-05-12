@@ -3,10 +3,12 @@
 @Author: FlyingRedPig
 @Date: 2020-05-01 19:22:36
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-07 16:50:04
+@LastEditTime: 2020-05-12 20:00:03
 @FilePath: \EDM\edm\Spider\BasicPerformance.py
 '''
-from CampaignSpider import CampaignSpider
+import sys
+sys.path.append('../..')
+from edm.Spider.CampaignSpider import CampaignSpider
 import re
 import time
 import selenium

@@ -5,7 +5,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-09 14:24:08
+@LastEditTime: 2020-05-12 13:54:17
 @FilePath: \EDM\edm\Tracker\RequestTracker.py
 '''
 
@@ -36,6 +36,9 @@ class Request_Tracker(object):
 
     def setCampaignId(self, *args):
         self.__campaignId = args
+
+    def getTrackerPath(self):
+        return self.__path
 
     def __transDate(self, x):
         '''

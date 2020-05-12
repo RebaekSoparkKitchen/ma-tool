@@ -3,12 +3,14 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-07 10:23:41
+@LastEditTime: 2020-05-12 20:17:52
 @FilePath: \EDM\edm\Tracker\SimpleTracker.py
 '''
 
-from RequestTracker import *
-from Analytics import *
+import sys
+sys.path.append("../..")
+from edm.Tracker.RequestTracker import Request_Tracker
+from edm.Tracker.Analytics import Analytics
 import datetime as dt
 import pandas as pd
 from openpyxl.utils.dataframe import dataframe_to_rows
@@ -19,10 +21,10 @@ import time
 
 class SimpleTracker(Request_Tracker):
 
-    def __init__(self, *args):
+    def __init__(self, path:str = "../../file/" , *args):
         super().__init__(*args)
         self.__startDate = dt.date.today() + dt.timedelta(-21)
-        self.__savePath = "test.xlsx"
+        self.__savePath = path + "Simple_Tracker.xlsx"
         self.__workbook = Workbook()
         self.__wsTitle1 = "Campaign Calender"
 
@@ -290,7 +292,7 @@ class SimpleTracker(Request_Tracker):
         self.__setMerge(ws)  #0.14s
         self.__setFreeze(ws)
         try:
-            wb.save("test.xlsx")  #0.03s
+            wb.save(self.getSavePath())  #0.03s
         except PermissionError:
             print("请关闭simple tracker.xlsx，我将于5s后重新尝试保存~~")
             time.sleep(5)

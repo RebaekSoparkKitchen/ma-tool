@@ -3,16 +3,15 @@
 @Author: FlyingRedPig
 @Date: 2020-05-08 11:35:14
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-11 23:01:30
+@LastEditTime: 2020-05-12 20:02:59
 @FilePath: \EDM\edm\Report\ReportExcel.py
 '''
+import sys
+sys.path.append('../..')
 from openpyxl.styles import Font, colors, Alignment, PatternFill, Border, Side
 import openpyxl
-import sys
-sys.path.append('../LocalDataBase')
-sys.path.append('../Tracker')
-from LocalData import LocalData
-from Analytics import Analytics
+from edm.LocalDataBase.LocalData import LocalData
+from edm.Tracker.Analytics import Analytics
 from openpyxl.utils.dataframe import dataframe_to_rows
 
 

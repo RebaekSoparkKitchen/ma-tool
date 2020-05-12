@@ -46,11 +46,5 @@
         "\u806f\u7d61\u6211\u5011",
         "\u53d6\u6d88\u9023\u7d50",
         "\u8acb\u6309\u6b64"
-    ],
-    "local_path": {
-        "tracker_path": "C:\\Users\\C5293427\\Desktop\\MA\\Request_Tracker.xlsx",
-        "simple_tracker_path": "C:\\Users\\C5293427\\Desktop\\MA\\Simple_Tracker_V3.xlsx",
-        "report_template": "C:\\Users\\C5293427\\Desktop\\MA\\report\\Report_template.xlsx",
-        "report_save": "C:/Users/C5293427/Desktop/MA/report/"
-    }
+    ]
 }

@@ -1,16 +1,17 @@
 '''
-@Description: 本地数据库需要发起请求，拿到campaign的basic和click performance数据，并主要提供save()和search()两个接口
+@Description: 本地数据库需要发起请求，拿到campaign的basic和click performance数据，并主要提供request()和search()两个接口
 @Author: FlyingRedPig
 @Date: 2020-05-07 16:15:45
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-11 17:54:37
+@LastEditTime: 2020-05-12 23:51:13
 @FilePath: \EDM\edm\LocalDataBase\LocalData.py
 '''
-import json
 import sys
-sys.path.append('../Spider')
-from BasicPerformance import BasicPerformance
-from ClickPerformance import ClickPerformance
+sys.path.append('../..')
+
+import json
+from edm.Spider.BasicPerformance import BasicPerformance
+from edm.Spider.ClickPerformance import ClickPerformance
 import pandas as pd
 
 
@@ -22,7 +23,7 @@ class LocalData(object):
         @param {int / str tuple} 
         @return: 
         '''
-        filename = '../../data/campaign_data.json'
+        filename = '../../EDM/data/campaign_data.json'
         with open(filename) as f_obj:
             self.__data = json.load(f_obj)
         if self.__data is None:
@@ -45,7 +46,7 @@ class LocalData(object):
 
         return totalDic
 
-    def save(self, overwrite: bool, *args):
+    def request(self, overwrite: bool, *args):
 
         assert type(overwrite) == bool
         if not overwrite:
@@ -143,7 +144,7 @@ class LocalData(object):
 
 if __name__ == "__main__":
     l = LocalData()
-    # l.save(True, 6414)
+    # l.request(True, 6414)
     # print(l.metricOpenRate(6414))
     # print(l.metricOpen(6414))
     print(l.mainClickPerformanceDf(6414))

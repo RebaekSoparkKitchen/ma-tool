@@ -3,12 +3,13 @@
 @Author: FlyingRedPig
 @Date: 2020-05-02 11:11:05
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-07 15:59:52
+@LastEditTime: 2020-05-12 20:00:38
 @FilePath: \EDM\edm\Spider\ClickPerformance.py
 '''
-
-from CampaignSpider import CampaignSpider
-from BasicPerformance import BasicPerformance
+import sys
+sys.path.append('../..')
+from edm.Spider.CampaignSpider import CampaignSpider
+from edm.Spider.BasicPerformance import BasicPerformance
 import time
 import selenium
 from selenium.webdriver.common.keys import Keys

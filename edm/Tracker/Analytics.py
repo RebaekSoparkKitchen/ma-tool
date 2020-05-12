@@ -3,14 +3,16 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-09 15:58:45
+@LastEditTime: 2020-05-12 21:18:43
 @FilePath: \EDM\edm\Tracker\Analytics.py
 '''
 
+import sys
+sys.path.append("../..")
 import pandas as pd
 import numpy as np
 from pandas import Series, DataFrame
-from RequestTracker import *
+from edm.Tracker.RequestTracker import Request_Tracker
 import datetime as dt
 from dateutil.parser import parse, _parser
 import warnings
@@ -59,7 +61,7 @@ class Analytics(Request_Tracker):
         if df.empty == True:
             return "There's no campaign in the future"
         return df[[
-            'Campaign Name', 'Owner ', 'Launch Date', 'Weekday', 'Report Date'
+            'Campaign Name', 'Owner ', 'Launch Date', 'Weekday', 'Event Date'
         ]]
 
     def report(self, *args):
@@ -172,10 +174,7 @@ class Analytics(Request_Tracker):
         else:
             raise TypeError('此方法只接收两个以下参数哦~')
 
-        return report_df[[
-            'Campaign Name', 'Launch Date', 'Weekday', 'Campaign ID',
-            'Event Date', 'formal report date', 'Report Date'
-        ]]
+        return report_df[['Campaign Name', 'Launch Date', 'Weekday', 'Campaign ID', 'Event Date']]
 
     def check(self):
         '''
@@ -234,7 +233,7 @@ class Analytics(Request_Tracker):
         if df.empty == True:
             return "There's no concern for communication limit."
 
-        return df[['Campaign Name', 'Launch Date', 'weekday', 'Campaign ID']]
+        return df[['Campaign Name', 'Launch Date', 'Weekday', 'Campaign ID']]
 
     def findCol(self, colName) -> object:
         '''
@@ -268,6 +267,8 @@ class Analytics(Request_Tracker):
     def name(self) -> object:
 
         return self.findCol('Campaign Name')
+
+    
 
 
 if __name__ == "__main__":
