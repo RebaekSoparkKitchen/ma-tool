@@ -3,13 +3,14 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 19:44:54
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-12 23:48:05
+@LastEditTime: 2020-05-13 20:05:53
 @FilePath: \EDM\bin\EDM.py
 '''
 import fire
 import sys
 sys.path.append("..")
 sys.path.append("../edm/LocalDataBase/")
+
 from edm.Tracker.Analytics import Analytics
 from edm.Tracker.SimpleTracker import SimpleTracker
 from edm.Tracker.WriteTracker import WriteTracker
@@ -25,12 +26,15 @@ import pandas as pd
 class EDM(object):
 
     def __init__(self):
-        pass
+        self.trackerInput = WriteTracker()
+
+    def __getTrackerInput(self):
+        return self.trackerInput
     
-    def simple_tracker(self, path:str = "../../file/"):
+    def simple_tracker(self, path:str = "../../files/"):
         s = SimpleTracker(path)
         s.simpleTrackerExcel()
-        print('Simple_tracker.xlsx has been created successfully！')
+        print('Simple_tracker.xlsx 已经创建成功！')
         return 
 
     def __pretty(self, df):
@@ -64,14 +68,14 @@ class EDM(object):
         
         print('我们需要检查的campaign:')
         if a.check().empty:
-            print('\n过去的campaign都添上了campaign id, 很棒！')
+            print('\n过去的campaign都填上了campaign id, 很棒！')
         else:
             print(self.__pretty(a.check()))
         print('\n')
 
         print('由于traffic control, 我们需要在执行时间上考虑以下campaign:')
         if a.communicationLimitHint().empty:
-            print('我们没有时间上的避让考虑')
+            print('\n我们没有时间上的避让考虑')
         else:
             print(self.__pretty(a.communicationLimitHint()))
         
@@ -80,25 +84,64 @@ class EDM(object):
     def write_campaign_id(self):
         
         a = Analytics()
-        w = WriteTracker()
+        
         if a.check().empty:
             return "没啥campaign id需要写啊~"
         for index, row in a.check().iterrows():
             print(row)
-            campaignId = input('请输入以上campaign的id，谢谢~')
-            w.writeCampaignId(campaignId)
-            w.saveTracker()
+            while True:
+                campaignId = input('请输入以上campaign的id，谢谢~')
+                if campaignId =="next" or "exit":
+                    break
+                try:
+                    int(campaignId)
+                    break
+                except ValueError:
+                    print('请输入正确格式的campaign id')
+            if campaignId == "exit":
+                print('您已退出campaign_id输入环境')
+                break
+            elif campaignId == "next":
+                continue
+            else: 
+                self.trackerInput.writeCampaignId(index, campaignId)
+                self.trackerInput.saveTracker()
         return
     
-    def report(self, overwrite=False, path="../../report/",*args):
+    def report(self, campaignId, catagory="static", path='../../report/'):
         
-        l = LocalData()
-        l.request(overwrite, *args)
-        for campaignId in args:
-            r = ReportExcel()
-            r.create(path)
+        l = LocalData(dataPath="../data/campaign_data.json") #此处硬编码了地址，因为脚本文件和类文件不在同一个位置，那么与campaign_data.json的相对位置也不同
+        w = WriteTracker()
+        if catagory == "static":
+            l.request(False, campaignId)
+        elif catagory == "dynamic":
+            l.request(True, campaignId)
+        else:
+            raise ValueError('catagory参数只接收static或者dynamic')
+        
+        r = ReportExcel(campaignId, templatePath="../config/Report_template.xlsx")
+        r.create(path=path)
+        self.trackerInput.writePerformanceData(campaignId)
+        self.trackerInput.saveTracker()
+        a = Analytics(campaignId)
+        print('《{}》数据报告已创建成功！'.format(a.name()))
         return 
     
+    def routine(self):
+        
+        a = Analytics()
+
+        self.simple_tracker()
+        self.workflow()
+        self.write_campaign_id()
+        reportList = list(a.report()['Campaign ID'])
+        reportList = list(map(int, reportList)) #此行重要，df中campaign_id是float形式
+       
+        for campaignId in reportList:
+            self.report(campaignId)
+        return 
+        
 
 if __name__ == "__main__":
     fire.Fire(EDM)
+    

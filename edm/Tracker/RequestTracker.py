@@ -5,7 +5,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-12 13:54:17
+@LastEditTime: 2020-05-13 15:53:50
 @FilePath: \EDM\edm\Tracker\RequestTracker.py
 '''
 
@@ -20,7 +20,7 @@ class Request_Tracker(object):
 
     def __init__(self, *args):
 
-        self.__path = r'C:\Users\C5293427\Desktop\MA\Request_Tracker.xlsx'
+        self.__path = r'../../files/Request_Tracker.xlsx'
         self.__vanillaDf = pd.read_excel(self.__path, encoding='utf-8')
         self.__cleanDf = self.cleanDate()
         self.__campaignId = args

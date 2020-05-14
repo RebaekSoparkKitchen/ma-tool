@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-12 20:17:52
+@LastEditTime: 2020-05-13 16:29:30
 @FilePath: \EDM\edm\Tracker\SimpleTracker.py
 '''
 
@@ -21,7 +21,7 @@ import time
 
 class SimpleTracker(Request_Tracker):
 
-    def __init__(self, path:str = "../../file/" , *args):
+    def __init__(self, path:str = "../../files/" , *args):
         super().__init__(*args)
         self.__startDate = dt.date.today() + dt.timedelta(-21)
         self.__savePath = path + "Simple_Tracker.xlsx"
@@ -291,11 +291,19 @@ class SimpleTracker(Request_Tracker):
         self.__setColor(ws)  #0.07s
         self.__setMerge(ws)  #0.14s
         self.__setFreeze(ws)
-        try:
-            wb.save(self.getSavePath())  #0.03s
-        except PermissionError:
-            print("请关闭simple tracker.xlsx，我将于5s后重新尝试保存~~")
-            time.sleep(5)
+        while True:
+            try:
+                wb.save(self.getSavePath())  #0.03s
+                break
+            except PermissionError:
+                answer = input("simple_tracker.xlsx已打开，请关闭后重试，谢谢(y/n)")
+                if answer.lower() == 'y':
+                    pass
+                elif answer.lower() == 'n':
+                    print('由于您执意不关闭simple_tracker.xlsx，我们只好不干活了，结束程序~')
+                    break
+                else:
+                    print('请输入正确的命令(y/n)')
 
         return
 

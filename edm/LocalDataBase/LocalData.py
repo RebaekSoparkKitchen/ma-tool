@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-07 16:15:45
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-12 23:51:13
+@LastEditTime: 2020-05-13 20:24:36
 @FilePath: \EDM\edm\LocalDataBase\LocalData.py
 '''
 import sys
@@ -17,49 +17,58 @@ import pandas as pd
 
 class LocalData(object):
 
-    def __init__(self):
+    def __init__(self, dataPath="../data/campaign_data.json"):
         '''
         @description: 
-        @param {int / str tuple} 
+        @param {str} 本地数据库的地址 
         @return: 
         '''
-        filename = '../../EDM/data/campaign_data.json'
+        filename = dataPath
         with open(filename) as f_obj:
             self.__data = json.load(f_obj)
         if self.__data is None:
             self.__data = {}
+        
+        self.__dataPath = dataPath
+        self.__configPath = "../config/config.json"
 
     def getData(self):
         return self.__data
+    
+    def getDataPath(self):
+        return self.__dataPath
+    
+    def getConfigPath(self):
+        return self.__configPath
 
-    def __SMC2Dict(self, *args) -> dict:
+    def __SMC2Dict(self, campaignId) -> dict:
 
-        campaignId = list(map(int, args))
+        
         totalDic = {}
-        for campaign in campaignId:
-            dic = {}
-            basicData = BasicPerformance(campaign)
-            dic['basic_performance'] = basicData.basicPerformanceData()
-            clickData = ClickPerformance(campaign, basicData.driver)
-            dic['click_performance'] = clickData.clickPerformanceData()
-            totalDic[campaign] = dic
+        dic = {}
+        basicData = BasicPerformance(campaignId)
+        dic['basic_performance'] = basicData.basicPerformanceData()
+        clickData = ClickPerformance(campaignId, basicData.driver)
+        dic['click_performance'] = clickData.clickPerformanceData()
+        totalDic[campaignId] = dic
 
         return totalDic
 
-    def request(self, overwrite: bool, *args):
+    def request(self, overwrite: bool, campaignId: str or int) -> None:
 
         assert type(overwrite) == bool
         if not overwrite:
-            campaignList = []
-            for campaign in args:
-                if str(campaign) not in self.getData().keys():
-                    campaignList.append(campaign)
-            args = tuple(campaignList)
+            if (str(campaignId) in self.getData()) or (int(campaignId) in self.getData()):
+                return
+            
+        dic = self.__SMC2Dict(campaignId)
+            
+        self.__data.update(dic)  #若有键值则update新值，若无则添加 
+        #!important
+        # 千万不要写self.__data = self.__data.update(dic) 会把数据库清零的！！！
+        assert type(dic) == dict
 
-        dic = self.__SMC2Dict(*args)
-        self.__data.update(dic)  #若有键值则update新值，若无则添加
-
-        filename = '../../data/campaign_data.json'
+        filename = self.getDataPath()
         with open(filename, 'w') as f_obj:
             json.dump(self.getData(), f_obj)
 
@@ -69,7 +78,7 @@ class LocalData(object):
 
         campaignId = str(campaignId)
         target = {}
-        filename = '../../data/campaign_data.json'
+        filename = self.getDataPath()
         with open(filename) as f_obj:
             dic = json.load(f_obj)
 
@@ -119,7 +128,7 @@ class LocalData(object):
 
     def otherLink(self):
         
-        f = open('../../config/config.json',encoding="utf-8")
+        f = open(self.getConfigPath(),encoding="utf-8")
         configDic = json.load(f)
         return configDic['other_link']
 
@@ -143,10 +152,14 @@ class LocalData(object):
 
 
 if __name__ == "__main__":
-    l = LocalData()
+    l = LocalData(dataPath="../../data/campaign_data.json")
     # l.request(True, 6414)
     # print(l.metricOpenRate(6414))
     # print(l.metricOpen(6414))
-    print(l.mainClickPerformanceDf(6414))
-    print(l.otherClickPerformanceDf(6414))
+    print(l.mainClickPerformanceDf(6867))
+    print(l.otherClickPerformanceDf(6867))
+    # print('6867' in l.getData())
+    # print(l.getData())
+    # l.request(False,6867)
+    l.search(4227)
 

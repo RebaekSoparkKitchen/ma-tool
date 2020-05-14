@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 13:46:11
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-12 19:57:45
+@LastEditTime: 2020-05-13 19:57:11
 @FilePath: \EDM\edm\Tracker\WriteTracker.py
 '''
 import sys
@@ -24,17 +24,25 @@ class WriteTracker(Request_Tracker):
         @index: df对应的索引； campaignId: 对应即将写入的campaignId，会要求用户输入
         @return: 
         '''
+        campaignId = int(campaignId)
         campaignIdCol = 'K'
         rowNum = index + 2 # 2指openpyxl的行号和dataframe的索引天然的差值
         self.trackerWs[campaignIdCol + str(rowNum)] = campaignId
         return
+
+    def __transInt(self, x:object):
+        
+        try:
+            return int(x)
+        except:
+            pass
     
     def writePerformanceData(self, campaignId):
         
         colDic = {'Sent':'R', 'Delivered':'S', 'Opened':'T', 'Soft Bounces':'U', 'Hard Bounces':'V', 'Click':'W', 'Unique Click':'X'}
         
         df = self.getVanillaDf()
-        index = df[df['Campaign ID'] == campaignId].index[-1]
+        index = df[df['Campaign ID'].apply(lambda x:self.__transInt(x)) == int(campaignId)].index[-1]
         rowNum = index + 2
         data = LocalData().search(campaignId)['basic_performance']
         for item in colDic:

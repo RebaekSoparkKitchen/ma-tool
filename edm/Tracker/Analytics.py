@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-12 21:18:43
+@LastEditTime: 2020-05-13 21:23:12
 @FilePath: \EDM\edm\Tracker\Analytics.py
 '''
 
@@ -172,9 +172,9 @@ class Analytics(Request_Tracker):
                                & (df['formal report date'] >= args[1])]
 
         else:
-            raise TypeError('此方法只接收两个以下参数哦~')
+            raise ValueError('此方法只接收两个以下参数哦~')
 
-        return report_df[['Campaign Name', 'Launch Date', 'Weekday', 'Campaign ID', 'Event Date']]
+        return report_df[['Campaign Name','Owner ', 'Launch Date', 'Weekday', 'Campaign ID', 'Event Date']]
 
     def check(self):
         '''
@@ -229,9 +229,6 @@ class Analytics(Request_Tracker):
             df['Campaign ID'] = df['Campaign ID'].apply(lambda x: int(x))
         except ValueError:
             pass
-
-        if df.empty == True:
-            return "There's no concern for communication limit."
 
         return df[['Campaign Name', 'Launch Date', 'Weekday', 'Campaign ID']]
 

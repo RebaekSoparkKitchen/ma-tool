@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-01 17:58:32
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-06 19:34:45
+@LastEditTime: 2020-05-13 21:44:56
 @FilePath: \EDM\edm\Spider\CampaignSpider.py
 '''
 
@@ -25,7 +25,7 @@ class CampaignSpider(object):
         '''
 
         self.campaignId = campaignId
-        self.driverPath = r'C:\Users\C5293427\Desktop\MA\chromedriver_win32\chromedriver.exe'
+        self.driverPath = '../config/chromedriver.exe'
         self.driver = driver
 
     def getCampaignId(self):
