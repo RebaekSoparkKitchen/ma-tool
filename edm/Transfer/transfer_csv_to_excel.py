@@ -10,7 +10,7 @@ class ExportedData:
         初始化，self.df用来导入原始文件，self.clean_df用来存储清洗后的文件
         """
 
-        self.df = pd.read_csv(path, sep=';', error_bad_lines=False, quoting=csv.QUOTE_NONE, engine="python")
+        self.df = pd.read_csv(path, sep=';', error_bad_lines=False, quoting=csv.QUOTE_NONE, engine="python", encoding="utf_8_sig")
         
         self.path = path
         self.clean_df = 0  # Placeholder
@@ -45,8 +45,6 @@ class ExportedData:
     def read_file(self, path):
         df = pd.read_csv(open((path), 'r', encoding='utf-8'),sep=';')
         return df
-
-
 
     def add_color(self, click_file_path, match_attribute='DB_key'):
         '''
@@ -95,7 +93,7 @@ class ExportedData:
         :return:
         """
         self.clean_data()
-        self.clean_df.to_excel(path, index=False)
+        self.clean_df.to_excel(path, encoding='utf_8_sig', index=False)
 
         return
 
