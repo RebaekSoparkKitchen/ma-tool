@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-13 21:23:12
+@LastEditTime: 2020-06-16 15:13:04
 @FilePath: \EDM\edm\Tracker\Analytics.py
 '''
 
@@ -104,6 +104,12 @@ class Analytics(Request_Tracker):
                & df['Launch Date'].notna()
                & (df['Event Date'] - df['Launch Date'] <= dt.timedelta(days=2)),
                ['formal report date']] = df['Event Date']
+        #感谢信一般是launch data 晚于 event date, 特此列出。 
+        df.loc[df['Report Date'].isna() & df['Event Date'].notna()
+               & df['Launch Date'].notna()
+               & (df['Event Date'] - df['Launch Date'] <= dt.timedelta(days=0)),
+               ['formal report date']] = df['Launch Date'] + dt.timedelta(
+                   days=7)
 
         #若report date是星期六，那么就要加两天，到星期一发报告
         df.loc[df['formal report date']
