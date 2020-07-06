@@ -3,8 +3,8 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 19:44:54
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-06-04 19:12:06
-@FilePath: \EDM\bin\EDM.py
+@LastEditTime: 2020-07-06 17:03:25
+@FilePath: \EDM_project\EDM\bin\EDM.py
 '''
 import fire
 import sys
@@ -19,9 +19,11 @@ from edm.Spider.ClickPerformance import ClickPerformance
 from edm.LocalDataBase.LocalData import LocalData
 from edm.Report.ReportExcel import ReportExcel
 from edm.Transfer.gui import DataTransfer
-
+from Data import DataExtractor
+from dateutil.parser import parse
 from tabulate import tabulate
 import pandas as pd
+import datetime as dt
 
 
 class EDM(object):
@@ -152,6 +154,13 @@ class EDM(object):
         t = DataTransfer()
         t.execute()
         return 
+
+    def data(self, country: str, time1: int, time2: int):
+        DataExtractor.save(country, str(time1), str(time2))
+        return
+
+    
+
 
 
 if __name__ == "__main__":

@@ -3,19 +3,20 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-06-16 15:13:04
-@FilePath: \EDM\edm\Tracker\Analytics.py
+@LastEditTime: 2020-07-06 17:09:51
+@FilePath: \EDM_project\EDM\edm\Tracker\Analytics.py
 '''
 
-import sys
-sys.path.append("../..")
-import pandas as pd
-import numpy as np
-from pandas import Series, DataFrame
-from edm.Tracker.RequestTracker import Request_Tracker
-import datetime as dt
-from dateutil.parser import parse, _parser
 import warnings
+from dateutil.parser import parse, _parser
+import datetime as dt
+from edm.Tracker.RequestTracker import Request_Tracker
+from pandas import Series, DataFrame
+import numpy as np
+import pandas as pd
+import sys
+
+sys.path.append("../..")
 
 
 class Analytics(Request_Tracker):
@@ -54,9 +55,9 @@ class Analytics(Request_Tracker):
 
         df = self.getCleanDf()
 
-        today = dt.date.today()  #获取此时此刻的时间
-        df = df[(df['Launch Date'] > today)]  #按时间筛选出今天以后的时间
-        df = df.sort_values(by='Launch Date')  #按顺序排列
+        today = dt.date.today()  # 获取此时此刻的时间
+        df = df[(df['Launch Date'] > today)]  # 按时间筛选出今天以后的时间
+        df = df.sort_values(by='Launch Date')  # 按顺序排列
 
         if df.empty == True:
             return "There's no campaign in the future"
@@ -73,7 +74,7 @@ class Analytics(Request_Tracker):
 
         df = self.getCleanDf()
 
-        #必须让类型统一，把launch Date中的字符串删掉
+        # 必须让类型统一，把launch Date中的字符串删掉
         df.loc[df['Launch Date'].apply(lambda x: isinstance(x, str)),
                'Launch Date'] = np.nan
 
@@ -104,14 +105,14 @@ class Analytics(Request_Tracker):
                & df['Launch Date'].notna()
                & (df['Event Date'] - df['Launch Date'] <= dt.timedelta(days=2)),
                ['formal report date']] = df['Event Date']
-        #感谢信一般是launch data 晚于 event date, 特此列出。 
+        # 感谢信一般是launch data 晚于 event date, 特此列出。
         df.loc[df['Report Date'].isna() & df['Event Date'].notna()
                & df['Launch Date'].notna()
                & (df['Event Date'] - df['Launch Date'] <= dt.timedelta(days=0)),
                ['formal report date']] = df['Launch Date'] + dt.timedelta(
                    days=7)
 
-        #若report date是星期六，那么就要加两天，到星期一发报告
+        # 若report date是星期六，那么就要加两天，到星期一发报告
         df.loc[df['formal report date']
                .apply(lambda x: self.__turnWeekday(x) == 5),
                ['formal report date']] = df.loc[
@@ -119,7 +120,7 @@ class Analytics(Request_Tracker):
                    .apply(lambda x: self.__turnWeekday(x) == 5),
                    ['formal report date']] + dt.timedelta(days=2)
 
-        #若report date是星期日，那么就要加一天，到星期一发报告
+        # 若report date是星期日，那么就要加一天，到星期一发报告
         df.loc[df['formal report date']
                .apply(lambda x: self.__turnWeekday(x) == 6),
                ['formal report date']] = df.loc[
@@ -129,7 +130,7 @@ class Analytics(Request_Tracker):
 
         today = dt.date.today()
 
-        #处理参数
+        # 处理参数
         def transfer_str(x):
             if isinstance(x, (int, float)):
                 return str(x)
@@ -180,7 +181,7 @@ class Analytics(Request_Tracker):
         else:
             raise ValueError('此方法只接收两个以下参数哦~')
 
-        return report_df[['Campaign Name','Owner ', 'Launch Date', 'Weekday', 'Campaign ID', 'Event Date']]
+        return report_df[['Campaign Name', 'Owner ', 'Launch Date', 'Weekday', 'Campaign ID', 'Event Date']]
 
     def check(self):
         '''
@@ -224,7 +225,7 @@ class Analytics(Request_Tracker):
         the_date_for_friday = today + dt.timedelta(
             days=-2)  # 如果是周五，那实际上应该计算2天前的日期
 
-        if today.weekday() == 4:  #这个函数是从0算起，0代表星期一，4代表星期五
+        if today.weekday() == 4:  # 这个函数是从0算起，0代表星期一，4代表星期五
             df = df[(
                 df['Launch Date'] == the_date_for_friday)]  # 筛选出4天前布置的campaign
         else:
@@ -264,17 +265,51 @@ class Analytics(Request_Tracker):
         return dic
 
     def executionTime(self) -> object:
-
         return self.findCol('Launch Date')
 
     def name(self) -> object:
-
         return self.findCol('Campaign Name')
 
-    
+    def isHongKong(self, x):
+        return "hong" in x.lower()
+
+    def isTaiWan(self, x):
+        return "tai" in x.lower()
+
+    def isChina(self, x):
+        return "china" in x.lower()
+
+    def timeRangeData(self, country: str, timeRange: tuple) -> pd.DataFrame:
+        df = self.getCleanDf()
+        if "china" in country.lower():
+            df = df[df['MU'].apply(lambda x: self.isChina(x))]
+        elif "hong" in country.lower():
+            df = df[df['MU'].apply(lambda x: self.isHongKong(x))]
+        elif "tai" in country.lower():
+            df = df[df['MU'].apply(lambda x: self.isTaiWan(x))]
+
+        df = df[(df['Launch Date'] > timeRange[0]) &
+                (df['Launch Date'] < timeRange[1])]
+        return df
+
+    def overview(self, df: pd.DataFrame) -> dict:
+        Num = len(df)
+        openRate = df['Opened'].sum() / df['Delivered'].sum()
+        CTR = df['Click'].sum() / df['Delivered'].sum()
+        UniqueCTR = df['Unique Click'].sum() / df['Delivered'].sum()
+        clickToOpen = df['Unique Click'].sum() / df['Opened'].sum()
+        dic = {'Email Number': Num,
+               'Open Rate': openRate,
+               'Click to Open rate': clickToOpen,
+               "CTR": CTR,
+               "Unique CTR": UniqueCTR}
+
+        return dic
 
 
 if __name__ == "__main__":
-    a = Analytics(6414, 6316, 1234)
+    a = Analytics(6414)
+    q2_start = dt.datetime(2020, 4, 1)
+    q2_end = dt.datetime(2020, 6, 30)
     print(a.name())
     print(str(a.executionTime()[6414]))
