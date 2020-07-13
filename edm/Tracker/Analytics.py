@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-07-06 17:09:51
+@LastEditTime: 2020-07-13 13:49:04
 @FilePath: \EDM_project\EDM\edm\Tracker\Analytics.py
 '''
 
@@ -279,6 +279,12 @@ class Analytics(Request_Tracker):
     def isChina(self, x):
         return "china" in x.lower()
 
+    def isWaveOne(self, campaignName: str):
+        return not (('w2' in campaignName) or ('W2' in campaignName) or ('w3' in campaignName) or ('W3' in campaignName) or ('W4' in campaignName) or ('w4' in campaignName) or ('W5' in campaignName) or ('w5' in campaignName))
+
+    def removeDuplicate(self, df: pd.DataFrame):
+        return df[df['Campaign Name'].apply(lambda x: self.isWaveOne(x))]
+
     def timeRangeData(self, country: str, timeRange: tuple) -> pd.DataFrame:
         df = self.getCleanDf()
         if "china" in country.lower():
@@ -293,16 +299,18 @@ class Analytics(Request_Tracker):
         return df
 
     def overview(self, df: pd.DataFrame) -> dict:
-        Num = len(df)
+        num = len(df)
+        uniqueNum = len(self.removeDuplicate(df))
         openRate = df['Opened'].sum() / df['Delivered'].sum()
-        CTR = df['Click'].sum() / df['Delivered'].sum()
-        UniqueCTR = df['Unique Click'].sum() / df['Delivered'].sum()
+        ctr = df['Click'].sum() / df['Delivered'].sum()
+        uniqueCTR = df['Unique Click'].sum() / df['Delivered'].sum()
         clickToOpen = df['Unique Click'].sum() / df['Opened'].sum()
-        dic = {'Email Number': Num,
+        dic = {'Email Number': num,
+               'Unique Number': uniqueNum,
                'Open Rate': openRate,
                'Click to Open rate': clickToOpen,
-               "CTR": CTR,
-               "Unique CTR": UniqueCTR}
+               "CTR": ctr,
+               "Unique CTR": uniqueCTR}
 
         return dic
 
