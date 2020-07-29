@@ -1,5 +1,11 @@
 
 chcp 936
+echo on
 cd /d %~dp0
-%~dp0..\EDM-venv\Scripts\python.exe EDM.py routine
+cd ..
+cd EDM-venv\Scripts
+call activate
+cd ..
+cd ..
+cd bin
 cmd.exe

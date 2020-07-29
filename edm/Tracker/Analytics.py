@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-07-13 13:49:04
+@LastEditTime: 2020-07-13 16:21:56
 @FilePath: \EDM_project\EDM\edm\Tracker\Analytics.py
 '''
 
@@ -301,12 +301,14 @@ class Analytics(Request_Tracker):
     def overview(self, df: pd.DataFrame) -> dict:
         num = len(df)
         uniqueNum = len(self.removeDuplicate(df))
+        touchPoints = df['Delivered'].sum()
         openRate = df['Opened'].sum() / df['Delivered'].sum()
         ctr = df['Click'].sum() / df['Delivered'].sum()
         uniqueCTR = df['Unique Click'].sum() / df['Delivered'].sum()
         clickToOpen = df['Unique Click'].sum() / df['Opened'].sum()
         dic = {'Email Number': num,
                'Unique Number': uniqueNum,
+               'Touch Points': touchPoints,
                'Open Rate': openRate,
                'Click to Open rate': clickToOpen,
                "CTR": ctr,

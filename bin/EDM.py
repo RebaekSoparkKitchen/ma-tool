@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 19:44:54
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-07-06 17:03:25
+@LastEditTime: 2020-07-29 14:57:05
 @FilePath: \EDM_project\EDM\bin\EDM.py
 '''
 import fire
@@ -14,12 +14,12 @@ sys.path.append("../edm/LocalDataBase/")
 from edm.Tracker.Analytics import Analytics
 from edm.Tracker.SimpleTracker import SimpleTracker
 from edm.Tracker.WriteTracker import WriteTracker
+from edm.Tracker.Data import DataExtractor
 from edm.Spider.BasicPerformance import BasicPerformance
 from edm.Spider.ClickPerformance import ClickPerformance
 from edm.LocalDataBase.LocalData import LocalData
 from edm.Report.ReportExcel import ReportExcel
 from edm.Transfer.gui import DataTransfer
-from Data import DataExtractor
 from dateutil.parser import parse
 from tabulate import tabulate
 import pandas as pd
@@ -35,6 +35,10 @@ class EDM(object):
         return self.trackerInput
 
     def simple_tracker(self, path: str = "../../files/"):
+        '''
+        此命令负责刷新simple_tracker，是我们需求安排的日程版本，
+        您可以在EDM_project/files中找到它。
+        '''
         s = SimpleTracker(path)
         s.simpleTrackerExcel()
         print('Simple_tracker.xlsx 已经创建成功！')
@@ -44,7 +48,10 @@ class EDM(object):
         return tabulate(df, headers='keys', tablefmt='psql')
 
     def workflow(self):
-
+        '''
+        此命令负责跟踪排查我们近期的workflow，包括：未来工作、待定工作、今天需发送报告、哪些条目还没有填写campaign id、我们明天的campaign需要避让哪些campaign
+        eg: python edm.py workflow
+        '''
         a = Analytics()
 
         print('\n')
@@ -85,6 +92,10 @@ class EDM(object):
         return
 
     def write_campaign_id(self):
+        '''
+        此命令负责检查：今天之前需要发送的edm，是否没有填上SMC campaign id，若没有填上，此方法会提供一些信息，帮助您填写它。
+        eg: python edm.py write_campaign_id
+        '''
 
         a = Analytics()
 
@@ -112,7 +123,13 @@ class EDM(object):
         return
 
     def report(self, campaignId, catagory="static", path='../../report/'):
-
+        '''
+        此命令提供报告生成功能
+        eg:  python edm.py report 1234 static
+        其中 1234 指SMC campaign id
+        static控制是否覆盖已有报告，这个参数只有两个值：static/dynamic 同时这个值可以不填，默认为static
+         
+        '''
         l = LocalData(
             dataPath="../data/campaign_data.json"
         )  #此处硬编码了地址，因为脚本文件和类文件不在同一个位置，那么与campaign_data.json的相对位置也不同
@@ -134,6 +151,9 @@ class EDM(object):
         return
 
     def routine(self):
+        '''
+        此命令是其他几个命令的大集合（important），每天都需要执行的一个指令，提供信息如：未来工作、今天需发送报告、哪些campaign id需登记等
+        '''
 
         a = Analytics()
 
@@ -149,19 +169,22 @@ class EDM(object):
 
     def transfer(self):
         '''
-        弹出数据格式转换的gui
+        此命令会弹出数据格式转换的用户界面，请注意我们要求模板为GC_STANDARD_EXPORT_EMAIL,
+        不建议其他模板的csv文件转换。
         '''
         t = DataTransfer()
         t.execute()
         return 
 
     def data(self, country: str, time1: int, time2: int):
+        '''
+        此命令提供一段时间内某一地区的基本数据,并将以excel的形式存在EDM_project/analytics_data中。
+        eg: python edm.py data hongkong 20200101 20200630 
+        '''
         DataExtractor.save(country, str(time1), str(time2))
         return
 
     
-
-
 
 if __name__ == "__main__":
     fire.Fire(EDM)
