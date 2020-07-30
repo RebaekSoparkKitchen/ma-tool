@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 13:46:11
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-13 19:57:11
+@LastEditTime: 2020-07-30 12:25:37
 @FilePath: \EDM\edm\Tracker\WriteTracker.py
 '''
 import sys
@@ -55,7 +55,7 @@ class WriteTracker(Request_Tracker):
     def saveTracker(self):
         while True:
             try:
-                self.trackerWb.save(self.getTrackerPath())
+                self.trackerWb.save(self.getTrackerPath())  #这个地方写的无敌好，单一保存接口
                 break
             except PermissionError:
                 reminder = input('请关闭RequestTracker，是否现在重试？(y/n)')

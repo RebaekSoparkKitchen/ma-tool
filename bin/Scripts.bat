@@ -8,4 +8,5 @@ call activate
 cd ..
 cd ..
 cd bin
+cls
 cmd.exe

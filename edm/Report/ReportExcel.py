@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-08 11:35:14
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-12 20:02:59
+@LastEditTime: 2020-07-30 12:06:44
 @FilePath: \EDM\edm\Report\ReportExcel.py
 '''
 import sys
@@ -13,21 +13,33 @@ import openpyxl
 from edm.LocalDataBase.LocalData import LocalData
 from edm.Tracker.Analytics import Analytics
 from openpyxl.utils.dataframe import dataframe_to_rows
-
+import json
 
 
 class ReportExcel():
 
     def __init__(
         self,
-        campaignId,
-        templatePath=r'..\..\config\Report_template.xlsx'):
+        campaignId):
+        templatePath = self.readConfig()['location']['reportTemplate']
         self.reportWb = openpyxl.load_workbook(templatePath)
         self.reportWs = self.reportWb.active
         self.campaignId = campaignId
         self.trackerData = Analytics(self.getCampaignId())
         self.localData = LocalData()
         self.tableWidth = 5
+        self.savePath = self.readConfig()['location']['reportSave']
+    
+    def readConfig(self):
+        '''
+        从config文件中读取tracker path
+        '''
+        configPath = r'../config/config.json'
+        with open(configPath,'r',encoding='utf8')as fp:
+            json_data = json.load(fp)
+        
+        return json_data
+        
 
     def getCampaignId(self) -> int:
         return int(self.campaignId)
@@ -40,6 +52,9 @@ class ReportExcel():
 
     def getTableWidth(self) -> int:
         return self.tableWidth
+
+    def getSavePath(self) -> str:
+        return self.savePath
 
     def standardFont(self) -> Font:
         return Font(name='Calibri', bold=False, size=11)
@@ -185,7 +200,7 @@ class ReportExcel():
 
     
 
-    def save(self, path:str) -> None :
+    def __save(self, path:str) -> None :
         '''
         @description: 关于保存过程的封装，这里值得注意要在permission error时提示关闭。 
         @param {str} excel 表格的存储地址，只需写到父级目录，excel的名字会自动从tracker中获取。 
@@ -218,7 +233,7 @@ class ReportExcel():
         self.__addOverview()
         self.__addBasicPerformance()
         self.__addClickPerformance()
-        self.save(path)
+        self.__save(self.getSavePath())
         return 
 
 

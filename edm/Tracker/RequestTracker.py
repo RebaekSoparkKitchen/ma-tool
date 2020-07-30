@@ -5,7 +5,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-13 15:53:50
+@LastEditTime: 2020-07-30 12:26:29
 @FilePath: \EDM\edm\Tracker\RequestTracker.py
 '''
 
@@ -14,16 +14,29 @@ import datetime as dt
 import warnings
 import time
 from pandas.core.common import SettingWithCopyWarning
+import json
 
 
 class Request_Tracker(object):
 
     def __init__(self, *args):
-
-        self.__path = r'../../files/Request_Tracker.xlsx'
+        
+        # self.__path = r'../../files/Request_Tracker.xlsx'
+        self.__path = self.readConfig()['location']['RequestTracker']
         self.__vanillaDf = pd.read_excel(self.__path, encoding='utf-8')
         self.__cleanDf = self.cleanDate()
         self.__campaignId = args
+    
+    def readConfig(self):
+        '''
+        从config文件中读取tracker path
+        '''
+        configPath = r'../config/config.json'
+        with open(configPath,'r',encoding='utf8')as fp:
+            json_data = json.load(fp)
+        
+        return json_data
+        
 
     def getVanillaDf(self):
         return self.__vanillaDf

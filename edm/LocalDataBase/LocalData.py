@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-07 16:15:45
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-13 20:24:36
+@LastEditTime: 2020-07-30 12:03:14
 @FilePath: \EDM\edm\LocalDataBase\LocalData.py
 '''
 import sys
@@ -17,19 +17,19 @@ import pandas as pd
 
 class LocalData(object):
 
-    def __init__(self, dataPath="../data/campaign_data.json"):
+    def __init__(self):
         '''
         @description: 
         @param {str} 本地数据库的地址 
         @return: 
         '''
-        filename = dataPath
+        filename = self.readConfig()['location']['SMCData']
         with open(filename) as f_obj:
             self.__data = json.load(f_obj)
         if self.__data is None:
             self.__data = {}
         
-        self.__dataPath = dataPath
+        self.__dataPath = filename
         self.__configPath = "../config/config.json"
 
     def getData(self):
@@ -40,6 +40,17 @@ class LocalData(object):
     
     def getConfigPath(self):
         return self.__configPath
+
+    def readConfig(self):
+        '''
+        从config文件中读取tracker path
+        '''
+        configPath = r'../config/config.json'
+        with open(configPath,'r',encoding='utf8')as fp:
+            json_data = json.load(fp)
+        
+        return json_data
+        
 
     def __SMC2Dict(self, campaignId) -> dict:
 
@@ -149,17 +160,4 @@ class LocalData(object):
         return df
 
     
-
-
-if __name__ == "__main__":
-    l = LocalData(dataPath="../../data/campaign_data.json")
-    # l.request(True, 6414)
-    # print(l.metricOpenRate(6414))
-    # print(l.metricOpen(6414))
-    print(l.mainClickPerformanceDf(6867))
-    print(l.otherClickPerformanceDf(6867))
-    # print('6867' in l.getData())
-    # print(l.getData())
-    # l.request(False,6867)
-    l.search(4227)
 

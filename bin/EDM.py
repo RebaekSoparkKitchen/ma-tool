@@ -3,8 +3,8 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 19:44:54
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-07-29 14:57:05
-@FilePath: \EDM_project\EDM\bin\EDM.py
+@LastEditTime: 2020-07-30 12:02:01
+@FilePath: \EDM\bin\EDM.py
 '''
 import fire
 import sys
@@ -130,9 +130,7 @@ class EDM(object):
         static控制是否覆盖已有报告，这个参数只有两个值：static/dynamic 同时这个值可以不填，默认为static
          
         '''
-        l = LocalData(
-            dataPath="../data/campaign_data.json"
-        )  #此处硬编码了地址，因为脚本文件和类文件不在同一个位置，那么与campaign_data.json的相对位置也不同
+        l = LocalData()  #此处硬编码了地址，因为脚本文件和类文件不在同一个位置，那么与campaign_data.json的相对位置也不同
         w = WriteTracker()
         if catagory == "static":
             l.request(False, campaignId)
@@ -142,7 +140,7 @@ class EDM(object):
             raise ValueError('catagory参数只接收static或者dynamic')
 
         r = ReportExcel(
-            campaignId, templatePath="../config/Report_template.xlsx")
+            campaignId)
         r.create(path=path)
         self.trackerInput.writePerformanceData(campaignId)
         self.trackerInput.saveTracker()

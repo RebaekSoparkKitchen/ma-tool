@@ -3,8 +3,8 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-07-29 12:01:50
-@FilePath: \EDM_project\EDM\edm\Tracker\SimpleTracker.py
+@LastEditTime: 2020-07-30 11:30:41
+@FilePath: \EDM\edm\Tracker\SimpleTracker.py
 '''
 
 import sys
@@ -21,10 +21,10 @@ import time
 
 class SimpleTracker(Request_Tracker):
 
-    def __init__(self, path:str = "../../files/" , *args):
+    def __init__(self, *args):
         super().__init__(*args)
         self.__startDate = dt.date.today() + dt.timedelta(-21)
-        self.__savePath = path + "Simple_Tracker.xlsx"
+        self.__savePath = self.readConfig()['location']['SimpleTracker']
         self.__workbook = Workbook()
         self.__wsTitle1 = "Campaign Calender"
 
@@ -308,9 +308,3 @@ class SimpleTracker(Request_Tracker):
         return
 
 
-if __name__ == "__main__":
-    start = time.time()
-    s = SimpleTracker()
-    s.simpleTrackerExcel()
-    end = time.time()
-    print(end - start)

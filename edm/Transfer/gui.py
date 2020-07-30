@@ -3,27 +3,31 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 13:40:05
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-06-04 19:17:51
+@LastEditTime: 2020-07-30 12:34:32
 @FilePath: \EDM\edm\Transfer\gui.py
 '''
 import tkinter as tk
 import edm.Transfer.transfer_csv_to_excel as ce
 from tkinter import filedialog
+import json
 
 class DataTransfer(object):
 
     def __init__(self):
+
+        self.input_path = self.readConfig()['transfer']['input_path']
+        self.output_path = self.readConfig()['transfer']['output_path']
         
         self.root = tk.Tk()
         self.root.title("Data Transfer Tool")
         self.root.geometry('800x1000')
 
         self.e1 = tk.Entry(self.root, width=70, show=None, relief='groove')
-        self.e1.insert(0,"C:/Users/C5293427/Desktop/Data_exported/csv_file")
+        self.e1.insert(0,self.input_path)
         self.e1.place(x=160,y=300, anchor='nw')
 
         self.e2 = tk.Entry(self.root, width=70, show=None)
-        self.e2.insert(0,"C:/Users/C5293427/Desktop/Data_exported/成品")
+        self.e2.insert(0,self.output_path)
         self.e2.place(x=160, y=350, anchor='nw')
 
         self.l1 = tk.Label(self.root, text='input path', show = None)
@@ -42,12 +46,22 @@ class DataTransfer(object):
         self.b2.place(x=600, y=350, anchor='nw')
         return
 
+    def readConfig(self):
+        '''
+        从config文件中读取tracker path
+        '''
+        configPath = r'../config/config.json'
+        with open(configPath,'r',encoding='utf8')as fp:
+            json_data = json.load(fp)
+        
+        return json_data
+
     def select_open_path(self):
         '''
         为browse按钮写的，删除默认路径，填上选中路径
         :return:
         '''
-        file_path = filedialog.askopenfilename(initialdir='C:/Users/C5293427/Desktop/Data_exported/csv_file')
+        file_path = filedialog.askopenfilename(initialdir=self.input_path)
         self.e1.delete(0, tk.END)
         self.e1.insert(0, file_path)
 
@@ -56,7 +70,7 @@ class DataTransfer(object):
         为save as按钮写的
         :return:
         '''
-        save_path = filedialog.asksaveasfilename(defaultextension='xlsx',initialdir='C:/Users/C5293427/Desktop/Data_exported/成品',filetypes=[('Excel file', '.xlsx'),('all files','.*')])
+        save_path = filedialog.asksaveasfilename(defaultextension='xlsx',initialdir=self.output_path,filetypes=[('Excel file', '.xlsx'),('all files','.*')])
         self.e2.delete(0, tk.END)
         self.e2.insert(0, save_path)
 
