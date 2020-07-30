@@ -45,7 +45,9 @@
         "\u7576\u5730\u96fb\u8a71\u865f\u78bc",
         "\u806f\u7d61\u6211\u5011",
         "\u53d6\u6d88\u9023\u7d50",
-        "\u8acb\u6309\u6b64"
+        "\u8acb\u6309\u6b64",
+        "联系我们",
+        "当地电话号码"
     ],
     "location": {
         "RequestTracker": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/EDM_project/files/Request_Tracker.xlsx",
