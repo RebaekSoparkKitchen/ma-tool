@@ -1,13 +1,23 @@
 '''
-@Description: 本地数据库需要发起请求，拿到campaign的basic和click performance数据，并主要提供request()和search()两个接口
+@Description: 
+本地数据库需要发起请求，拿到campaign的basic和click performance数据，并主要提供request()和search()两个接口
+data flow:
+spider -> local_data(raw data) -> sql_computer(中间计算层) -> sql_writer(更完备的记录进入数据库)
+                               -> report (只是分发一部分)
+                               -> tracker (只是分发一部分)
+
+实际上sql_computer是local_data的子类，它的作用是把数据再包装一下交给sql_writer
+所以sql_writer只需要调用sql_computer中的basicData和clickData方法即可得到自己想要的数据了
 @Author: FlyingRedPig
 @Date: 2020-05-07 16:15:45
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-07-30 12:03:14
+@LastEditTime: 2020-08-01 17:42:33
 @FilePath: \EDM\edm\LocalDataBase\LocalData.py
 '''
 import sys
 sys.path.append('../..')
+sys.path.append('../../bin')
+sys.path.append('..')
 
 import json
 from edm.Spider.BasicPerformance import BasicPerformance
@@ -50,11 +60,14 @@ class LocalData(object):
             json_data = json.load(fp)
         
         return json_data
-        
+    
+    
 
     def __SMC2Dict(self, campaignId) -> dict:
-
-        
+        '''
+        important
+        它是localData和spider的一个对接口
+        '''
         totalDic = {}
         dic = {}
         basicData = BasicPerformance(campaignId)
@@ -71,7 +84,8 @@ class LocalData(object):
         if not overwrite:
             if (str(campaignId) in self.getData()) or (int(campaignId) in self.getData()):
                 return
-            
+        
+        # dynamic 情况
         dic = self.__SMC2Dict(campaignId)
             
         self.__data.update(dic)  #若有键值则update新值，若无则添加 
@@ -85,8 +99,12 @@ class LocalData(object):
 
         return
 
-    def search(self, campaignId: int or str):
 
+    def search(self, campaignId: int or str):
+        '''
+        important!
+        为其他类提供接口
+        '''
         campaignId = str(campaignId)
         target = {}
         filename = self.getDataPath()
@@ -159,5 +177,8 @@ class LocalData(object):
         df.reset_index(drop=True)
         return df
 
-    
+if __name__ == "__main__":
+    l = LocalData()
+    a = l.search(9728)
+    print(a)
 

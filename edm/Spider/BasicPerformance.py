@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-01 19:22:36
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-05-12 20:00:03
+@LastEditTime: 2020-07-31 17:46:12
 @FilePath: \EDM\edm\Spider\BasicPerformance.py
 '''
 import sys
@@ -61,11 +61,12 @@ class BasicPerformance(CampaignSpider):
 
         self.initDriver()
         self.driver.get(self.url())
-
         self.ifLoadPage('__box7-0')  #通过这个方法来判断是否真正加载出来了这些box
 
         # dataDic 这里得到基本数据
         dataDic = {}  #初始化数据字典
+        for item in self.getIndexList():  #如果最后没有找到任何记录，我还能保持一个0，让这一项存在
+            dataDic[item] = 0
         for i in self.getBoxList():
             try:
                 sentence = self.driver.find_element_by_id(i).get_attribute(
