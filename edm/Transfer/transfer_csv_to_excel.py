@@ -11,7 +11,7 @@ class ExportedData(MA):
         """
         初始化，self.df用来导入原始文件，self.clean_df用来存储清洗后的文件
         """
-
+        super().__init__()
         self.df = pd.read_csv(path, sep='^', error_bad_lines=False,
                               quoting=csv.QUOTE_NONE, engine="python", encoding="utf_8_sig")
 

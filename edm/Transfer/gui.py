@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 13:40:05
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-03 12:01:55
+@LastEditTime: 2020-08-03 14:24:31
 @FilePath: \EDM\edm\Transfer\gui.py
 '''
 import tkinter as tk
@@ -15,6 +15,8 @@ from edm.Control.MA import MA
 class DataTransfer(MA):
 
     def __init__(self):
+
+        super().__init__()
 
         self.input_path = self.readConfig()['transfer']['input_path']
         self.output_path = self.readConfig()['transfer']['output_path']

@@ -9,7 +9,7 @@ spider -> local_data(raw data) -> sql_computer(中间计算层) -> sql_writer(�
 @Author: FlyingRedPig
 @Date: 2020-07-31 17:56:28
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-03 11:58:18
+@LastEditTime: 2020-08-03 14:22:12
 @FilePath: \EDM\edm\LocalDataBase\SqlWriter.py
 '''
 import sys
@@ -24,7 +24,7 @@ from edm.Control.MA import MA
 class SqlWriter(MA):
 
     def __init__(self, campaignId: int):
-
+        super().__init__()
         config = self.readConfig()
         self.clickTable = 'ClickPerformance'
         self.basicTable = 'BasicPerformance'

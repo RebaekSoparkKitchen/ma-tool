@@ -1,9 +1,9 @@
 '''
-@Description: 一个作为newsletter以及qbr的脚本
+@Description: 一个作为newsletter以及qbr的脚本，上次作newsletter随便写的
 @Author: FlyingRedPig
 @Date: 2020-07-15 11:51:16
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-03 12:01:25
+@LastEditTime: 2020-08-03 14:36:03
 @FilePath: \EDM\edm\Tracker\DA.py
 '''
 from edm.Tracker.RequestTracker import Request_Tracker
@@ -18,6 +18,9 @@ from edm.Control.MA import MA
 class SMCDA(MA):
 
     def __init__(self):
+        
+        super().__init__()
+
         rq = Request_Tracker()
         self.df = rq.getCleanDf()
         # 在clean df中 所有日期的格式都是datetime.date

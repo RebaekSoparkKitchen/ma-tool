@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-03 10:54:47
+@LastEditTime: 2020-08-03 16:09:34
 @FilePath: \EDM\edm\Tracker\SimpleTracker.py
 '''
 
@@ -21,10 +21,10 @@ import time
 
 class SimpleTracker(Request_Tracker):
 
-    def __init__(self, *args):
-        super().__init__(*args)
+    def __init__(self, path):
+        super().__init__()
         self.__startDate = dt.date.today() + dt.timedelta(-21)
-        self.__savePath = self.readConfig()['location']['SimpleTracker']
+        self.__savePath = path
         self.__workbook = Workbook()
         self.__wsTitle1 = "Campaign Calender"
 

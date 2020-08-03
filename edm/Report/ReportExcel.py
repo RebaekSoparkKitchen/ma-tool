@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-08 11:35:14
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-03 12:00:14
+@LastEditTime: 2020-08-03 14:22:26
 @FilePath: \EDM\edm\Report\ReportExcel.py
 '''
 import sys
@@ -22,6 +22,7 @@ class ReportExcel(MA):
     def __init__(
         self,
         campaignId):
+        super().__init__()
         templatePath = self.readConfig()['location']['reportTemplate']
         self.reportWb = openpyxl.load_workbook(templatePath)
         self.reportWs = self.reportWb.active

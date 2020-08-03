@@ -11,7 +11,7 @@ spider -> local_data(raw data) -> sql_computer(中间计算层) -> sql_writer(�
 @Author: FlyingRedPig
 @Date: 2020-05-07 16:15:45
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-03 12:04:56
+@LastEditTime: 2020-08-03 14:21:59
 @FilePath: \EDM\edm\LocalDataBase\LocalData.py
 '''
 import sys
@@ -34,6 +34,7 @@ class LocalData(MA):
         @param {str} 本地数据库的地址 
         @return: 
         '''
+        super().__init__()
         filename = self.readConfig()['location']['SMCData']
         with open(filename) as f_obj:
             self.__data = json.load(f_obj)

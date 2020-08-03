@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-01 17:58:32
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-03 11:59:40
+@LastEditTime: 2020-08-03 14:22:51
 @FilePath: \EDM\edm\Spider\CampaignSpider.py
 '''
 
@@ -25,7 +25,7 @@ class CampaignSpider(MA):
         @param {type} campaignId:是最重要的参数，其他类请求服务的时候要用它作为键值请求；driverPath:指定chrome_driver的地址
         @return: 
         '''
-
+        super().__init__()
         self.campaignId = campaignId
         self.driverPath = self.readConfig()['chrome_driver']
         self.driver = driver

@@ -3,28 +3,22 @@
 @Author: FlyingRedPig
 @Date: 2020-07-06 16:26:03
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-03 12:01:15
+@LastEditTime: 2020-08-03 14:55:48
 @FilePath: \EDM\edm\Tracker\Data.py
 '''
-import datetime as dt
-import pandas as pd
-from tabulate import tabulate
-from dateutil.parser import parse
-from edm.Transfer.gui import DataTransfer
-from edm.Report.ReportExcel import ReportExcel
-from edm.LocalDataBase.LocalData import LocalData
-from edm.Spider.ClickPerformance import ClickPerformance
-from edm.Spider.BasicPerformance import BasicPerformance
-from edm.Tracker.WriteTracker import WriteTracker
-from edm.Tracker.SimpleTracker import SimpleTracker
-from edm.Tracker.Analytics import Analytics
+
+from edm.Tracker.Analytics import Analytics 
 from edm.Control.MA import MA
+import pandas as pd
+from dateutil.parser import parse
 import sys
 sys.path.append("..")
-sys.path.append("../edm/LocalDataBase/")
 
 
 class DataExtractor(MA):
+
+    def __init__(self):
+        super().__init__()
 
     @staticmethod
     def add_row(df: pd.DataFrame, dic: dict) -> pd.DataFrame:
@@ -36,15 +30,17 @@ class DataExtractor(MA):
     def str2date(string: str):
         return parse(str(string)).date()
 
-    @staticmethod
-    def save(country, time1, time2):
+    
+    def save(self, country, time1, time2):
+        
+        path = self.readConfig()['location']['Analytics']
         time1_date = DataExtractor.str2date(time1)
         time2_date = DataExtractor.str2date(time2)
         a = Analytics()
         df = a.timeRangeData(country, (time1_date, time2_date))
         dic = a.overview(df)
         df = pd.DataFrame(dic, index=[0])
-        df.to_excel("../../analytics_data/" + country+"_" +
+        df.to_excel(path + country+"_" +
                     time1+"_" + time2+".xlsx", index=False)
         return
 

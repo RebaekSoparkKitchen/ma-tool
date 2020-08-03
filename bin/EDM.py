@@ -3,13 +3,12 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 19:44:54
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-03 13:43:29
+@LastEditTime: 2020-08-03 16:47:19
 @FilePath: \EDM\bin\EDM.py
 '''
 import fire
 import sys
 sys.path.append("..")
-sys.path.append("../edm/LocalDataBase/")
 
 from edm.Tracker.Analytics import Analytics
 from edm.Tracker.SimpleTracker import SimpleTracker
@@ -40,14 +39,15 @@ class EDM(MA):
     def __pretty(self, df):
         return tabulate(df, headers='keys', tablefmt='psql')
 
-    def simple_tracker(self, path: str = "../../files/"):
+    def simple_tracker(self, path=None):
         '''
         此命令负责刷新simple_tracker，是我们需求安排的日程版本，
         您可以在EDM_project/files中找到它。
         '''
+        if path == None:
+            path = self.readConfig()['location']['SimpleTracker']
         s = SimpleTracker(path)
         s.simpleTrackerExcel()
-       
         return
 
     def workflow(self):
@@ -190,7 +190,8 @@ class EDM(MA):
         此命令提供一段时间内某一地区的基本数据,并将以excel的形式存在EDM_project/analytics_data中。
         eg: python edm.py data hongkong 20200101 20200630 
         '''
-        DataExtractor.save(country, str(time1), str(time2))
+        data = DataExtractor()
+        data.save(country, str(time1), str(time2))
         return
     
     def setting(self, attribute: str, data: str):
@@ -199,10 +200,9 @@ class EDM(MA):
         self.setConfig('username', data)
         return
 
-
-
     
 
 if __name__ == "__main__":
     fire.Fire(EDM)
+    
    
