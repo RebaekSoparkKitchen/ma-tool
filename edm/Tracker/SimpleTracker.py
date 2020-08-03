@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-07-30 11:30:41
+@LastEditTime: 2020-08-03 10:54:47
 @FilePath: \EDM\edm\Tracker\SimpleTracker.py
 '''
 
@@ -294,13 +294,14 @@ class SimpleTracker(Request_Tracker):
         while True:
             try:
                 wb.save(self.getSavePath())  #0.03s
+                print('simple tracker已创建成功')
                 break
             except PermissionError:
                 answer = input("simple_tracker.xlsx已打开，请关闭后重试，谢谢(y/n)")
                 if answer.lower() == 'y':
                     pass
                 elif answer.lower() == 'n':
-                    print('由于您执意不关闭simple_tracker.xlsx，我们只好不干活了，结束程序~')
+                    print('由于您执意不关闭simple_tracker.xlsx，我们只好不干活了，simple tracker 没有创建~')
                     break
                 else:
                     print('请输入正确的命令(y/n)')

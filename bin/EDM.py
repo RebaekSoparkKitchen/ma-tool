@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 19:44:54
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-07-30 12:02:01
+@LastEditTime: 2020-08-03 11:12:03
 @FilePath: \EDM\bin\EDM.py
 '''
 import fire
@@ -18,6 +18,7 @@ from edm.Tracker.Data import DataExtractor
 from edm.Spider.BasicPerformance import BasicPerformance
 from edm.Spider.ClickPerformance import ClickPerformance
 from edm.LocalDataBase.LocalData import LocalData
+from edm.LocalDataBase.SqlWriter import SqlWriter
 from edm.Report.ReportExcel import ReportExcel
 from edm.Transfer.gui import DataTransfer
 from dateutil.parser import parse
@@ -33,6 +34,9 @@ class EDM(object):
 
     def __getTrackerInput(self):
         return self.trackerInput
+    
+    def __pretty(self, df):
+        return tabulate(df, headers='keys', tablefmt='psql')
 
     def simple_tracker(self, path: str = "../../files/"):
         '''
@@ -41,11 +45,8 @@ class EDM(object):
         '''
         s = SimpleTracker(path)
         s.simpleTrackerExcel()
-        print('Simple_tracker.xlsx 已经创建成功！')
+       
         return
-
-    def __pretty(self, df):
-        return tabulate(df, headers='keys', tablefmt='psql')
 
     def workflow(self):
         '''
@@ -127,15 +128,20 @@ class EDM(object):
         此命令提供报告生成功能
         eg:  python edm.py report 1234 static
         其中 1234 指SMC campaign id
-        static控制是否覆盖已有报告，这个参数只有两个值：static/dynamic 同时这个值可以不填，默认为static
+        static控制是否覆盖已有报告，这个参数只有两个值：static/dynamic，这个值也可以不填，默认为static
          
         '''
         l = LocalData()  #此处硬编码了地址，因为脚本文件和类文件不在同一个位置，那么与campaign_data.json的相对位置也不同
         w = WriteTracker()
+        
         if catagory == "static":
-            l.request(False, campaignId)
+            l.request(overwrite=False, campaignId=campaignId)
+            s = SqlWriter(campaignId)  #一定要在这里初始化，因为sqlWriter初始化的时候要在数据库中找这个campaign id 所以必须要上一行代码执行结束之后才行
+            s.push(overwrite=False)
         elif catagory == "dynamic":
-            l.request(True, campaignId)
+            l.request(overwrite=True, campaignId=campaignId)
+            s = SqlWriter(campaignId)
+            s.push(overwrite=True)
         else:
             raise ValueError('catagory参数只接收static或者dynamic')
 

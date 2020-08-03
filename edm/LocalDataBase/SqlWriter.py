@@ -9,7 +9,7 @@ spider -> local_data(raw data) -> sql_computer(中间计算层) -> sql_writer(�
 @Author: FlyingRedPig
 @Date: 2020-07-31 17:56:28
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-02 21:55:49
+@LastEditTime: 2020-08-03 11:24:49
 @FilePath: \EDM\edm\LocalDataBase\SqlWriter.py
 '''
 import sys
@@ -40,7 +40,7 @@ class SqlWriter(object):
             json_data = json.load(fp)
         return json_data
 
-    def sqlProcess(self, *args) -> list:
+    def __sqlProcess(self, *args) -> list:
         '''
         helper method -> 对于一切需要sql操作的方法
         '''
@@ -68,8 +68,8 @@ class SqlWriter(object):
         '''
         sql1 = 'SELECT * FROM {} WHERE {}={}'.format(self.basicTable, self.campaignIdAttribute, self.campaignId)
         sql2 = 'SELECT * FROM {} WHERE {}={}'.format(self.clickTable, self.campaignIdAttribute, self.campaignId)
-        result1, result2 = self.sqlProcess(sql1, sql2)
-        return (result1 != []) &  (result2 != [])
+        result1, result2 = self.__sqlProcess(sql1, sql2)
+        return (result1 != []) & (result2 != [])
 
     @staticmethod
     def __insert(table: str, attribute: tuple, data: tuple):
@@ -86,7 +86,7 @@ class SqlWriter(object):
         data = (basic['smc_campaign_id'], basic['Sent'], basic['Hard Bounces'], basic['Soft Bounces'], basic['Delivered'], basic['Opened'], basic['Click'], basic['Unique Click'], basic['valid_click'], basic['bounce_rate'], basic['open_rate'], basic['unique_click_to_open_rate'], basic['valid_click_to_open_rate'], basic['vanilla_click_to_open_rate'], basic['ctr'], basic['unique_ctr'], basic['creation_time'])
 
         sql = SqlWriter.__insert(self.basicTable, attribute, data)
-        self.sqlProcess(sql)
+        self.__sqlProcess(sql)
         return 
 
     def insertIntoClick(self) -> None:
@@ -101,7 +101,7 @@ class SqlWriter(object):
             sql = SqlWriter.__insert(self.clickTable, attribute, data)
             sqlList.append(sql)
         sqlTuple = tuple(sqlList)
-        self.sqlProcess(*sqlTuple)
+        self.__sqlProcess(*sqlTuple)
         return 
     
     def delete(self, table: str) -> list:
@@ -110,11 +110,16 @@ class SqlWriter(object):
         '''
         assert table in [self.basicTable, self.clickTable] 
         sql = "DELETE from {} where smc_campaign_id={};".format(table, str(self.campaignId))
-        self.sqlProcess(sql)
+        self.__sqlProcess(sql)
         return 
              
 
-    def push(self) -> None:
+    def push(self, overwrite: bool) -> None:
+        assert type(overwrite) == bool
+        #在非覆盖，数据库中有值的情况下才直接return，其他情况都是要与数据库交互的
+        if not overwrite:
+            if self.check():
+                return 
         if self.check():
             self.delete(self.clickTable)
             self.delete(self.basicTable)
@@ -123,10 +128,6 @@ class SqlWriter(object):
         return 
 
 
-if __name__ == "__main__":
-    s = SqlWriter(4227)
-    s.push()
-    
 
 
         

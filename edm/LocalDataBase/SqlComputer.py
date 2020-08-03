@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-08-01 14:23:41
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-02 21:56:52
+@LastEditTime: 2020-08-03 11:27:20
 @FilePath: \EDM\edm\LocalDataBase\SqlComputer.py
 '''
 import sys
@@ -24,9 +24,6 @@ class SqlComputer(LocalData):
     def getCampaignId(self):
         return self.__campaignId
     
-    def getRawData(self):
-        return self.__rawData
-
     def getClick(self):
         return self.__click
     
@@ -108,13 +105,10 @@ class SqlComputer(LocalData):
                 num += int(item['Clicks'])
         return num
 
-    
-
     def basicData(self) -> list:
         '''
         此方法提供数据给到sql table: basic_performance
         '''
-
         nowTime=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         data = self.__rawData['basic_performance']
         clickData = self.__click
@@ -134,8 +128,4 @@ class SqlComputer(LocalData):
         data['unique_ctr'] = data['Unique Click'] / data['Delivered']
         return data
         
-
-if __name__ == "__main__":
-    s = SqlComputer(4227)
-    print(s.basicData())
     

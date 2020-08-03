@@ -11,7 +11,7 @@ spider -> local_data(raw data) -> sql_computer(中间计算层) -> sql_writer(�
 @Author: FlyingRedPig
 @Date: 2020-05-07 16:15:45
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-01 17:42:33
+@LastEditTime: 2020-08-03 11:28:59
 @FilePath: \EDM\edm\LocalDataBase\LocalData.py
 '''
 import sys
@@ -60,8 +60,7 @@ class LocalData(object):
             json_data = json.load(fp)
         
         return json_data
-    
-    
+        
 
     def __SMC2Dict(self, campaignId) -> dict:
         '''

@@ -53,10 +53,10 @@
     "location": {
         "RequestTracker": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/EDM_project/files/Request_Tracker.xlsx",
         "SimpleTracker": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/EDM_project/files/Simple_Tracker.xlsx",
-        "SMCData": "C:/Users/C5293427/Desktop/research/EDM_project/EDM/data/campaign_data.json",
+        "SMCData": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/EDM_project/EDM/data/campaign_data.json",
         "reportSave": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/EDM_project/report/",
         "reportTemplate": "../config/Report_template.xlsx",
-        "Database": "C:/Users/C5293427/Desktop/research/EDM_project/EDM/data/MarketingAutomation.db"
+        "Database": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/EDM_project/EDM/data/MarketingAutomation.db"
     },
     "transfer": {
         "input_path": "C:/Users/C5293427/Desktop/Data_exported/csv_file",
