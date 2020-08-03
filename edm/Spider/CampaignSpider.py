@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-01 17:58:32
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-07-30 12:44:29
+@LastEditTime: 2020-08-03 11:59:40
 @FilePath: \EDM\edm\Spider\CampaignSpider.py
 '''
 
@@ -14,9 +14,10 @@ from selenium.webdriver.chrome.options import Options
 import selenium
 import time
 import json
+from edm.Control.MA import MA
 
 
-class CampaignSpider(object):
+class CampaignSpider(MA):
 
     def __init__(self, campaignId, driver=None):
         '''
@@ -28,16 +29,6 @@ class CampaignSpider(object):
         self.campaignId = campaignId
         self.driverPath = self.readConfig()['chrome_driver']
         self.driver = driver
-
-    def readConfig(self):
-        '''
-        从config文件中读取tracker path
-        '''
-        configPath = r'../config/config.json'
-        with open(configPath,'r',encoding='utf8')as fp:
-            json_data = json.load(fp)
-        
-        return json_data
 
     def getCampaignId(self):
         return self.campaignId

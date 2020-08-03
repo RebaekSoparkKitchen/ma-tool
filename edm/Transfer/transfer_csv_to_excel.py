@@ -2,9 +2,10 @@ import pandas as pd
 import csv
 import openpyxl
 from openpyxl.styles import Font, colors, Alignment, Border, Side, PatternFill
+from edm.Control.MA import MA
 
 
-class ExportedData:
+class ExportedData(MA):
 
     def __init__(self, path):
         """

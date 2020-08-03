@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 19:44:54
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-03 11:12:03
+@LastEditTime: 2020-08-03 12:13:27
 @FilePath: \EDM\bin\EDM.py
 '''
 import fire
@@ -25,11 +25,13 @@ from dateutil.parser import parse
 from tabulate import tabulate
 import pandas as pd
 import datetime as dt
+from edm.Control.MA import MA
 
 
-class EDM(object):
+class EDM(MA):
 
     def __init__(self):
+        super().__init__()
         self.trackerInput = WriteTracker()
 
     def __getTrackerInput(self):
@@ -187,6 +189,14 @@ class EDM(object):
         '''
         DataExtractor.save(country, str(time1), str(time2))
         return
+    
+    def setting(self, attribute: str, data: str):
+        config = self.readConfig()
+        assert attribute == "username"
+        self.setConfig('username', data)
+        return
+
+
 
     
 

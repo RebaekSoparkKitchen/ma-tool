@@ -11,7 +11,7 @@ spider -> local_data(raw data) -> sql_computer(中间计算层) -> sql_writer(�
 @Author: FlyingRedPig
 @Date: 2020-05-07 16:15:45
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-03 11:28:59
+@LastEditTime: 2020-08-03 12:04:56
 @FilePath: \EDM\edm\LocalDataBase\LocalData.py
 '''
 import sys
@@ -22,10 +22,11 @@ sys.path.append('..')
 import json
 from edm.Spider.BasicPerformance import BasicPerformance
 from edm.Spider.ClickPerformance import ClickPerformance
+from edm.Control.MA import MA
 import pandas as pd
 
 
-class LocalData(object):
+class LocalData(MA):
 
     def __init__(self):
         '''
@@ -40,7 +41,6 @@ class LocalData(object):
             self.__data = {}
         
         self.__dataPath = filename
-        self.__configPath = "../config/config.json"
 
     def getData(self):
         return self.__data
@@ -48,19 +48,6 @@ class LocalData(object):
     def getDataPath(self):
         return self.__dataPath
     
-    def getConfigPath(self):
-        return self.__configPath
-
-    def readConfig(self):
-        '''
-        从config文件中读取tracker path
-        '''
-        configPath = r'../config/config.json'
-        with open(configPath,'r',encoding='utf8')as fp:
-            json_data = json.load(fp)
-        
-        return json_data
-        
 
     def __SMC2Dict(self, campaignId) -> dict:
         '''
@@ -155,10 +142,7 @@ class LocalData(object):
         return df[['Content Link Name','Clicks']]
 
     def otherLink(self):
-        
-        f = open(self.getConfigPath(),encoding="utf-8")
-        configDic = json.load(f)
-        return configDic['other_link']
+        return self.readConfig()['other_link']
 
     def mainClickPerformanceDf(self, campaignId:int or str) -> pd.DataFrame :
         

@@ -3,15 +3,16 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 13:40:05
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-07-30 12:34:32
+@LastEditTime: 2020-08-03 12:01:55
 @FilePath: \EDM\edm\Transfer\gui.py
 '''
 import tkinter as tk
 import edm.Transfer.transfer_csv_to_excel as ce
 from tkinter import filedialog
 import json
+from edm.Control.MA import MA
 
-class DataTransfer(object):
+class DataTransfer(MA):
 
     def __init__(self):
 

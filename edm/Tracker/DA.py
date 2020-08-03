@@ -3,8 +3,8 @@
 @Author: FlyingRedPig
 @Date: 2020-07-15 11:51:16
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-07-29 12:03:11
-@FilePath: \EDM_project\EDM\edm\Tracker\DA.py
+@LastEditTime: 2020-08-03 12:01:25
+@FilePath: \EDM\edm\Tracker\DA.py
 '''
 from edm.Tracker.RequestTracker import Request_Tracker
 import pandas as pd
@@ -12,9 +12,10 @@ from dateutil.parser import parse
 from matplotlib import pyplot as plt
 import numpy as np
 from matplotlib.ticker import FuncFormatter
+from edm.Control.MA import MA
 
 
-class SMCDA(object):
+class SMCDA(MA):
 
     def __init__(self):
         rq = Request_Tracker()

@@ -3,8 +3,8 @@
 @Author: FlyingRedPig
 @Date: 2020-07-06 16:26:03
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-07-13 13:52:56
-@FilePath: \EDM_project\EDM\bin\data.py
+@LastEditTime: 2020-08-03 12:01:15
+@FilePath: \EDM\edm\Tracker\Data.py
 '''
 import datetime as dt
 import pandas as pd
@@ -18,12 +18,13 @@ from edm.Spider.BasicPerformance import BasicPerformance
 from edm.Tracker.WriteTracker import WriteTracker
 from edm.Tracker.SimpleTracker import SimpleTracker
 from edm.Tracker.Analytics import Analytics
+from edm.Control.MA import MA
 import sys
 sys.path.append("..")
 sys.path.append("../edm/LocalDataBase/")
 
 
-class DataExtractor(object):
+class DataExtractor(MA):
 
     @staticmethod
     def add_row(df: pd.DataFrame, dic: dict) -> pd.DataFrame:

@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-08 11:35:14
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-07-30 12:06:44
+@LastEditTime: 2020-08-03 12:00:14
 @FilePath: \EDM\edm\Report\ReportExcel.py
 '''
 import sys
@@ -12,11 +12,12 @@ from openpyxl.styles import Font, colors, Alignment, PatternFill, Border, Side
 import openpyxl
 from edm.LocalDataBase.LocalData import LocalData
 from edm.Tracker.Analytics import Analytics
+from edm.Control.MA import MA
 from openpyxl.utils.dataframe import dataframe_to_rows
 import json
 
 
-class ReportExcel():
+class ReportExcel(MA):
 
     def __init__(
         self,
@@ -29,17 +30,7 @@ class ReportExcel():
         self.localData = LocalData()
         self.tableWidth = 5
         self.savePath = self.readConfig()['location']['reportSave']
-    
-    def readConfig(self):
-        '''
-        从config文件中读取tracker path
-        '''
-        configPath = r'../config/config.json'
-        with open(configPath,'r',encoding='utf8')as fp:
-            json_data = json.load(fp)
-        
-        return json_data
-        
+            
 
     def getCampaignId(self) -> int:
         return int(self.campaignId)
