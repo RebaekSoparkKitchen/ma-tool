@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-08 11:35:14
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-03 14:22:26
+@LastEditTime: 2020-08-04 15:52:56
 @FilePath: \EDM\edm\Report\ReportExcel.py
 '''
 import sys
@@ -200,7 +200,9 @@ class ReportExcel(MA):
         '''
         while True:
             try:
-                self.reportWb.save(path+'{}.xlsx'.format(self.getTrackerData().name()))
+                name = self.getTrackerData().name().replace(' ', '')
+                name = name.replace(r'/', r'&')
+                self.reportWb.save(path+'{}.xlsx'.format(name))
                 break
             except PermissionError:
                 name = self.getTrackerData().name()
