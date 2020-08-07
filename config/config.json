@@ -50,19 +50,21 @@
         "联系我们",
         "当地电话号码"
     ],
-    "location": {
-        "RequestTracker": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/EDM_project/files/Request_Tracker.xlsx",
-        "SimpleTracker": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/EDM_project/files/Simple_Tracker.xlsx",
-        "SMCData": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/EDM_project/EDM/data/campaign_data.json",
-        "reportSave": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/EDM_project/report/",
-        "reportTemplate": "../config/Report_template.xlsx",
-        "Database": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/EDM_project/EDM/data/MarketingAutomation.db",
-        "Analytics": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/EDM_project/analytics_data/"
+    "data_location": {
+        "RequestTracker": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/data/Request_Tracker.xlsx",
+        "SMCData": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/data/campaign_data.json",
+        "Database": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/data/MarketingAutomation.db"
+    },
+    "file_location":{
+        "SimpleTracker": "C:/Users/C5293427/Desktop/EDM/Simple_Tracker.xlsx",
+        "reportSave": "C:/Users/C5293427/Desktop/EDM/report/",
+        "Analytics": "C:/Users/C5293427/Desktop/EDM/analytics_data/",
+        "reportTemplate": "../../config/Report_template.xlsx"
     },
     "transfer": {
         "input_path": "C:/Users/C5293427/Desktop/Data_exported/csv_file",
         "output_path": "C:/Users/C5293427/Desktop/Data_exported/成品"
     },
-    "chrome_driver": "../config/chromedriver.exe",
+    "chrome_driver": "../../config/chromedriver.exe",
     "username": "xuzinan"
 }
