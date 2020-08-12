@@ -3,8 +3,8 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 13:40:05
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-06 11:24:46
-@FilePath: \EDM\src\Transfer\gui.py
+@LastEditTime: 2020-08-12 20:21:59
+@FilePath: \MA_tool\src\Transfer\gui.py
 '''
 import tkinter as tk
 import src.Transfer.transfer_csv_to_excel as ce
@@ -49,15 +49,7 @@ class DataTransfer(MA):
         self.b2.place(x=600, y=350, anchor='nw')
         return
 
-    def readConfig(self):
-        '''
-        从config文件中读取tracker path
-        '''
-        configPath = r'../config/config.json'
-        with open(configPath,'r',encoding='utf8')as fp:
-            json_data = json.load(fp)
-        
-        return json_data
+
 
     def select_open_path(self):
         '''
