@@ -3,8 +3,8 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-06 10:36:22
-@FilePath: \EDM\src\Tracker\Analytics.py
+@LastEditTime: 2020-08-17 11:19:17
+@FilePath: \MA_tool\src\Tracker\Analytics.py
 '''
 
 import warnings
@@ -315,6 +315,12 @@ class Analytics(Request_Tracker):
                "Unique CTR": uniqueCTR}
 
         return dic
+    
+    def owner(self):
+        campaignId = self.getCampaignId()
+        df = self.getCleanDf()
+        return df[df['Campaign ID'] == campaignId]['Owner '].iloc[-1]
+
 
 
 if __name__ == "__main__":
