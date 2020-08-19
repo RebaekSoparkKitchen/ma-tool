@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 19:44:54
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-19 11:27:18
+@LastEditTime: 2020-08-19 16:32:16
 @FilePath: \MA_tool\src\app\EDM.py
 '''
 import fire
@@ -161,7 +161,9 @@ class EDM(object):
         self.getTrackerInput().writePerformanceData(campaignId)
         self.getTrackerInput().saveTracker()
         a = Analytics(campaignId)
-        print('《{}》数据报告已创建成功！campaign id: {}, owner:{}'.format(a.name(), campaignId, a.owner()))
+        print(f'《{a.name()}》数据报告已创建成功')
+        print(f'campaign id: {campaignId}')
+        print(f'owner: {a.owner()}')
        
         reportInfo = Report(campaignId)
         time = reportInfo.time()
