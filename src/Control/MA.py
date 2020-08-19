@@ -3,26 +3,30 @@
 @Author: FlyingRedPig
 @Date: 2020-08-03 11:47:04
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-07 17:44:41
-@FilePath: \EDM\src\Control\MA.py
+@LastEditTime: 2020-08-19 11:19:58
+@FilePath: \MA_tool\src\Control\MA.py
 '''
 import json
 import sqlite3
 
 class MA(object):
     def __init__(self):
+        self.configPath = r'../../config/config.json'
         self.config =self.readConfig()
         self.dbAddress = self.config['data_location']['Database']
         self.username = self.config['username']
     
+    def getConfigPath(self):
+        return self.configPath
+    
     def readConfig(self) -> dict:
-        configPath = r'../../config/config.json'
+        configPath = self.getConfigPath()
         with open(configPath,'r',encoding='utf8') as fp:
             json_data = json.load(fp)
         return json_data
 
     def setConfig(self, attribute, data) -> None:
-        configPath = r'../config/config.json'
+        configPath = self.getConfigPath()
         config = self.readConfig()
         config['username'] = data
         if config == {}:

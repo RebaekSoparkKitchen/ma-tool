@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 19:44:54
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-17 11:17:27
+@LastEditTime: 2020-08-19 11:27:18
 @FilePath: \MA_tool\src\app\EDM.py
 '''
 import fire
@@ -28,14 +28,18 @@ import datetime as dt
 from src.Control.MA import MA
 
 
-class EDM(MA):
+class EDM(object):
 
     def __init__(self):
         super().__init__()
-        self.trackerInput = WriteTracker()
+        self.__trackerInput = WriteTracker()
+        self.__ma = MA()
 
-    def __getTrackerInput(self):
-        return self.trackerInput
+    def getTrackerInput(self):
+        return self.__trackerInput
+    
+    def getMA(self):
+        return self.__ma
     
     def __pretty(self, df):
         return tabulate(df, headers='keys', tablefmt='psql')
@@ -46,7 +50,7 @@ class EDM(MA):
         您可以在EDM_project/files中找到它。
         '''
         if path == None:
-            path = self.readConfig()['file_location']['SimpleTracker']
+            path = self.getMA().readConfig()['file_location']['SimpleTracker']
         s = SimpleTracker(path)
         s.simpleTrackerExcel()
         return
@@ -122,8 +126,8 @@ class EDM(MA):
             elif campaignId == "next":
                 continue
             else:
-                self.trackerInput.writeCampaignId(index, campaignId)
-                self.trackerInput.saveTracker()
+                self.getTrackerInput().writeCampaignId(index, campaignId)
+                self.getTrackerInput().saveTracker()
         return
 
     def report(self, campaignId, catagory="static", path='../../report/'):
@@ -134,7 +138,7 @@ class EDM(MA):
         static控制是否覆盖已有报告，这个参数只有两个值：static/dynamic，这个值也可以不填，默认为static
          
         '''
-        if self.readConfig()['username'] == "":
+        if self.getMA().readConfig()['username'] == "":
             username = input("此命令将访问数据库，您需要填写username: ")
             self.setting('username', username)
         l = LocalData()  #此处硬编码了地址，因为脚本文件和类文件不在同一个位置，那么与campaign_data.json的相对位置也不同
@@ -154,8 +158,8 @@ class EDM(MA):
         r = ReportExcel(
             campaignId)
         r.create(path=path)
-        self.trackerInput.writePerformanceData(campaignId)
-        self.trackerInput.saveTracker()
+        self.getTrackerInput().writePerformanceData(campaignId)
+        self.getTrackerInput().saveTracker()
         a = Analytics(campaignId)
         print('《{}》数据报告已创建成功！campaign id: {}, owner:{}'.format(a.name(), campaignId, a.owner()))
        
@@ -201,9 +205,12 @@ class EDM(MA):
         return
     
     def setting(self, attribute: str, data: str):
-        config = self.readConfig()
+        '''
+        此命令负责更改个人设置，目前仅支持修改用户名，建议只在开始使用时设置一次即可。
+        '''
+        config = self.getMA().readConfig()
         assert attribute == "username"
-        self.setConfig('username', data)
+        self.getMA().setConfig('username', data)
         return
 
     
