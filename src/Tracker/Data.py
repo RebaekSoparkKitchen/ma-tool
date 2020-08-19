@@ -3,8 +3,8 @@
 @Author: FlyingRedPig
 @Date: 2020-07-06 16:26:03
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-06 10:36:56
-@FilePath: \EDM\src\Tracker\Data.py
+@LastEditTime: 2020-08-19 10:48:15
+@FilePath: \MA_tool\src\Tracker\Data.py
 '''
 
 from src.Tracker.Analytics import Analytics 
@@ -33,7 +33,7 @@ class DataExtractor(MA):
     
     def save(self, country, time1, time2):
         
-        path = self.readConfig()['location']['Analytics']
+        path = self.readConfig()['file_location']['Analytics']
         time1_date = DataExtractor.str2date(time1)
         time2_date = DataExtractor.str2date(time2)
         a = Analytics()

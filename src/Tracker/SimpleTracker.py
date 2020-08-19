@@ -3,8 +3,8 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-07 17:45:58
-@FilePath: \EDM\src\Tracker\SimpleTracker.py
+@LastEditTime: 2020-08-19 10:59:07
+@FilePath: \MA_tool\src\Tracker\SimpleTracker.py
 '''
 
 from src.Tracker.RequestTracker import Request_Tracker
@@ -73,7 +73,7 @@ class SimpleTracker(Request_Tracker):
         @return: dataframe
         '''
         cleanDf = self.getCleanDf()[[
-            'Launch Date', 'Weekday', 'Campaign Name', 'Event Date', 'Owner '
+            'Launch Date', 'Weekday', 'Campaign Name', 'Event Date', 'Owner ','Campaign ID'
         ]]
         timeSeries = pd.Series(
             self.__dateRange(), name="Launch Date").apply(lambda x: x.date())
@@ -115,6 +115,7 @@ class SimpleTracker(Request_Tracker):
         ws.column_dimensions['C'].width = 50
         ws.column_dimensions['D'].width = 12
         ws.column_dimensions['E'].width = 25
+        ws.column_dimensions['F'].width = 15
         return
 
     def __setFont(self, ws):
