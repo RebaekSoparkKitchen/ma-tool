@@ -3,10 +3,11 @@
 @Author: FlyingRedPig
 @Date: 2020-05-08 11:35:14
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-07 17:47:55
-@FilePath: \EDM\src\Report\ReportExcel.py
+@LastEditTime: 2020-08-20 11:15:20
+@FilePath: \MA_tool\src\Report\ReportExcel.py
 '''
-
+import sys
+sys.path.append("../..")
 from openpyxl.styles import Font, colors, Alignment, PatternFill, Border, Side
 import openpyxl
 from src.LocalDataBase.LocalData import LocalData
@@ -149,10 +150,14 @@ class ReportExcel(MA):
         mergeColNumbers = 3
         linkName = iter(['Main Link Name','Other Link Name'])
         for df in [mainDf, otherDf]:
+            name = next(linkName)
             for i in range(mergeColNumbers-1):
                 df[None] = None
-            df = df[[next(linkName),None,None,None,'Click Numbers']]
-        
+            if df.empty:
+                df[name] = None
+                df['Click Numbers'] = None
+            
+            df = df[[name,None,None,None,'Click Numbers']]
             for r in dataframe_to_rows(df, index=False, header=True):
                 self.reportWs.append(r)
 
@@ -230,6 +235,6 @@ class ReportExcel(MA):
 
 
 if __name__ == "__main__":
-    r = ReportExcel(6414)
-    r.create()
+    r = ReportExcel(10149)
+    r.addClickPerformance()
 
