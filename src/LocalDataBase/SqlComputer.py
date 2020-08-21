@@ -3,8 +3,8 @@
 @Author: FlyingRedPig
 @Date: 2020-08-01 14:23:41
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-06 10:32:01
-@FilePath: \EDM\src\LocalDataBase\SqlComputer.py
+@LastEditTime: 2020-08-21 11:55:03
+@FilePath: \MA_tool\src\LocalDataBase\SqlComputer.py
 '''
 import sys
 sys.path.append("..")
@@ -68,6 +68,9 @@ class SqlComputer(LocalData):
             row['if_main_click'] = self.__checkMainLink(row['Content Link Name'])
             if 'Link Alias' not in row.keys(): #历史遗留问题，link_alias是后加的一个attribute
                 row['Link Alias'] = ''
+            if row['Clicks'] == '':
+                row['Clicks'] = 0
+            
         return data
 
     def linkNum(self) -> int: 
@@ -119,13 +122,29 @@ class SqlComputer(LocalData):
         data['link_num'] = self.linkNum()
         data['valid_click'] = self.validClickNum()
         data['other_click'] = self.otherClickNum()
-        data['bounce_rate'] = (data['Hard Bounces'] + data['Soft Bounces']) / data['Sent']
-        data['open_rate'] = data['Opened'] / data['Delivered']
-        data['unique_click_to_open_rate'] = data['Unique Click'] / data['Opened']
-        data['valid_click_to_open_rate'] = data['valid_click'] / data['Opened']
-        data['vanilla_click_to_open_rate'] = data['Click'] / data['Opened']
-        data['ctr'] = data['Click'] / data['Delivered']
-        data['unique_ctr'] = data['Unique Click'] / data['Delivered']
+        if data['Sent'] == 0:
+            data['bounce_rate'] = 0
+        else:
+            data['bounce_rate'] = (data['Hard Bounces'] + data['Soft Bounces']) / data['Sent'] 
+        
+        if data['Delivered'] == 0:
+            data['open_rate'] = 0
+            data['ctr'] = 0
+            data['unique_ctr'] = 0
+        else:
+            data['ctr'] = data['Click'] / data['Delivered']
+            data['unique_ctr'] = data['Unique Click'] / data['Delivered']
+            data['open_rate'] = data['Opened'] / data['Delivered']
+
+        if data['Opened'] == 0:
+            data['unique_click_to_open_rate'] = 0
+            data['valid_click_to_open_rate'] = 0
+            data['vanilla_click_to_open_rate'] = 0
+        else:
+            data['unique_click_to_open_rate'] = data['Unique Click'] / data['Opened']
+            data['valid_click_to_open_rate'] = data['valid_click'] / data['Opened']
+            data['vanilla_click_to_open_rate'] = data['Click'] / data['Opened']
+           
         return data
         
     
