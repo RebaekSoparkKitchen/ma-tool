@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-08 11:35:14
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-20 11:15:20
+@LastEditTime: 2020-09-03 10:37:13
 @FilePath: \MA_tool\src\Report\ReportExcel.py
 '''
 import sys
@@ -204,7 +204,10 @@ class ReportExcel(MA):
         '''
         while True:
             try:
+                # 文件名中出现特殊符号，要替换掉
                 name = self.getTrackerData().name().replace(r'/', r'&')
+                name = self.getTrackerData().name().replace(' ', '_')
+                name = self.getTrackerData().name().replace('|', '')
                 self.reportWb.save(path+'{}.xlsx'.format(name.strip()))
                 break
             except PermissionError:
