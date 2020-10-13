@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-17 11:19:17
+@LastEditTime: 2020-10-13 16:07:45
 @FilePath: \MA_tool\src\Tracker\Analytics.py
 '''
 
@@ -298,6 +298,7 @@ class Analytics(Request_Tracker):
                 (df['Launch Date'] < timeRange[1])]
         return df
 
+    # overiew 是我们data命令的核心方法
     def overview(self, df: pd.DataFrame) -> dict:
         num = len(df)
         uniqueNum = len(self.removeDuplicate(df))
@@ -306,10 +307,12 @@ class Analytics(Request_Tracker):
         ctr = df['Click'].sum() / df['Delivered'].sum()
         uniqueCTR = df['Unique Click'].sum() / df['Delivered'].sum()
         clickToOpen = df['Unique Click'].sum() / df['Opened'].sum()
+        openContact = df['Opened'].sum()
         dic = {'Email Number': num,
                'Unique Number': uniqueNum,
                'Touch Points': touchPoints,
                'Open Rate': openRate,
+               'Open Contacts': openContact,
                'Click to Open rate': clickToOpen,
                "CTR": ctr,
                "Unique CTR": uniqueCTR}
