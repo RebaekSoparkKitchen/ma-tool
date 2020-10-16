@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-10-13 16:07:45
+@LastEditTime: 2020-10-16 14:50:46
 @FilePath: \MA_tool\src\Tracker\Analytics.py
 '''
 
@@ -285,6 +285,8 @@ class Analytics(Request_Tracker):
     def removeDuplicate(self, df: pd.DataFrame):
         return df[df['Campaign Name'].apply(lambda x: self.isWaveOne(x))]
 
+    
+
     def timeRangeData(self, country: str, timeRange: tuple) -> pd.DataFrame:
         df = self.getCleanDf()
         if "china" in country.lower():
@@ -308,8 +310,12 @@ class Analytics(Request_Tracker):
         uniqueCTR = df['Unique Click'].sum() / df['Delivered'].sum()
         clickToOpen = df['Unique Click'].sum() / df['Opened'].sum()
         openContact = df['Opened'].sum()
+
+        df = self.removeDuplicate(df)
+        events = len(df[df['Request Type'].apply(lambda x: 'invitation' in x.lower())])
         dic = {'Email Number': num,
                'Unique Number': uniqueNum,
+               'Events': events,
                'Touch Points': touchPoints,
                'Open Rate': openRate,
                'Open Contacts': openContact,
