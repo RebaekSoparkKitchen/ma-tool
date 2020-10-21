@@ -10,9 +10,9 @@ spider -> local_data(raw data) -> sql_computer(中间计算层) -> sql_writer(�
 所以sql_writer只需要调用sql_computer中的basicData和clickData方法即可得到自己想要的数据了
 @Author: FlyingRedPig
 @Date: 2020-05-07 16:15:45
-@LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-07 16:03:29
-@FilePath: \EDM\src\LocalDataBase\LocalData.py
+@LastEditors: ,: FlyingRedPig
+@LastEditTime: ,: 2020-10-21 10:39:34
+@FilePath: ,: \MA_tool\src\LocalDataBase\LocalData.py
 '''
 import sys
 sys.path.append('../..')
@@ -125,6 +125,8 @@ class LocalData(MA):
         return self.metricClick(campaignId) / self.metricDeliver(campaignId)
 
     def metricClickToOpen(self, campaignId: int or str) -> float:
+        if self.metricOpen(campaignId) == 0:
+            return 0
         return self.metricUniqueClick(campaignId) / self.metricOpen(campaignId)
 
     
