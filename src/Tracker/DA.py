@@ -2,10 +2,12 @@
 @Description: 一个作为newsletter以及qbr的脚本，上次作newsletter随便写的
 @Author: FlyingRedPig
 @Date: 2020-07-15 11:51:16
-@LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-06 10:36:38
-@FilePath: \EDM\src\Tracker\DA.py
+@LastEditors: ,: FlyingRedPig
+@LastEditTime: ,: 2020-10-21 11:57:40
+@FilePath: ,: \MA_tool\src\Tracker\DA.py
 '''
+import sys
+sys.path.append("../..")
 from src.Tracker.RequestTracker import Request_Tracker
 import pandas as pd
 from dateutil.parser import parse
@@ -238,10 +240,13 @@ class SMCDA(MA):
 
 if __name__ == "__main__":
     s = SMCDA()
-    df = s.filterData('gc', (20190101, 20190630))
+    
+    df = s.filterData('gc', (20191209, 20201021))
     print(len(df))
-    df1 = s.filterData('gc', (20200101, 20200630))
-    print(len(df1))
+
+    df1 = SMCDA.countBy(df, 'Request Type')
+    print(df1)
+    df1.to_excel(r'C:\Users\C5293427\Desktop\Data_analysis\hongliang_20201021\type.xlsx')
 
     # bgColor = "#f4f8fb"
     # df = s.filterData('gc', (20200101, 20200630))

@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 19:44:54
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-08-19 16:32:16
+@LastEditTime: 2020-11-05 12:50:38
 @FilePath: \MA_tool\src\app\EDM.py
 '''
 import fire
@@ -178,7 +178,6 @@ class EDM(object):
 
         a = Analytics()
 
-        self.simple_tracker()
         self.workflow()
         self.write_campaign_id()
         reportList = list(a.report()['Campaign ID'])
@@ -186,6 +185,8 @@ class EDM(object):
 
         for campaignId in reportList:
             self.report(campaignId)
+        # 最后再生成simple_tracker，以便于把刚刚写的campaign id也计算进去
+        self.simple_tracker()
         return
 
     def transfer(self):

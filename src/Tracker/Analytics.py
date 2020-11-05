@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-10-16 14:50:46
+@LastEditTime: 2020-10-23 11:31:51
 @FilePath: \MA_tool\src\Tracker\Analytics.py
 '''
 
@@ -310,15 +310,30 @@ class Analytics(Request_Tracker):
         uniqueCTR = df['Unique Click'].sum() / df['Delivered'].sum()
         clickToOpen = df['Unique Click'].sum() / df['Opened'].sum()
         openContact = df['Opened'].sum()
+        webinar = len(df[df['Request Type'].apply(lambda x: 'webinar' in x.lower())])
+        offline = len(df[df['Request Type'].apply(lambda x: 'offline' in x.lower())])
+        edm = len(df[df['Request Type'].apply(lambda x: 'edm' in x.lower())])
+        newsletter = len(df[df['Request Type'].apply(lambda x: 'newsletter' in x.lower() or 'digitalist' in x.lower())])
+        nurture = len(df[df['Request Type'].apply(lambda x: 'nurture' in x.lower())])
+        if num == 0:
+            averTouch = 0
+        else:
+            averTouch = touchPoints / num
 
         df = self.removeDuplicate(df)
         events = len(df[df['Request Type'].apply(lambda x: 'invitation' in x.lower())])
         dic = {'Email Number': num,
                'Unique Number': uniqueNum,
                'Events': events,
+               'Average touch': averTouch,
                'Touch Points': touchPoints,
-               'Open Rate': openRate,
                'Open Contacts': openContact,
+               'webinar invitation': webinar,
+               'offline invitation': offline,
+               'EDM(assets)': edm,
+               'nurture': nurture,
+               'newsletter' : newsletter,
+               'Open Rate': openRate,
                'Click to Open rate': clickToOpen,
                "CTR": ctr,
                "Unique CTR": uniqueCTR}
