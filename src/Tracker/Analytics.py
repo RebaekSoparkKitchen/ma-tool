@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-10-23 11:31:51
+@LastEditTime: 2020-11-10 14:07:15
 @FilePath: \MA_tool\src\Tracker\Analytics.py
 '''
 
@@ -183,6 +183,7 @@ class Analytics(Request_Tracker):
 
         return report_df[['Campaign Name', 'Owner ', 'Launch Date', 'Weekday', 'Campaign ID', 'Event Date']]
 
+        
     def check(self):
         '''
         @description: 

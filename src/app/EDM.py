@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 19:44:54
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-11-05 12:50:38
+@LastEditTime: 2020-11-10 14:21:06
 @FilePath: \MA_tool\src\app\EDM.py
 '''
 import fire
@@ -176,11 +176,18 @@ class EDM(object):
         此命令是其他几个命令的大集合（important），每天都需要执行的一个指令，提供信息如：未来工作、今天需发送报告、哪些campaign id需登记等
         '''
 
-        a = Analytics()
 
         self.workflow()
         self.write_campaign_id()
-        reportList = list(a.report()['Campaign ID'])
+        a = Analytics()
+        reportDf = a.report()
+        # the noId / withId crazy staff is to solve bug like campaign id == null in reportDf
+        noIdReportDf = reportDf[reportDf['Campaign ID'].isna()]
+        withIdReportDf = reportDf[reportDf['Campaign ID'].notna()]
+        reportList = list(withIdReportDf['Campaign ID'])
+        noIdreportList = list(noIdReportDf['Campaign Name'])
+        
+        print("以下campaign应该今天发送报告，但没有campaign id，他们包括：\n{campaign}".format(campaign='\n'.join(noIdreportList)))
         reportList = list(map(int, reportList))  #此行重要，df中campaign_id是float形式
 
         for campaignId in reportList:
