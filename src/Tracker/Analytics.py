@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-11-10 14:07:15
+@LastEditTime: 2020-11-23 11:04:31
 @FilePath: \MA_tool\src\Tracker\Analytics.py
 '''
 
@@ -147,15 +147,14 @@ class Analytics(Request_Tracker):
                 x = x.lower()
             try:
                 return parse(x).date()
-            except _parser.ParserError:
+            except ValueError:
                 if x == "today":
                     return dt.date.today()
                 elif x == "yesterday":
                     return dt.date.today() + dt.timedelta(-1)
                 elif x == "tomorrow" or x == "tmr":
                     return dt.date.today() + dt.timedelta(1)
-                else:
-                    raise _parser.ParserError("请输入正确格式的日期字样~")
+                
 
         args = list(map(transfer_str, args))
         args = list(map(transfer_date, args))
@@ -181,7 +180,7 @@ class Analytics(Request_Tracker):
         else:
             raise ValueError('此方法只接收两个以下参数哦~')
 
-        return report_df[['Campaign Name', 'Owner ', 'Launch Date', 'Weekday', 'Campaign ID', 'Event Date']]
+        return report_df[['Campaign Name', 'Owner ', 'Launch Date', 'Weekday', 'Campaign ID', 'Event Date', 'Sent']]
 
         
     def check(self):
@@ -345,6 +344,14 @@ class Analytics(Request_Tracker):
         campaignId = self.getCampaignId()
         df = self.getCleanDf()
         return df[df['Campaign ID'] == campaignId]['Owner '].iloc[-1]
+    
+    def launchDate(self):
+        """
+        docstring
+        """
+        campaignId = self.getCampaignId()
+        df = self.getCleanDf()
+        return df[df['Campaign ID'] == campaignId]['Launch Date'].iloc[-1]
 
 
 

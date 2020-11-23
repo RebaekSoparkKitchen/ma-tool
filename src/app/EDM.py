@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 19:44:54
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-11-10 14:21:06
+@LastEditTime: 2020-11-23 12:22:12
 @FilePath: \MA_tool\src\app\EDM.py
 '''
 import fire
@@ -164,6 +164,7 @@ class EDM(object):
         print(f'《{a.name()}》数据报告已创建成功')
         print(f'campaign id: {campaignId}')
         print(f'owner: {a.owner()}')
+        print(f'Launch Date: {a.launchDate()}')
        
         reportInfo = Report(campaignId)
         time = reportInfo.time()
@@ -176,7 +177,6 @@ class EDM(object):
         此命令是其他几个命令的大集合（important），每天都需要执行的一个指令，提供信息如：未来工作、今天需发送报告、哪些campaign id需登记等
         '''
 
-
         self.workflow()
         self.write_campaign_id()
         a = Analytics()
@@ -185,13 +185,30 @@ class EDM(object):
         noIdReportDf = reportDf[reportDf['Campaign ID'].isna()]
         withIdReportDf = reportDf[reportDf['Campaign ID'].notna()]
         reportList = list(withIdReportDf['Campaign ID'])
-        noIdreportList = list(noIdReportDf['Campaign Name'])
-        
-        print("以下campaign应该今天发送报告，但没有campaign id，他们包括：\n{campaign}".format(campaign='\n'.join(noIdreportList)))
         reportList = list(map(int, reportList))  #此行重要，df中campaign_id是float形式
+        noIdReportList = list(noIdReportDf['Campaign Name'])
+        if len(noIdReportList) > 0:
+            print("以下campaign应该今天发送报告，但没有campaign id，他们包括：\n{campaign}".format(campaign='\n'.join(noIdReportList)))
 
-        for campaignId in reportList:
-            self.report(campaignId)
+        if len(reportList) > 0:
+            print('以下campaign应该在今天发送报告')
+            for campaignId in reportList:
+                self.report(campaignId)
+
+        preReportDf = a.report('20200101', 'yesterday')
+        preNoIdReportDf = preReportDf[preReportDf['Campaign ID'].isna()]
+        preWithIdReportDf = preReportDf[preReportDf['Campaign ID'].notna()]
+        preWithIdReportDf = preWithIdReportDf[preWithIdReportDf['Campaign ID'].apply(lambda x: not Report(x).judge())] #排除掉数据库中BasicPerformance表中已经有的campaign id
+        preReportList = list(preWithIdReportDf['Campaign ID'])
+        preReportList = list(map(int, preReportList)) #此行重要，df中campaign_id是float形式
+        preNoIdReportList = list(preNoIdReportDf['Campaign Name'])
+        if len(preNoIdReportList) > 0:
+            print("以下campaign应该今天以前发送报告，但没有campaign id，他们包括：\n{campaign}".format(campaign='\n'.join(preNoIdReportList)))
+
+        if len(preReportList) > 0:
+            print('以下campaign应该在今天以前发送报告')
+            for campaignId in preReportList:
+                self.report(campaignId)
         # 最后再生成simple_tracker，以便于把刚刚写的campaign id也计算进去
         self.simple_tracker()
         return
