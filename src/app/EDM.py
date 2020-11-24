@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-05-12 19:44:54
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-11-23 12:22:12
+@LastEditTime: 2020-11-23 15:28:44
 @FilePath: \MA_tool\src\app\EDM.py
 '''
 import fire
@@ -240,6 +240,12 @@ class EDM(object):
         self.getMA().setConfig('username', data)
         return
 
+    def request(self, type: str = 'add'):
+        """
+        此命令负责request的管理，type分为[add, delete, edit, check]
+        分别对应增删改查
+        """
+        pass
     
 
 if __name__ == "__main__":

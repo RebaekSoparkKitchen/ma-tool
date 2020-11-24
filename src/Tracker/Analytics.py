@@ -3,7 +3,7 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-11-23 11:04:31
+@LastEditTime: 2020-11-24 16:39:17
 @FilePath: \MA_tool\src\Tracker\Analytics.py
 '''
 
@@ -303,15 +303,16 @@ class Analytics(Request_Tracker):
     # overiew 是我们data命令的核心方法
     def overview(self, df: pd.DataFrame) -> dict:
         num = len(df)
-        uniqueNum = len(self.removeDuplicate(df))
+        unique_df = self.removeDuplicate(df)
+        uniqueNum = len(unique_df)
         touchPoints = df['Delivered'].sum()
         openRate = df['Opened'].sum() / df['Delivered'].sum()
         ctr = df['Click'].sum() / df['Delivered'].sum()
         uniqueCTR = df['Unique Click'].sum() / df['Delivered'].sum()
         clickToOpen = df['Unique Click'].sum() / df['Opened'].sum()
         openContact = df['Opened'].sum()
-        webinar = len(df[df['Request Type'].apply(lambda x: 'webinar' in x.lower())])
-        offline = len(df[df['Request Type'].apply(lambda x: 'offline' in x.lower())])
+        webinar = len(unique_df[unique_df['Request Type'].apply(lambda x: 'webinar' in x.lower())])
+        offline = len(unique_df[unique_df['Request Type'].apply(lambda x: 'offline' in x.lower())])
         edm = len(df[df['Request Type'].apply(lambda x: 'edm' in x.lower())])
         newsletter = len(df[df['Request Type'].apply(lambda x: 'newsletter' in x.lower() or 'digitalist' in x.lower())])
         nurture = len(df[df['Request Type'].apply(lambda x: 'nurture' in x.lower())])
@@ -320,8 +321,7 @@ class Analytics(Request_Tracker):
         else:
             averTouch = touchPoints / num
 
-        df = self.removeDuplicate(df)
-        events = len(df[df['Request Type'].apply(lambda x: 'invitation' in x.lower())])
+        events = len(unique_df[unique_df['Request Type'].apply(lambda x: 'invitation' in x.lower())])
         dic = {'Email Number': num,
                'Unique Number': uniqueNum,
                'Events': events,

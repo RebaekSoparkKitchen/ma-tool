@@ -1,0 +1,1 @@
+print(Panel.fit('[green]' + guess_name[0] + ' ' + guess_name[1]+ '\n' +'[blue]' + self.info(guess_name)[0][0] + '\n' + '[blue]' + self.info(guess_name)[0][1]))
