@@ -3,20 +3,20 @@
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
-@LastEditTime: 2020-11-24 16:39:17
+@LastEditTime: 2020-11-25 13:55:44
 @FilePath: \MA_tool\src\Tracker\Analytics.py
 '''
-
+import sys
+sys.path.append("../..")
 import warnings
 from dateutil.parser import parse, _parser
 import datetime as dt
 from src.Tracker.RequestTracker import Request_Tracker
+
 from pandas import Series, DataFrame
 import numpy as np
 import pandas as pd
-import sys
 
-sys.path.append("../..")
 
 
 class Analytics(Request_Tracker):
@@ -357,7 +357,12 @@ class Analytics(Request_Tracker):
 
 if __name__ == "__main__":
     a = Analytics(6414)
-    q2_start = dt.datetime(2020, 4, 1)
-    q2_end = dt.datetime(2020, 6, 30)
-    print(a.name())
-    print(str(a.executionTime()[6414]))
+    df = a.removeDuplicate(a.getCleanDf())
+   
+    df = df[(df['Launch Date'] >= dt.date(2020,1,1)) & (df['Launch Date'] <= dt.date(2020,11,23))]
+    df = df[df['MU'] == 'China']
+    df = df[df['Request Type'] == 'Webinar Invitation']
+    # print(df['Team'].value_counts())
+    print(df[df['Team'] == 'Digital'])
+    
+    

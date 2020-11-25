@@ -1,1 +1,2 @@
-print(Panel.fit('[green]' + guess_name[0] + ' ' + guess_name[1]+ '\n' +'[blue]' + self.info(guess_name)[0][0] + '\n' + '[blue]' + self.info(guess_name)[0][1]))
+else:
+    #     b.start_completion(select_first=True)

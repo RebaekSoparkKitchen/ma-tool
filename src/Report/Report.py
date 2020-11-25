@@ -41,7 +41,7 @@ class Report(MA):
     
 
 if __name__ == "__main__":
-    a = Report(4227)
+    a = Report(4227.0)
     print(a.judge())
 
 

@@ -1,0 +1,1 @@
+df['Team'].value_counts().to_excel(r'C:\Users\C5293427\Desktop\china_webinar.xlsx')
