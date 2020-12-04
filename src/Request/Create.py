@@ -7,14 +7,12 @@
 @FilePath: \MA_tool\src\Request\Create.py
 """
 import sys
-
 sys.path.append("../..")
 import datetime as dt
 from src.Control.MA import MA
 from src.Utils.Similarity import Similarity
 from rich import print
 from rich.panel import Panel
-from rich.console import RenderGroup
 from rich.prompt import Prompt, IntPrompt, Confirm
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter, Completer, Completion
@@ -71,7 +69,7 @@ class Create(MA):
         return self.sqlProcess(
             f"SELECT department, location FROM Staff WHERE first_name = '{name[0]}' AND last_name = '{name[1]}'")
 
-    def name_dialogue(self, default='') -> None:
+    def name_dialogue(self, default: str = '') -> None:
         """
         the conversation for name confirmation
         """
@@ -96,7 +94,7 @@ class Create(MA):
                 break
         return
 
-    def wave_dialogue(self, default=1):
+    def wave_dialogue(self, default: int = 1):
         """
         the conversation for the waves
         """
@@ -117,7 +115,7 @@ class Create(MA):
             return confirm
         return True
 
-    def blast_date_dialogue(self, default='2020'):
+    def blast_date_dialogue(self, default: str = '2020'):
         """
         main method
         let user input blast date
@@ -142,7 +140,7 @@ class Create(MA):
                 print('[prompt.invalid]请输入正确的日期格式，eg: 20201125')
         return
 
-    def event_date_dialogue(self, default='2020'):
+    def event_date_dialogue(self, default: str = '2020'):
         """
         main method
         let user input event date
@@ -167,15 +165,16 @@ class Create(MA):
                 print('[prompt.invalid]请输入正确的日期格式，eg: 20201125')
         return
 
-    def request_type_dialogue(self, default='Webinar Invitation'):
+    def request_type_dialogue(self, default: str = 'Webinar Invitation'):
         """
-        dialogue for create new request type
+        dialogue -> create new request type
         """
         type_list = ['Webinar Invitation', 'Offline Event Invitation', 'EDM', 'Newsletter']
         type_completer = WordCompleter(type_list, ignore_case=True, match_middle=True)
         while True:
-            request_type = prompt('请输入 Request Type: ', default=default, completer=type_completer, complete_while_typing=True,
-                          key_bindings=short_cut())
+            request_type = prompt('请输入 Request Type: ', default=default, completer=type_completer,
+                                  complete_while_typing=True,
+                                  key_bindings=short_cut())
             if request_type not in type_list:
                 print('请输入正确的type，请参考')
                 print(','.join(type_list))
@@ -184,24 +183,14 @@ class Create(MA):
         self.request_type = request_type
         return
 
-    def campaign_name_dialogue(self, default=''):
+    def campaign_name_dialogue(self, default: str = ''):
         """
         dialogue for campaign name
         :return: None
         """
-
         campaign_name = prompt('请输入 Campaign name: ', default=default)
         self.campaign_name = campaign_name
         return
-
-    def creation_dialogue(self):
-        self.wave_dialogue()
-        self.name_dialogue()
-        self.campaign_name_dialogue()
-        self.request_type_dialogue()
-        self.blast_date_dialogue()
-        self.event_date_dialogue()
-        self.confirm_dialogue()
 
     def confirm_dialogue(self):
         """
@@ -231,21 +220,30 @@ class Create(MA):
                 break
             else:
                 self.wave_dialogue(default=self.wave)
-                self.name_dialogue(default=self.last_name + ' ' + self.first_name)
+                self.name_dialogue(default=self.first_name + ' ' + self.last_name)
                 self.campaign_name_dialogue(default=self.campaign_name)
                 self.request_type_dialogue(default=self.request_type)
                 self.blast_date_dialogue(default=self.blast_date_str)
                 if self.request_type in ['Webinar Invitation', 'Offline Event Invitation']:
                     self.event_date_dialogue(default=self.event_date_str)
+        return
+
+
+
+    def creation_dialogue(self):
+        self.wave_dialogue()
+        self.name_dialogue()
+        self.campaign_name_dialogue()
+        self.request_type_dialogue()
+        self.blast_date_dialogue()
+        if c.request_type in ['Webinar Invitation', 'Offline Event Invitation']:
+            c.event_date_dialogue()
+        self.confirm_dialogue()
+        return
 
 
 if __name__ == "__main__":
+    # 明日任务： wave 2 的处理 request id的处理
     c = Create()
-    c.wave_dialogue()
-    c.name_dialogue()
-    c.campaign_name_dialogue()
-    c.request_type_dialogue()
-    c.blast_date_dialogue()
-    if c.request_type in ['Webinar Invitation', 'Offline Event Invitation']:
-        c.event_date_dialogue()
-    c.confirm_dialogue()
+    a = c.creation_dialogue
+    print(type(a))

@@ -9,19 +9,27 @@
 import json
 import sqlite3
 
+
 class MA(object):
     def __init__(self):
         self.configPath = r'../../config/config.json'
-        self.config =self.readConfig()
+        self.dataPath = r'../data/Request_Data.json'
+        self.config = self.readConfig()
         self.dbAddress = self.config['data_location']['Database']
         self.username = self.config['username']
-    
+
     def getConfigPath(self):
         return self.configPath
-    
+
+    def readData(self) -> dict:
+
+        with open(self.dataPath, 'r', encoding='utf8') as fp:
+            json_data = json.load(fp)
+        return json_data
+
     def readConfig(self) -> dict:
         configPath = self.getConfigPath()
-        with open(configPath,'r',encoding='utf8') as fp:
+        with open(configPath, 'r', encoding='utf8') as fp:
             json_data = json.load(fp)
         return json_data
 
@@ -31,16 +39,16 @@ class MA(object):
         config['username'] = data
         if config == {}:
             print("此更改将清空config文件， 请查看命令是否合理")
-            return 
-        with open(configPath,"w") as f:
-            json.dump(config,f)
-        return 
-    
+            return
+        with open(configPath, "w") as f:
+            json.dump(config, f)
+        return
+
     def sqlProcess(self, *args) -> list:
         '''
         helper method -> 对于一切需要sql操作的方法
         '''
-        assert len(args) > 0  #您必须传一个命令进来，否则不要调用此方法
+        assert len(args) > 0  # 您必须传一个命令进来，否则不要调用此方法
         conn = sqlite3.connect(self.dbAddress)
         cur = conn.cursor()
         temp = []

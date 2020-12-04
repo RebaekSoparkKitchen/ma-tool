@@ -1,4 +1,4 @@
-'''
+"""
 @Description: 
 本地数据库需要发起请求，拿到campaign的basic和click performance数据，并主要提供request()和search()两个接口
 data flow:
@@ -12,8 +12,8 @@ spider -> local_data(raw data) -> sql_computer(中间计算层) -> sql_writer(�
 @Date: 2020-05-07 16:15:45
 @LastEditors: ,: FlyingRedPig
 @LastEditTime: ,: 2020-10-21 10:39:34
-@FilePath: ,: \MA_tool\src\LocalDataBase\LocalData.py
-'''
+@FilePath: /MA_tool/src/LocalDataBase/LocalData.py
+"""
 import sys
 sys.path.append('../..')
 sys.path.append('../../bin')
