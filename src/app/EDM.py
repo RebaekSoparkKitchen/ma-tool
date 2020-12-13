@@ -240,11 +240,19 @@ class EDM(object):
         self.getMA().setConfig('username', data)
         return
 
-    def request(self, type: str = 'add'):
+    def request(self, type: str = 'create'):
         """
-        此命令负责request的管理，type分为[add, delete, edit, check]
+        此命令负责request的管理，type分为[create, delete, edit, check]
         分别对应增删改查
         """
+        # if type == 'create':
+        #     Command.create()
+        # elif type == 'delete':
+        #     Command.delete()
+        # elif type == 'check':
+        #     Command.check()
+        # elif type == 'edit':
+        #     Command.edit()
         pass
     
 

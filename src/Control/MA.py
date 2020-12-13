@@ -13,7 +13,7 @@ import sqlite3
 class MA(object):
     def __init__(self):
         self.configPath = r'../../config/config.json'
-        self.dataPath = r'../data/Request_Data.json'
+
         self.config = self.readConfig()
         self.dbAddress = self.config['data_location']['Database']
         self.username = self.config['username']
@@ -21,9 +21,9 @@ class MA(object):
     def getConfigPath(self):
         return self.configPath
 
-    def readData(self) -> dict:
-
-        with open(self.dataPath, 'r', encoding='utf8') as fp:
+    def readData(self, data_name='Request_Data') -> dict:
+        data_path = f'../data/{data_name}.json'
+        with open(data_path, 'r', encoding='utf8') as fp:
             json_data = json.load(fp)
         return json_data
 

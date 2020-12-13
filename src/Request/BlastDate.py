@@ -13,6 +13,8 @@ class BlastDate(Dialogue):
         super().__init__(request, question, default)
         if default == '':
             self.default = self.readData()['default']['blast_date']
+        elif isinstance(default, dt.date):
+            self.default = default.strftime('%Y%m%d')
 
     @staticmethod
     def is_date(text: str):

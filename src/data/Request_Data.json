@@ -1,8 +1,9 @@
 {
   "standard": {
     "request_type": [
-      "Webinar Invitation", "Offline Event Invitation", "EDM", "Newsletter"
-    ]
+      "Webinar Invitation", "Offline Event Invitation", "EDM", "Newsletter", "Nurture"
+    ],
+    "mu": ["China", "Taiwan", "Hong Kong"]
   },
   "default": {
     "wave": "1",
@@ -14,5 +15,12 @@
     "owner_full_name": "",
     "department": "",
     "location": ""
+  },
+  "status":{
+    "-2": "the request has been deleted",
+    "-1": "the request has no blast date, content only / wait",
+    "0": "the request has been received, not blast yet",
+    "1": "the request EDM has been blasted, but no report yet",
+    "2": "the request EDM has been blasted, report has been generated"
   }
 }

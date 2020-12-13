@@ -52,8 +52,8 @@
     ],
     "data_location": {
         "RequestTracker": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/data/Request_Tracker.xlsx",
-        "SMCData": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/data/campaign_data.json",
-        "Database": "//cnshag101.sha.global.corp.sap/Restricted/Marketing/Marketing_Automation/data/MarketingAutomation.db"
+        "SMCData": "C:/Users/C5293427/Desktop/test/campaign_data.json",
+        "Database": "C:/Users/C5293427/Desktop/test/MarketingAutomation.db"
     },
     "file_location": {
         "SimpleTracker": "C:/Users/C5293427/Desktop/EDM/Simple_Tracker.xlsx",
@@ -66,5 +66,5 @@
         "output_path": "C:/Users/C5293427/Desktop/Data_exported/成品"
     },
     "chrome_driver": "../../config/chromedriver.exe",
-    "username": "xuzinan"
+    "username": "Zinan Xu"
 }

@@ -19,6 +19,7 @@ from prompt_toolkit.completion import WordCompleter, Completer, Completion
 from src.Request.Key_bindings import short_cut
 
 
+
 class Create(MA):
     def __init__(self):
         """
@@ -245,5 +246,5 @@ class Create(MA):
 if __name__ == "__main__":
     # 明日任务： wave 2 的处理 request id的处理
     c = Create()
-    a = c.creation_dialogue
-    print(type(a))
+    c.creation_dialogue()
+

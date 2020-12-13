@@ -7,37 +7,52 @@
 @FilePath: \MA_tool\src\Request\Request.py
 """
 import datetime as dt
+from rich import print
+from rich.panel import Panel
 from src.Control.MA import MA
+import src.Utils.AttributeToStr as attr
 
 
-class Request(MA):
-    def __init__(self, request_id='', campaign_name='', request_type='', owner_first_name='',
-                 owner_last_name='', owner_full_name='', department='', location='', wave='',
-                 smc_campaign_id='', blast_date=None, event_date=None, creation_time=None, last_modified_time=None,
-                 editor='', comments=''):
+class Request:
+    def __init__(self, request_id='', campaign_name='', wave='', request_type='', owner_first_name='',
+                 owner_last_name='', owner_full_name='', team='', location='', mu='',
+                 smc_campaign_id='', blast_date='', event_date='', report_date='', creation_time='',
+                 last_modified_time='',
+                 editor='', comments='', request_status=0):
         """
         request template
         """
         super().__init__()
         self._request_id = request_id
         self._campaign_name = campaign_name
+        self._wave = wave
         self._request_type = request_type
         self._owner_first_name = owner_first_name
         self._owner_last_name = owner_last_name
         self._owner_full_name = owner_full_name
-        self._department = department
+        self._team = team
         self._location = location
-        self._wave = wave
+        self._mu = mu  # 依据location做一个mapping
         self._smc_campaign_id = smc_campaign_id
         self._blast_date = blast_date
         self._event_date = event_date
+        self._report_date = report_date
         self._creation_time = creation_time
         self._last_modified_time = last_modified_time
         self._editor = editor
         self._comments = comments
+        self._request_status = request_status
 
     def create(self):
-        pass
+        ma = MA()
+        db_data = ma.readData('Database')
+        request_db = db_data['Request']
+        col, values = attr.transfer(self)
+        col = tuple(map(lambda x: request_db[x], col))
+        values = tuple(map(lambda x: str(x), values))
+        sql = f"INSERT INTO Request {str(col)} VALUES {str(values)}"
+        ma.sqlProcess(sql)
+        return
 
     def edit(self):
         pass
@@ -45,11 +60,33 @@ class Request(MA):
     def delete(self):
         pass
 
-    def check(self):
-        pass
+    @staticmethod
+    def check(check_code: str):
+        """
+        :param check_code: request_id - wave, eg: 459-1
+        :return:
+        """
+        check_code = str(check_code).split('-')
+
+        sql = f"SELECT * FROM Request WHERE request_id = '{check_code[0]}' and wave = '{check_code[1]}'"
+        ma = MA()
+        result = ma.sqlProcess(sql)
+
+        if len(result) > 1:
+            raise ValueError("请赶快检查：同一个request id不可以有两个wave")
+
+        return ma.sqlProcess(sql)[0]
 
     def display(self):
-        pass
+        request_vars = vars(self)
+        info = ''
+        for item in request_vars:
+            if item in ['_owner_first_name', '_owner_last_name', '_mu']:
+                continue
+            if request_vars[item]:
+                info += f'[green]{item[1:]}:[/green] [blue]{request_vars[item]}[blue] \n'
+        # [:-2]去除最后的一个\n折行
+        print(Panel.fit(info[:-2]))
 
     @property
     def wave(self):
@@ -68,7 +105,8 @@ class Request(MA):
 
     @request_type.setter
     def request_type(self, value):
-        request_type_collection = self.readData()['standard']['request_type']
+        ma = MA()
+        request_type_collection = ma.readData()['standard']['request_type']
         if value not in request_type_collection:
             raise ValueError('a standard request type should be one of them : {}'.format(', '
                                                                                          ''.join(
@@ -93,9 +131,20 @@ class Request(MA):
     @event_date.setter
     def event_date(self, value: dt.date):
         if (not value) or (isinstance(value, dt.date)):
-            self._blast_date = value
+            self._event_date = value
         else:
             raise TypeError('The event_date type should be datetime.date or None')
+
+    @property
+    def report_date(self):
+        return self._report_date
+
+    @report_date.setter
+    def report_date(self, value: dt.date):
+        if (not value) or (isinstance(value, dt.date)):
+            self._report_date = value
+        else:
+            raise TypeError('The report_date type should be datetime.date or None')
 
     @property
     def owner_first_name(self):
@@ -128,14 +177,14 @@ class Request(MA):
         self._owner_full_name = value
 
     @property
-    def department(self):
-        return self._department
+    def team(self):
+        return self._team
 
-    @department.setter
-    def department(self, value: str):
+    @team.setter
+    def team(self, value: str):
         if not value:
-            raise ValueError('The department can not be null')
-        self._department = value
+            raise ValueError('The team can not be null')
+        self._team = value
 
     @property
     def location(self):
@@ -146,6 +195,18 @@ class Request(MA):
         if not value:
             raise ValueError('There should be an owner name for a certain campaign')
         self._location = value
+
+    @property
+    def mu(self):
+        return self._mu
+
+    @mu.setter
+    def mu(self, value: str):
+        ma = MA()
+        mu_collection = ma.readData()['standard']['mu']
+        if value not in mu_collection:
+            raise ValueError('a standard mu should be one of them : {}'.format(', '.join(mu_collection)))
+        self._mu = value
 
     @property
     def campaign_name(self):
@@ -198,7 +259,7 @@ class Request(MA):
     @creation_time.setter
     def creation_time(self, value: dt.datetime):
         if (not value) or (isinstance(value, dt.datetime)):
-            self._blast_date = value
+            self._creation_time = value
         else:
             raise TypeError('The creation_time type should be datetime.datetime or None')
 
@@ -209,7 +270,19 @@ class Request(MA):
     @last_modified_time.setter
     def last_modified_time(self, value: dt.datetime):
         if (not value) or (isinstance(value, dt.datetime)):
-            self._blast_date = value
+            self._last_modified_time = value
         else:
             raise TypeError('The last_modified_time type should be datetime.datetime or None')
 
+    @property
+    def request_status(self):
+        return self._request_status
+
+    @request_status.setter
+    def request_status(self, value: int):
+        self._request_status = value
+
+
+if __name__ == '__main__':
+    r = Request()
+    print(r.display())

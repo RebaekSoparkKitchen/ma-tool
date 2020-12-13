@@ -35,17 +35,17 @@ class OwnerName(Dialogue):
     def guess(self, text, question, default):
         for item in self.search_name(text):
             guess_name = item[0]
-            department = self.info(guess_name)[0][0]
+            team = self.info(guess_name)[0][0]
             location = self.info(guess_name)[0][1]
             print(Panel.fit(
-                '[green]' + guess_name[0] + ' ' + guess_name[1] + '\n' + '[blue]' + department + '\n' + '[blue]' +
+                '[green]' + guess_name[0] + ' ' + guess_name[1] + '\n' + '[blue]' + team + '\n' + '[blue]' +
                 location))
 
             command = Confirm.ask('您是指上面这个员工吗？', default=True)
 
             if command:
                 return {'owner_first_name': guess_name[0], 'owner_last_name': guess_name[1], 'owner_full_name':
-                    ' '.join(guess_name), 'department': department, 'location': location}
+                    ' '.join(guess_name), 'team': team, 'location': location}
 
     def ask(self):
         name_completer = WordCompleter(list(map(lambda x: ' '.join(x), self.name_list)), ignore_case=True,
@@ -79,10 +79,10 @@ class OwnerName(Dialogue):
 
     def info(self, name: tuple):
         """
-        return : department , location when input name
+        return : team , location when input name
         """
         return self.sqlProcess(
-            f"SELECT department, location FROM Staff WHERE first_name = '{name[0]}' AND last_name = '{name[1]}'")
+            f"SELECT team, location FROM Staff WHERE first_name = '{name[0]}' AND last_name = '{name[1]}'")
 
 
 if __name__ == '__main__':

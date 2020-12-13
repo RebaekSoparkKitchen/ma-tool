@@ -13,6 +13,8 @@ class EventDate(Dialogue):
         super().__init__(request, question, default)
         if default == '':
             self.default = self.readData()['default']['event_date']
+        elif isinstance(default, dt.date):
+            self.default = default.strftime('%Y%m%d')
 
     def verify_event_date(self, text: str):
         """
@@ -21,7 +23,9 @@ class EventDate(Dialogue):
         :return: true if the input can be translated to a dt.date successfully
         """
         if text == '':
-            return self.request.request_type not in ['Webinar Invitation', 'Offline Invitation']
+            return self.request.request_type not in ['Webinar Invitation', 'Offline Event Invitation']
+        elif self.request.request_type in ['EDM', 'Newsletter', 'Nurture']:
+            return False
         try:
             dt.datetime.strptime(text, '%Y%m%d').date()
             return True
@@ -64,7 +68,8 @@ class EventDate(Dialogue):
 
         event_date = dt.datetime.strptime(text, '%Y%m%d').date()
         if self.request.blast_date:
-            while not EventDate.confirm_date(event_date, self.request.blast_date,
+            blast_date = self.request.blast_date
+            while not EventDate.confirm_date(event_date, blast_date,
                                              '[#ffc107]您输入的event date日期({})在blast date({})之前，您确定吗？'.format(event_date,
                                                                                                            self.request.blast_date)):
                 return self.ask()
