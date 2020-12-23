@@ -4,11 +4,11 @@ sys.path.append("../..")
 from prompt_toolkit.validation import Validator
 import datetime as dt
 from rich.prompt import Confirm
-from src.Views.RequestDialogue.Dialogue import Dialogue
+from src.Views.RequestDialogue.RequestDialogue import RequestDialogue
 from src.Models.Request import Request
 
 
-class BlastDate(Dialogue):
+class BlastDate(RequestDialogue):
     def __init__(self, request: Request = Request(), question: str = '请输入Blast Date: ', default: str = ''):
         super().__init__(request, question, default)
         if default == '':
@@ -75,8 +75,15 @@ class BlastDate(Dialogue):
 
         blast_date = dt.datetime.strptime(text, '%Y%m%d').date()
         while not BlastDate.confirm_date(blast_date, dt.date.today(),
-                                         '[#ffc107]您输入的blast date日期{}在今天之前，您确定吗？'.format(blast_date)):
+                                         f'[#ffc107]您输入的blast date日期{blast_date}在今天之前，您确定吗？'):
             return self.ask()
+
+        if self.request.event_date:
+            event_date = self.request.event_date
+
+            while not self.confirm_date(event_date, blast_date,
+                                        f'[#ffc107]您输入的blast date日期({blast_date})在event date({event_date})之后，您确定吗？'):
+                return self.ask()
 
         return text
 
@@ -97,4 +104,3 @@ if __name__ == '__main__':
     b = BlastDate(r)
     ans = b.ask()
     print(ans)
-

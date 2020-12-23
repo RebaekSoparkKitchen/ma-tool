@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append("../..")
-from src.Models.Register import register
+from src.Views.RequestDialogue.Register import register
 from src.Models.Request import Request
 
 

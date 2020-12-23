@@ -23,6 +23,11 @@ def register(request: Request):
     else:
         index = MoreWave(request).ask()
         request = wave_else_process(request, int(index))
+
+    request.display()
+    if not Confirm.ask('请最终确定一下此request的信息', default=True):
+        return register(request)
+
     return request
 
 
@@ -34,10 +39,6 @@ def wave_one_process(request: Request):
     request = event_date(request, default=request.event_date)
     request = comments(request, default=request.comments)
     request = request_id(request=request)
-    request.display()
-
-    if not Confirm.ask('请最终确定一下此request的信息', default=True):
-        return register(request)
 
     request = report_date(request=request)
     request = editor(request=request)
@@ -54,6 +55,12 @@ def wave_else_process(request: Request, index: int):
     request.comments = ''
     request = comments(request, default='')
     request.smc_campaign_id = ''
+    request.request_status = 0
+
+    request = report_date(request=request)
+    request = editor(request=request)
+    request = creation_time(request=request)
+    request = last_modified_time(request=request)
     return request
 
 

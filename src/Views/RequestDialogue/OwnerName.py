@@ -3,7 +3,7 @@ import sys
 sys.path.append("../..")
 from prompt_toolkit.validation import Validator
 from rich.prompt import Confirm
-from src.Views.RequestDialogue.Dialogue import Dialogue
+from src.Views.RequestDialogue.RequestDialogue import RequestDialogue
 from src.Models.Request import Request
 from prompt_toolkit import prompt
 from src.Views.RequestDialogue.Key_bindings import short_cut
@@ -14,7 +14,7 @@ from rich import print
 from rich import box
 
 
-class OwnerName(Dialogue):
+class OwnerName(RequestDialogue):
     def __init__(self, request: Request = Request(), question: str = '请输入Owner Name: ', default: str = ''):
         super().__init__(request, question, default)
         self.name_list = self.sql_process("SELECT first_name, last_name FROM Staff")

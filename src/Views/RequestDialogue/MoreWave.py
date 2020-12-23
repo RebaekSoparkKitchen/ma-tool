@@ -2,11 +2,11 @@ import sys
 
 sys.path.append("../..")
 from prompt_toolkit.validation import Validator
-from src.Views.RequestDialogue.Dialogue import Dialogue
+from src.Views.RequestDialogue.RequestDialogue import RequestDialogue
 from src.Models.Request import Request
 
 
-class MoreWave(Dialogue):
+class MoreWave(RequestDialogue):
     def __init__(self, request: Request, question: str = '请输入wave1 index: ', default: str = ''):
         super().__init__(request, question, default)
 

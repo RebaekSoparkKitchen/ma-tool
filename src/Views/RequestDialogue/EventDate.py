@@ -4,11 +4,11 @@ sys.path.append("../..")
 from prompt_toolkit.validation import Validator
 import datetime as dt
 from rich.prompt import Confirm
-from src.Views.RequestDialogue.Dialogue import Dialogue
+from src.Views.RequestDialogue.RequestDialogue import RequestDialogue
 from src.Models.Request import Request
 
 
-class EventDate(Dialogue):
+class EventDate(RequestDialogue):
     def __init__(self, request: Request, question: str = '请输入Event Date: ', default: str = ''):
         super().__init__(request, question, default)
         if default == '':

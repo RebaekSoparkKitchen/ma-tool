@@ -6,6 +6,7 @@ from src.Models.Workflow import tbd_work
 from rich.console import Console
 import rich.table as rt
 from rich import box
+from src.Utils.StringProcessor import str_process
 
 
 class Table(object):
@@ -14,16 +15,6 @@ class Table(object):
         self.cols = data.cols
         self.content = data.content
 
-    @staticmethod
-    def str_process(col_name: str) -> str:
-        """
-        transfer the lower case staff to the first capital words
-        :param col_name: eg. campaign_name
-        :return: eg. Campaign Name
-        """
-        if col_name == 'id':
-            return col_name.upper()
-        return col_name.replace('_', ' ').title()
 
     @staticmethod
     def cols_process(cols: list) -> tuple:
@@ -32,7 +23,7 @@ class Table(object):
         :param cols: eg. [campaign_name, owner_full_name]
         :return: [Campaign Name, Owner Full Name]
         """
-        return tuple(map(Table.str_process, cols))
+        return tuple(map(str_process, cols))
 
     def display(self) -> None:
         """

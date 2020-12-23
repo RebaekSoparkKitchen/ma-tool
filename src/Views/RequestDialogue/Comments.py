@@ -2,11 +2,11 @@ import sys
 
 sys.path.append("../..")
 from prompt_toolkit.validation import Validator
-from src.Views.RequestDialogue.Dialogue import Dialogue
+from src.Views.RequestDialogue.RequestDialogue import RequestDialogue
 from src.Models.Request import Request
 
 
-class Comments(Dialogue):
+class Comments(RequestDialogue):
     def __init__(self, request: Request, question: str = '请输入 comments: ', default: str = ''):
         super().__init__(request, question, default)
 

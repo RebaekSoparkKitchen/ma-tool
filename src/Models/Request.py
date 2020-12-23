@@ -7,10 +7,11 @@
 @FilePath: \MA_tool\src\Request\Request.py
 """
 import datetime as dt
-from rich import print
+from rich import print, box
 from rich.panel import Panel
 from src.Connector.MA import MA
 import src.Utils.AttributeToStr as attr
+
 
 
 class Request:
@@ -35,8 +36,22 @@ class Request:
         self._team = team
         self._mu = mu  # 依据location做一个mapping
         self._location = location
-        self._blast_date = blast_date
-        self._event_date = event_date
+        try:
+            self._blast_date = dt.datetime.strptime(blast_date, '%Y-%m-%d').date()
+        except ValueError:
+            try:
+                self._blast_date = dt.datetime.strptime(blast_date, '%Y%m%d').date()
+            except ValueError:
+                self._blast_date = blast_date
+
+        try:
+            self._event_date = dt.datetime.strptime(event_date, '%Y-%m-%d').date()
+        except ValueError:
+            try:
+                self._event_date = dt.datetime.strptime(event_date, '%Y%m%d').date()
+            except ValueError:
+                self._event_date = event_date
+
         self._report_date = report_date
         self._creation_time = creation_time
         self._last_modified_time = last_modified_time
@@ -74,8 +89,7 @@ class Request:
         """
 
         sql = f"SELECT * FROM Request WHERE request_status != -2 and id = {index}"
-        ma = MA()
-        result = ma.sql_process(sql)
+        result = MA().sql_process(sql)
 
         if len(result) > 1:
             raise ValueError("请赶快检查：同一个request id不可以有两个wave")
@@ -83,7 +97,7 @@ class Request:
         if not result:
             return None
 
-        values = ma.sql_process(sql)[0][1:]  # index 0 is primary key id
+        values = MA().sql_process(sql)[0][1:]  # index 0 is primary key id
         request = Request(*values)
 
         return request
@@ -91,13 +105,26 @@ class Request:
     def display(self):
         request_vars = vars(self)
         info = ''
+
         for item in request_vars:
-            if item in ['_owner_first_name', '_owner_last_name', '_mu']:
+            if item in ['_owner_first_name', '_owner_last_name', '_mu', '_creation_time', '_last_modified_time',
+                        '_editor', '_report_date']:
                 continue
             if request_vars[item]:
-                info += f'[#E4007F]{item[1:]}:[/#E4007F] [#00FFFF]{request_vars[item]}[/#00FFFF] \n'
+                info += f'[#E4007F]{self.str_process(item[1:])}:[/#E4007F] [#00FFFF]{request_vars[item]}[/#00FFFF] \n'
         # [:-2]去除最后的一个\n折行
-        print(Panel.fit(info[:-2]))
+        print(Panel.fit(info[:-2], box=box.DOUBLE))
+
+    @staticmethod
+    def str_process(col_name: str) -> str:
+        """
+        transfer the lower case staff to the first capital words
+        :param col_name: eg. campaign_name
+        :return: eg. Campaign Name
+        """
+        if col_name == 'id':
+            return col_name.upper()
+        return col_name.replace('_', ' ').title()
 
     @property
     def wave(self):
