@@ -14,10 +14,8 @@ spider -> local_data(raw data) -> sql_computer(中间计算层) -> sql_writer(�
 '''
 
 import sqlite3
-import pandas as pd
-import json
 from src.LocalDataBase.SqlComputer import SqlComputer
-from src.Control.MA import MA
+from src.Connector.MA import MA
 
 
 class SqlWriter(MA):

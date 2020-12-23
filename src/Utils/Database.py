@@ -1,4 +1,4 @@
-from src.Control.MA import MA
+from src.Connector.MA import MA
 
 
 def get_col_name(table_name: str):

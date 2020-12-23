@@ -9,8 +9,7 @@
 import tkinter as tk
 import src.Transfer.transfer_csv_to_excel as ce
 from tkinter import filedialog
-import json
-from src.Control.MA import MA
+from src.Connector.MA import MA
 
 class DataTransfer(MA):
 

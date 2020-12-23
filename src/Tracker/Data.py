@@ -8,7 +8,7 @@
 '''
 
 from src.Tracker.Analytics import Analytics 
-from src.Control.MA import MA
+from src.Connector.MA import MA
 import pandas as pd
 from dateutil.parser import parse
 import sys

@@ -1,17 +1,17 @@
-import pandas as pd
+
 import datetime as dt
 
 
 def report_date_gen(blast: dt.date, event: dt.date):
-    if pd.isna(blast):
+    if not blast:
         report_date = None
-    elif pd.isna(event):
+    elif not event:
         report_date = blast + dt.timedelta(days=7)
     else:
-        if event - blast > dt.timedelta(days=7):
+        if (event - blast > dt.timedelta(days=7)) or (event - blast <= dt.timedelta(days=0)):
             report_date = blast + dt.timedelta(days=7)
         elif event - blast <= dt.timedelta(days=3):
-            report_date = event - dt.timedelta(days=0)
+            report_date = event
         else:
             report_date = event - dt.timedelta(days=2)
     if turn_weekday(report_date) == 5:

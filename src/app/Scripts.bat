@@ -21,7 +21,7 @@ echo on
 cd /d %~dp0
 cd ..
 cd ..
-cd EDM-venv\Scripts
+cd venv\Scripts
 call activate
 cd ..
 cd ..

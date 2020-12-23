@@ -22,7 +22,7 @@ sys.path.append('..')
 import json
 from src.Spider.BasicPerformance import BasicPerformance
 from src.Spider.ClickPerformance import ClickPerformance
-from src.Control.MA import MA
+from src.Connector.MA import MA
 import pandas as pd
 
 

@@ -1,3 +1,4 @@
+peewee
 rich
 alabaster==0.7.12
 altgraph==0.17

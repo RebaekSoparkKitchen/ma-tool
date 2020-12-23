@@ -12,10 +12,8 @@
 import pandas as pd
 import datetime as dt
 import warnings
-import time
 from pandas.core.common import SettingWithCopyWarning
-import json
-from src.Control.MA import MA
+from src.Connector.MA import MA
 
 
 class Request_Tracker(MA):

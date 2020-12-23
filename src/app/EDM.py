@@ -6,98 +6,90 @@
 @LastEditTime: 2020-11-23 15:28:44
 @FilePath: \MA_tool\src\app\EDM.py
 '''
-import fire
 import sys
-sys.path.append("../..")
 
-from src.Tracker.Analytics import Analytics
-from src.Tracker.SimpleTracker import SimpleTracker
-from src.Tracker.WriteTracker import WriteTracker
-from src.Tracker.Data import DataExtractor
-from src.Spider.BasicPerformance import BasicPerformance
-from src.Spider.ClickPerformance import ClickPerformance
-from src.LocalDataBase.LocalData import LocalData
-from src.LocalDataBase.SqlWriter import SqlWriter
-from src.Report.ReportExcel import ReportExcel
-from src.Report.Report import Report
-from src.Transfer.gui import DataTransfer
-from dateutil.parser import parse
-from tabulate import tabulate
-import pandas as pd
-import datetime as dt
-from src.Control.MA import MA
+import fire
+
+sys.path.append("../..")
+import time
+
+# from src.Tracker.Analytics import Analytics
+# from src.Tracker.WriteTracker import WriteTracker
+# from src.Tracker.Data import DataExtractor
+# from src.Spider.BasicPerformance import BasicPerformance
+# from src.Spider.ClickPerformance import ClickPerformance
+# from src.LocalDataBase.LocalData import LocalData
+# from src.LocalDataBase.SqlWriter import SqlWriter
+# from src.Report.ReportExcel import ReportExcel
+# from src.Report.Report import Report
+# from src.Transfer.gui import DataTransfer
+
+from src.Utils.timer import timer
+
+t1 = time.time()
+from src.Connector.MA import MA
+from src.Controller.TableCreator import create_table
+
+t2 = time.time()
+print(t2 - t1)
 
 
 class EDM(object):
 
     def __init__(self):
         super().__init__()
-        self.__trackerInput = WriteTracker()
-        self.__ma = MA()
 
-    def getTrackerInput(self):
-        return self.__trackerInput
-    
-    def getMA(self):
-        return self.__ma
-    
     def __pretty(self, df):
+        from tabulate import tabulate
         return tabulate(df, headers='keys', tablefmt='psql')
 
-    def simple_tracker(self, path=None):
-        '''
+    @timer
+    def simple_tracker(self, days=21):
+        """
         此命令负责刷新simple_tracker，是我们需求安排的日程版本，
         您可以在EDM_project/files中找到它。
-        '''
-        if path == None:
-            path = self.getMA().readConfig()['file_location']['SimpleTracker']
-        s = SimpleTracker(path)
-        s.simpleTrackerExcel()
+        """
+        from src.Models.SimpleTracker import SimpleTracker
+        path = MA().read_config()['file_location']['SimpleTracker']
+        s = SimpleTracker(days_diff=days)
+        s.main(path=path)
         return
 
+    @timer
+    def work(self, type: str):
+        """
+        此命令可以看到我们关心的一系列工作的情况
+        future: 未来需完成的工作
+        tbd: to be decided, 待定的工作
+        report: 今天需要发送报告的工作
+        campaign id: 今天需要填写smc campaign id的工作
+        limit: 明天的campaign需要注意哪些campaign的communication limitation
+        """
+        import src.Models.Workflow as wf
+        if type == 'future':
+            create_table(wf.future_work())
+        elif type == 'tbd':
+            create_table(wf.tbd_work())
+        elif type == 'report':
+            create_table(wf.report_work())
+        elif type == 'campaign_id':
+            create_table(wf.campaign_id_work())
+        elif type == 'limit':
+            create_table(wf.communication_limit_work())
+        else:
+            print('Your command is not right, should be in [future, tbd, report, campaign_id, limit]')
+
+    @timer
     def workflow(self):
-        '''
+        """
         此命令负责跟踪排查我们近期的workflow，包括：未来工作、待定工作、今天需发送报告、哪些条目还没有填写campaign id、我们明天的campaign需要避让哪些campaign
         eg: python edm.py workflow
-        '''
-        a = Analytics()
-
-        print('\n')
-        print('我们未来的工作')
-        if a.futureWork().empty:
-            print('\n据我所知，未来我们没有任何需求')
-        else:
-            print(self.__pretty(a.futureWork()))
-        print('\n')
-
-        print('待定的工作：')
-        if a.waitWork().empty:
-            print('\n我们没有待定的需求')
-        else:
-            print(self.__pretty(a.waitWork()))
-        print('\n')
-
-        print('今天需要发送的报告：')
-        if a.report().empty:
-            print('\n今天没有报告要发哈~')
-        else:
-            print(self.__pretty(a.report()))
-        print('\n')
-
-        print('我们需要检查的campaign:')
-        if a.check().empty:
-            print('\n过去的campaign都填上了campaign id, 很棒！')
-        else:
-            print(self.__pretty(a.check()))
-        print('\n')
-
-        print('由于traffic control, 我们需要在执行时间上考虑以下campaign:')
-        if a.communicationLimitHint().empty:
-            print('\n我们没有时间上的避让考虑')
-        else:
-            print(self.__pretty(a.communicationLimitHint()))
-
-        return
+        """
+        self.work('future')
+        self.work('tbd')
+        self.work('report')
+        self.work('campaign_id')
+        self.work('limit')
 
     def write_campaign_id(self):
         '''
@@ -136,17 +128,17 @@ class EDM(object):
         eg:  python edm.py report 1234 static
         其中 1234 指SMC campaign id
         static控制是否覆盖已有报告，这个参数只有两个值：static/dynamic，这个值也可以不填，默认为static
-         
+
         '''
         if self.getMA().readConfig()['username'] == "":
             username = input("此命令将访问数据库，您需要填写username: ")
             self.setting('username', username)
-        l = LocalData()  #此处硬编码了地址，因为脚本文件和类文件不在同一个位置，那么与campaign_data.json的相对位置也不同
+        l = LocalData()  # 此处硬编码了地址，因为脚本文件和类文件不在同一个位置，那么与campaign_data.json的相对位置也不同
         w = WriteTracker()
-        
+
         if catagory == "static":
             l.request(overwrite=False, campaignId=campaignId)
-            s = SqlWriter(campaignId)  #一定要在这里初始化，因为sqlWriter初始化的时候要在数据库中找这个campaign id 所以必须要上一行代码执行结束之后才行
+            s = SqlWriter(campaignId)  # 一定要在这里初始化，因为sqlWriter初始化的时候要在数据库中找这个campaign id 所以必须要上一行代码执行结束之后才行
             s.push(overwrite=False)
         elif catagory == "dynamic":
             l.request(overwrite=True, campaignId=campaignId)
@@ -165,7 +157,7 @@ class EDM(object):
         print(f'campaign id: {campaignId}')
         print(f'owner: {a.owner()}')
         print(f'Launch Date: {a.launchDate()}')
-       
+
         reportInfo = Report(campaignId)
         time = reportInfo.time()
         editor = reportInfo.editor()
@@ -185,7 +177,7 @@ class EDM(object):
         noIdReportDf = reportDf[reportDf['Campaign ID'].isna()]
         withIdReportDf = reportDf[reportDf['Campaign ID'].notna()]
         reportList = list(withIdReportDf['Campaign ID'])
-        reportList = list(map(int, reportList))  #此行重要，df中campaign_id是float形式
+        reportList = list(map(int, reportList))  # 此行重要，df中campaign_id是float形式
         noIdReportList = list(noIdReportDf['Campaign Name'])
         if len(noIdReportList) > 0:
             print("以下campaign应该今天发送报告，但没有campaign id，他们包括：\n{campaign}".format(campaign='\n'.join(noIdReportList)))
@@ -198,9 +190,10 @@ class EDM(object):
         preReportDf = a.report('20200101', 'yesterday')
         preNoIdReportDf = preReportDf[preReportDf['Campaign ID'].isna()]
         preWithIdReportDf = preReportDf[preReportDf['Campaign ID'].notna()]
-        preWithIdReportDf = preWithIdReportDf[preWithIdReportDf['Campaign ID'].apply(lambda x: not Report(x).judge())] #排除掉数据库中BasicPerformance表中已经有的campaign id
+        preWithIdReportDf = preWithIdReportDf[preWithIdReportDf['Campaign ID'].apply(
+            lambda x: not Report(x).judge())]  # 排除掉数据库中BasicPerformance表中已经有的campaign id
         preReportList = list(preWithIdReportDf['Campaign ID'])
-        preReportList = list(map(int, preReportList)) #此行重要，df中campaign_id是float形式
+        preReportList = list(map(int, preReportList))  # 此行重要，df中campaign_id是float形式
         preNoIdReportList = list(preNoIdReportDf['Campaign Name'])
         if len(preNoIdReportList) > 0:
             print("以下campaign应该今天以前发送报告，但没有campaign id，他们包括：\n{campaign}".format(campaign='\n'.join(preNoIdReportList)))
@@ -220,17 +213,17 @@ class EDM(object):
         '''
         t = DataTransfer()
         t.execute()
-        return 
+        return
 
     def data(self, country: str, time1: int, time2: int):
         '''
         此命令提供一段时间内某一地区的基本数据,并将以excel的形式存在EDM_project/analytics_data中。
-        eg: python edm.py data hongkong 20200101 20200630 
+        eg: python edm.py data hongkong 20200101 20200630
         '''
         data = DataExtractor()
         data.save(country, str(time1), str(time2))
         return
-    
+
     def setting(self, attribute: str, data: str):
         '''
         此命令负责更改个人设置，目前仅支持修改用户名，建议只在开始使用时设置一次即可。
@@ -245,8 +238,9 @@ class EDM(object):
         此命令负责request的管理，type分为[create, delete, edit, check]
         分别对应增删改查
         """
-        # if type == 'create':
-        #     Command.create()
+        from src.Controller.Request import create
+        if type == 'create':
+            create()
         # elif type == 'delete':
         #     Command.delete()
         # elif type == 'check':
@@ -254,9 +248,7 @@ class EDM(object):
         # elif type == 'edit':
         #     Command.edit()
         pass
-    
+
 
 if __name__ == "__main__":
     fire.Fire(EDM)
-    
-   

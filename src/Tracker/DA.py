@@ -14,7 +14,7 @@ from dateutil.parser import parse
 from matplotlib import pyplot as plt
 import numpy as np
 from matplotlib.ticker import FuncFormatter
-from src.Control.MA import MA
+from src.Connector.MA import MA
 
 
 class SMCDA(MA):

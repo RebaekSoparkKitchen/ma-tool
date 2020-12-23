@@ -9,12 +9,10 @@
 
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 import selenium
 import time
-import json
-from src.Control.MA import MA
+from src.Connector.MA import MA
 
 
 class CampaignSpider(MA):

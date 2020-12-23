@@ -1,8 +1,8 @@
 import pandas as pd
 import csv
 import openpyxl
-from openpyxl.styles import Font, colors, Alignment, Border, Side, PatternFill
-from src.Control.MA import MA
+from openpyxl.styles import Font, Border, Side, PatternFill
+from src.Connector.MA import MA
 
 
 class ExportedData(MA):

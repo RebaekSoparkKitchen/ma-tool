@@ -8,13 +8,12 @@
 '''
 import sys
 sys.path.append("../..")
-from openpyxl.styles import Font, colors, Alignment, PatternFill, Border, Side
+from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 import openpyxl
 from src.LocalDataBase.LocalData import LocalData
 from src.Tracker.Analytics import Analytics
-from src.Control.MA import MA
+from src.Connector.MA import MA
 from openpyxl.utils.dataframe import dataframe_to_rows
-import json
 
 
 class ReportExcel(MA):

@@ -8,8 +8,8 @@
 '''
 import sys
 sys.path.append("../..")
-from src.Control.MA import MA
-import sqlite3
+from src.Connector.MA import MA
+
 
 class Report(MA):
     def __init__(self, campaignId):
