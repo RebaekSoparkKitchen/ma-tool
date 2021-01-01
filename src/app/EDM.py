@@ -9,6 +9,7 @@
 import sys
 
 import fire
+from src.Transfer.gui import DataTransfer
 
 sys.path.append("../..")
 import time
@@ -38,10 +39,6 @@ class EDM(object):
 
     def __init__(self):
         super().__init__()
-
-    def __pretty(self, df):
-        from tabulate import tabulate
-        return tabulate(df, headers='keys', tablefmt='psql')
 
     @timer
     def simple_tracker(self, days=21):
@@ -92,35 +89,13 @@ class EDM(object):
         self.work('limit')
 
     def write_campaign_id(self):
-        '''
+        """
         此命令负责检查：今天之前需要发送的edm，是否没有填上SMC campaign id，若没有填上，此方法会提供一些信息，帮助您填写它。
         eg: python edm.py write_campaign_id
-        '''
-
-        a = Analytics()
-
-        if a.check().empty:
-            return "没啥campaign id需要写啊~"
-        for index, row in a.check().iterrows():
-            print(row)
-            while True:
-                campaignId = input('请输入以上campaign的id，谢谢~')
-                if campaignId == "next" or "exit":
-                    break
-                try:
-                    int(campaignId)
-                    break
-                except ValueError:
-                    print('请输入正确格式的campaign id')
-            if campaignId == "exit":
-                print('您已退出campaign_id输入环境')
-                break
-            elif campaignId == "next":
-                continue
-            else:
-                self.getTrackerInput().writeCampaignId(index, campaignId)
-                self.getTrackerInput().saveTracker()
-        return
+        :return: void
+        """
+        from src.Controller.CampaignIdUploader import upload
+        upload()
 
     def report(self, campaignId, catagory="static", path='../../report/'):
         '''

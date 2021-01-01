@@ -8,5 +8,6 @@ class TableData(object):
         self.content = content
 
 
+
 def data_producer(title: str, cols: list, sql: str) -> TableData:
     return TableData(title=title, cols=cols, content=MA().sql_process(sql))

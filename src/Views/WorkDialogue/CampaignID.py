@@ -9,7 +9,7 @@ class CampaignID(Dialogue):
 
     def validator(self):
         return Validator.from_callable(
-            lambda x: x.isdigit or (not x),
+            lambda x: x.isdigit() or (not x),
             error_message='smc campaign id should be numbers',
             move_cursor_to_end=True
         )
@@ -19,6 +19,6 @@ class CampaignID(Dialogue):
 
     def warning(self, text, question, default):
         if not text:
-            while not Confirm.ask("Are you sure you don't want to type in an smc_campaign_id for this request?")
+            while not Confirm.ask("Are you sure you don't want to type in an smc_campaign_id for this request?"):
                 self.ask()
         return text
