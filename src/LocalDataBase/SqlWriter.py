@@ -1,4 +1,4 @@
-'''
+"""
 @Description:
 data flow:
 spider -> local_data(raw data) -> sql_computer(中间计算层) -> sql_writer(更完备的记录进入数据库)
@@ -11,7 +11,7 @@ spider -> local_data(raw data) -> sql_computer(中间计算层) -> sql_writer(�
 @LastEditors: FlyingRedPig
 @LastEditTime: 2020-08-07 17:47:10
 @FilePath: \EDM\src\LocalDataBase\SqlWriter.py
-'''
+"""
 
 import sqlite3
 from src.LocalDataBase.SqlComputer import SqlComputer
@@ -34,9 +34,9 @@ class SqlWriter(MA):
 
 
     def __sqlProcess(self, *args) -> list:
-        '''
+        """
         helper method -> 对于一切需要sql操作的方法
-        '''
+        """
         assert len(args) > 0  #您必须传一个命令进来，否则不要调用此方法
         conn = sqlite3.connect(self.dbAddress)
         cur = conn.cursor()
@@ -54,11 +54,11 @@ class SqlWriter(MA):
         return temp
 
     def check(self) -> bool:
-        '''
+        """
         检查此campaign id是否已在数据库中
         已在数据库中 -> True
         不在数据库中 -> False
-        '''
+        """
         sql1 = 'SELECT * FROM {} WHERE {}={}'.format(self.basicTable, self.campaignIdAttribute, self.campaignId)
         sql2 = 'SELECT * FROM {} WHERE {}={}'.format(self.clickTable, self.campaignIdAttribute, self.campaignId)
         result1, result2 = self.__sqlProcess(sql1, sql2)
@@ -69,9 +69,9 @@ class SqlWriter(MA):
         return "INSERT INTO {} {} VALUES {}".format(table, str(attribute), str(data)) 
     
     def insertIntoBasic(self) -> None:
-        '''
+        """
         向BasicPerformance表插入此campaign id的数据
-        '''
+        """
         basic = self.basicData
 
         attribute = ('smc_campaign_id','sent','hard_bounces','soft_bounces','delivered', 'opened', 'click', 'unique_click', 'valid_click', 'bounce_rate', 'open_rate', 'unique_click_to_open_rate', 'valid_click_to_open_rate', 'vanilla_click_to_open_rate', 'ctr', 'unique_ctr', 'creation_time', 'editor')
@@ -83,9 +83,9 @@ class SqlWriter(MA):
         return 
 
     def insertIntoClick(self) -> None:
-        '''
+        """
         向ClickPerformance表插入此campaign id的数据
-        '''
+        """
         click = self.clickData
         attribute = ('smc_campaign_id', 'link_name', 'click_number', 'link_alias', 'if_main_link', 'creation_time', 'editor')
         sqlList = []
@@ -98,9 +98,9 @@ class SqlWriter(MA):
         return 
     
     def delete(self, table: str) -> list:
-        '''
+        """
         删除此数据库下所有带有此campaign id的数据
-        '''
+        """
         assert table in [self.basicTable, self.clickTable] 
         sql = "DELETE from {} where smc_campaign_id={};".format(table, str(self.campaignId))
         self.__sqlProcess(sql)

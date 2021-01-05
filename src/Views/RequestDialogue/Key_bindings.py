@@ -1,11 +1,11 @@
-'''
+"""
 @Description: 
 @Author: FlyingRedPig
 @Date: 2020-11-25 17:53:50
 @LastEditors: FlyingRedPig
 @LastEditTime: 2020-11-25 23:48:13
 @FilePath: \MA_tool\src\Request\key_bindings.py
-'''
+"""
 from prompt_toolkit.enums import EditingMode
 from prompt_toolkit.filters import completion_is_selected, has_completions
 from prompt_toolkit.key_binding import KeyBindings

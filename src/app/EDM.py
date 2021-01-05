@@ -1,15 +1,14 @@
-'''
+"""
 @Description: 可执行脚本
 @Author: FlyingRedPig
 @Date: 2020-05-12 19:44:54
 @LastEditors: FlyingRedPig
 @LastEditTime: 2020-11-23 15:28:44
 @FilePath: \MA_tool\src\app\EDM.py
-'''
+"""
 import sys
 
 import fire
-from src.Transfer.gui import DataTransfer
 
 sys.path.append("../..")
 import time
@@ -98,13 +97,13 @@ class EDM(object):
         upload()
 
     def report(self, campaignId, catagory="static", path='../../report/'):
-        '''
+        """
         此命令提供报告生成功能
         eg:  python edm.py report 1234 static
         其中 1234 指SMC campaign id
         static控制是否覆盖已有报告，这个参数只有两个值：static/dynamic，这个值也可以不填，默认为static
 
-        '''
+        """
         if self.getMA().readConfig()['username'] == "":
             username = input("此命令将访问数据库，您需要填写username: ")
             self.setting('username', username)
@@ -140,9 +139,9 @@ class EDM(object):
         return
 
     def routine(self):
-        '''
+        """
         此命令是其他几个命令的大集合（important），每天都需要执行的一个指令，提供信息如：未来工作、今天需发送报告、哪些campaign id需登记等
-        '''
+        """
 
         self.workflow()
         self.write_campaign_id()
@@ -182,27 +181,27 @@ class EDM(object):
         return
 
     def transfer(self):
-        '''
+        """
         此命令会弹出数据格式转换的用户界面，请注意我们要求模板为GC_STANDARD_EXPORT_EMAIL,
         不建议其他模板的csv文件转换。
-        '''
-        t = DataTransfer()
-        t.execute()
+        """
+        from src.Transfer.gui import DataTransfer
+        DataTransfer().execute()
         return
 
     def data(self, country: str, time1: int, time2: int):
-        '''
+        """
         此命令提供一段时间内某一地区的基本数据,并将以excel的形式存在EDM_project/analytics_data中。
         eg: python edm.py data hongkong 20200101 20200630
-        '''
+        """
         data = DataExtractor()
         data.save(country, str(time1), str(time2))
         return
 
     def setting(self, attribute: str, data: str):
-        '''
+        """
         此命令负责更改个人设置，目前仅支持修改用户名，建议只在开始使用时设置一次即可。
-        '''
+        """
         config = self.getMA().readConfig()
         assert attribute == "username"
         self.getMA().setConfig('username', data)

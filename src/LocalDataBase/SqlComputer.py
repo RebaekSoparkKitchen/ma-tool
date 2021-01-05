@@ -1,11 +1,11 @@
-'''
+"""
 @Description: 主要为SqlWriter提供clickData()和basicData()两个接口
 @Author: FlyingRedPig
 @Date: 2020-08-01 14:23:41
 @LastEditors: FlyingRedPig
 @LastEditTime: 2020-08-21 11:55:03
 @FilePath: \MA_tool\src\LocalDataBase\SqlComputer.py
-'''
+"""
 import sys
 sys.path.append("..")
 from src.LocalDataBase.LocalData import LocalData
@@ -31,9 +31,9 @@ class SqlComputer(LocalData):
         return self.__basic
     
     def pull(self) -> dict:
-        '''
+        """
         local_data中的json数据流向了我们这个子类
-        '''
+        """
         try:
             return self.search(self.__campaignId)
         except KeyError:
@@ -46,19 +46,19 @@ class SqlComputer(LocalData):
         return config['other_link']
 
     def __checkMainLink(self,x:str) -> int:
-        '''
+        """
         0 -> False
         1 -> True
-        '''
+        """
         if x in self.__otherLinkList():
             return 0
         return 1
     
 
     def clickData(self) -> list:
-        '''
+        """
         此方法提供数据给到sql table: click_performance
-        '''
+        """
         data = self.__rawData['click_performance']
         nowTime=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         # 新增三个json文件中没有的数据维度
@@ -109,9 +109,9 @@ class SqlComputer(LocalData):
         return num
 
     def basicData(self) -> list:
-        '''
+        """
         此方法提供数据给到sql table: basic_performance
-        '''
+        """
         nowTime=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         data = self.__rawData['basic_performance']
         clickData = self.__click

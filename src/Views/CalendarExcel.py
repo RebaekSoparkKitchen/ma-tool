@@ -1,11 +1,11 @@
-'''
+"""
 @Description: SimpleTracker类也是RequestTracker类的子类，它所提供的服务非常简单：(1) 提供一个日历形式的dataframe; (2) 提供一个日历形式的excel表格
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
 @LastEditTime: 2020-08-19 10:59:07
 @FilePath: \MA_tool\src\Tracker\SimpleTracker.py
-'''
+"""
 import datetime as dt
 from openpyxl.workbook.workbook import Workbook
 from openpyxl.styles import Font, Alignment, Border, Side, PatternFill

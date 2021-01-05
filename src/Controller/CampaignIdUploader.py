@@ -3,7 +3,7 @@ import sys
 sys.path.append("../..")
 
 from src.Models.Workflow import campaign_id_work
-from src.Views.Panel import Panel
+from src.Views.Diagram.Panel import Panel
 from src.Views.WorkDialogue.CampaignID import CampaignID
 from src.Models.Uploader import Uploader
 

@@ -1,11 +1,11 @@
-'''
+"""
 @Description: 当把数据迁移到sqlite时用到的脚本文件，不用做正式的操作中
 @Author: FlyingRedPig
 @Date: 2020-07-31 11:19:58
 @LastEditors: FlyingRedPig
 @LastEditTime: 2020-07-31 23:33:55
 @FilePath: \EDM\edm\LocalDataBase\migration.py
-'''
+"""
 import sqlite3
 import json
 import datetime
@@ -28,9 +28,9 @@ from sqlalchemy import create_engine
 # conn.close()
 
 def readConfig():
-    '''
+    """
     从config文件中读取tracker path
-    '''
+    """
     configPath = r'../config/config.json'
     with open(configPath,'r',encoding='utf8')as fp:
         json_data = json.load(fp)
@@ -46,9 +46,9 @@ def read():
     return json_data
 
 def build(table):
-    '''
+    """
     预处理数据，使其能导入sqlite
-    '''
+    """
     nowTime=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     data = read()
     if table == 'click_performance':

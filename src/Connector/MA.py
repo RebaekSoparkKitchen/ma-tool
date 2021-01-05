@@ -1,13 +1,15 @@
-'''
+"""
 @Description: 作为最高层级的类，让大家能方便读取配置文件
 @Author: FlyingRedPig
 @Date: 2020-08-03 11:47:04
 @LastEditors: FlyingRedPig
 @LastEditTime: 2020-08-19 11:19:58
 @FilePath: \MA_tool\src\Control\MA.py
-'''
+"""
 import json
 import sqlite3
+from collections import Iterable
+from typing import Iterator
 
 
 class MA(object):
@@ -38,25 +40,31 @@ class MA(object):
             json.dump(config, f)
         return
 
-    def sql_process(self, *args) -> list:
+    def query(self, statement: str or Iterator, as_dict=False) -> list:
         """
-        helper method -> 对于一切需要sql操作的方法
-        :param args:
+        sql 操作的简单封装
+        :param statement: could be a single statement or a list of statement
+        :param as_dict: if output a dictionary (key : col_names, value: data)
         :return:
         """
-
-        assert len(args) > 0  # 您必须传一个命令进来，否则不要调用此方法
         conn = sqlite3.connect(self.db_address)
+
+        def dict_factory(cursor, row):
+            d = {}
+            for idx, col in enumerate(cursor.description):
+                d[col[0]] = row[idx]
+            return d
+
+        if as_dict:
+            conn.row_factory = dict_factory
+
         cur = conn.cursor()
-        temp = []
-        if len(args) == 1:
-            sql = args[0]
-            cur.execute(sql)
-            temp = cur.fetchall()
-        else:
-            for sql in args:
-                cur.execute(sql)
-                temp.append(cur.fetchall())
+        if isinstance(statement, str):
+            cur.execute(statement)
+        elif isinstance(statement, Iterable):
+            for item in statement:
+                cur.execute(item)
+        result = cur.fetchall()
         conn.commit()
         conn.close()
-        return temp
+        return result

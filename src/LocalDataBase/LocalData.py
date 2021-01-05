@@ -29,11 +29,11 @@ import pandas as pd
 class LocalData(MA):
 
     def __init__(self):
-        '''
+        """
         @description: 
         @param {str} 本地数据库的地址 
         @return: 
-        '''
+        """
         super().__init__()
         filename = self.readConfig()['data_location']['SMCData']
         with open(filename) as f_obj:
@@ -51,14 +51,14 @@ class LocalData(MA):
     
 
     def __SMC2Dict(self, campaignId) -> dict:
-        '''
+        """
         important
         它是localData和spider的一个对接口
-        '''
+        """
         totalDic = {}
         dic = {}
         basicData = BasicPerformance(campaignId)
-        dic['basic_performance'] = basicData.basicPerformanceData()
+        dic['basic_performance'] = basicData.data()
         clickData = ClickPerformance(campaignId, basicData.driver)
         dic['click_performance'] = clickData.clickPerformanceData()
         totalDic[campaignId] = dic
@@ -88,10 +88,10 @@ class LocalData(MA):
 
 
     def search(self, campaignId: int or str):
-        '''
+        """
         important!
         为其他类提供接口
-        '''
+        """
         campaignId = str(campaignId)
         target = {}
         filename = self.getDataPath()
@@ -131,11 +131,11 @@ class LocalData(MA):
 
     
     def clickPerformanceDf(self, campaignId:int or str) -> pd.DataFrame :
-        '''
+        """
         @description:将json中的click_performance转换为dataframe数据结构
         @param {int or str} campaignId 
         @return: pd.DataFrame
-        '''
+        """
         dic = self.search(campaignId)['click_performance']
         df = pd.DataFrame(dic)
         df['Clicks'] = df['Clicks'].astype(int)

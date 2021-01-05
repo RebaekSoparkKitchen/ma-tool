@@ -1,5 +1,5 @@
 from src.Models.TableData import TableData
-from src.Views.Table import Table
+from src.Views.Diagram.Table import Table
 
 
 def create_table(data: TableData):

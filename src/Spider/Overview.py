@@ -1,11 +1,11 @@
-'''
+"""
 @Description: 
 @Author: FlyingRedPig
 @Date: 2020-05-06 19:19:06
 @LastEditors: FlyingRedPig
 @LastEditTime: 2020-08-06 10:35:10
 @FilePath: \EDM\src\Spider\Overview.py
-'''
+"""
 
 from src.Spider.CampaignSpider import CampaignSpider
 import time
@@ -23,9 +23,9 @@ class Overview(CampaignSpider):
 
     def goOverviewPage(self):
         if self.driver == None:  #若没有手动传driver过来
-            self.initDriver()
+            self.init_driver()
             self.driver.get(self.overviewUrl())
-        elif self.driver.current_url == self.url():
+        elif self.driver.current_url == self.url:
             self.driver.find_element_by_id(
                 "application-Initiative-manageCampaignFlow-component---object--ObjectPageLayout-anchBar-application-Initiative-manageCampaignFlow-component---object--Info_display_fragment_section-anchor"
             ).click()

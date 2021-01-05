@@ -1,11 +1,11 @@
-'''
+"""
 @Description: 此类负责report的excel表格的内容及排版
 @Author: FlyingRedPig
 @Date: 2020-05-08 11:35:14
 @LastEditors: FlyingRedPig
 @LastEditTime: 2020-09-03 10:37:13
 @FilePath: \MA_tool\src\Report\ReportExcel.py
-'''
+"""
 import sys
 sys.path.append("../..")
 from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
@@ -57,11 +57,11 @@ class ReportExcel(MA):
         return Font(name='Calibri', bold=True, size=14, color="00aecc")
 
     def setFormat(self) -> None:
-        '''
+        """
         @description: 在读取template之后，先整体对excel表格进行一些font,border的设置
         @param {type} 
         @return: 
-        '''
+        """
         border = Border(
             left=Side(border_style='thin', color='000000'),
             right=Side(border_style='thin', color='000000'),
@@ -84,11 +84,11 @@ class ReportExcel(MA):
         return
 
     def __addOverview(self) -> None:
-        '''
+        """
         @description: 添加overview块的字符串。ps.这边的接口设计是，所有计算均在对应的RequestTracker和LocalData类中完成，以降低耦合度。
         @param {type} 
         @return: 
-        '''
+        """
         trackerData = self.getTrackerData()
         localData = self.getLocalData()
 
@@ -109,11 +109,11 @@ class ReportExcel(MA):
         return
 
     def __addBasicPerformance(self) -> None:
-        '''
+        """
         @description: 添加基本表现信息，这些信息都是从localdata得到的，所以特意从localdata做了接口传过来。
         @param {type} 
         @return: 
-        '''
+        """
         LocalData = self.getLocalData()
 
         self.reportWs['A4'] = LocalData.metricSent(self.getCampaignId())
@@ -137,11 +137,11 @@ class ReportExcel(MA):
         return
 
     def __addClickPerformance(self) -> None:
-        '''
+        """
         @description: 将点击情况写入表格，来源于LocalData的两个方法，直接提取df过来，这里主要是一些格式上的调整。 
         @param {type} 
         @return: 
-        '''
+        """
         mainDf = self.getLocalData().mainClickPerformanceDf(self.getCampaignId())
         otherDf = self.getLocalData().otherClickPerformanceDf(self.getCampaignId())
 
@@ -196,11 +196,11 @@ class ReportExcel(MA):
     
 
     def __save(self, path:str) -> None :
-        '''
+        """
         @description: 关于保存过程的封装，这里值得注意要在permission error时提示关闭。 
         @param {str} excel 表格的存储地址，只需写到父级目录，excel的名字会自动从tracker中获取。 
         @return: 
-        '''
+        """
         while True:
             try:
                 # 文件名中出现特殊符号，要替换掉
@@ -222,11 +222,11 @@ class ReportExcel(MA):
         return
 
     def create(self, path:str="") -> None:
-        '''
+        """
         @description: 对外唯一接口，创建一个report excel表格。 
         @param {str} path: excel表格的存储地址，只需写到父级目录，excel的名字会自动从tracker中获取。  
         @return: 
-        '''
+        """
         self.setFormat()
         self.__addName()
         self.__addOverview()

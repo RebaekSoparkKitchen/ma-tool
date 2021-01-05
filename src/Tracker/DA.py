@@ -1,11 +1,11 @@
-'''
+"""
 @Description: 一个作为newsletter以及qbr的脚本，上次作newsletter随便写的
 @Author: FlyingRedPig
 @Date: 2020-07-15 11:51:16
 @LastEditors: ,: FlyingRedPig
 @LastEditTime: ,: 2020-10-21 11:57:40
 @FilePath: ,: \MA_tool\src\Tracker\DA.py
-'''
+"""
 import sys
 sys.path.append("../..")
 from src.Tracker.RequestTracker import Request_Tracker
@@ -63,9 +63,9 @@ class SMCDA(MA):
         return self.df
 
     def isHK(self, x):
-        '''
+        """
         判断一个字符串是不是香港的，在MU中
-        '''
+        """
         return 'hong' in x.lower()
 
     def isTW(self, x):
@@ -79,10 +79,10 @@ class SMCDA(MA):
         return parse(str(string)).date()
 
     def filterData(self, region: str, timeRange: tuple):
-        '''
+        """
         timeRange 是一个 str tuple，我们会预处理把它变成dt.date
         region: ['gc','cn','tw','hk']
-        '''
+        """
         time1 = SMCDA.str2date(timeRange[0])
         time2 = SMCDA.str2date(timeRange[1])
 
@@ -102,17 +102,17 @@ class SMCDA(MA):
     # 'Request Type' , 'MU', 'Team'
     @staticmethod
     def countBy(df, attribute: str):
-        '''
+        """
         核心函数，我们需要大量的countBy
-        '''
+        """
         return pd.pivot_table(
             df, index=[attribute], aggfunc='count')['Campaign Name']
 
     @staticmethod
     def openRateBy(df, attribute: str):
-        '''
+        """
         核心函数，按attribute的开信率对比
-        '''
+        """
         df = pd.pivot_table(df, index=[attribute], aggfunc=np.sum)
         return df['Opened'] / df['Delivered']
 
@@ -161,9 +161,9 @@ class SMCDA(MA):
 
     @staticmethod
     def to_percent(temp, position):
-        '''
+        """
         helper method, 为了显示百分比
-        '''
+        """
         return '%1.0f' % (100 * temp) + '%'
 
     def byOpenRateMonth(self, df, bgColor="#f4f8fb"):

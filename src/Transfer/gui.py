@@ -1,11 +1,11 @@
-'''
+"""
 @Description: 
 @Author: FlyingRedPig
 @Date: 2020-05-12 13:40:05
 @LastEditors: FlyingRedPig
 @LastEditTime: 2020-08-12 20:21:59
 @FilePath: \MA_tool\src\Transfer\gui.py
-'''
+"""
 import tkinter as tk
 import src.Transfer.transfer_csv_to_excel as ce
 from tkinter import filedialog
@@ -51,19 +51,19 @@ class DataTransfer(MA):
 
 
     def select_open_path(self):
-        '''
+        """
         为browse按钮写的，删除默认路径，填上选中路径
         :return:
-        '''
+        """
         file_path = filedialog.askopenfilename(initialdir=self.input_path)
         self.e1.delete(0, tk.END)
         self.e1.insert(0, file_path)
 
     def select_save_path(self):
-        '''
+        """
         为save as按钮写的
         :return:
-        '''
+        """
         save_path = filedialog.asksaveasfilename(defaultextension='xlsx',initialdir=self.output_path,filetypes=[('Excel file', '.xlsx'),('all files','.*')])
         self.e2.delete(0, tk.END)
         self.e2.insert(0, save_path)

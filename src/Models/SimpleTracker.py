@@ -16,7 +16,7 @@ class SimpleTracker:
               f"from Request WHERE " \
               f"DATE(blast_date) > DATE('now', '-{self.days_diff} day', 'localtime')"
 
-        return MA().sql_process(sql)
+        return MA().query(sql)
 
     def data(self):
         dates_range = self.date_range(dt.datetime.now().date(), self.days_diff)

@@ -1,10 +1,10 @@
-'''
+"""
 @Description: 
 @Author: FlyingRedPig
 @Date: 2020-11-23 18:08:28
 @LastEditors: FlyingRedPig
 @LastEditTime: 2020-11-23 18:56:28
-'''
+"""
 
 
 class Similarity():

@@ -1,11 +1,11 @@
-'''
+"""
 @Description: extract some data for qbr
 @Author: FlyingRedPig
 @Date: 2020-07-06 16:26:03
 @LastEditors: FlyingRedPig
 @LastEditTime: 2020-08-19 10:48:15
 @FilePath: \MA_tool\src\Tracker\Data.py
-'''
+"""
 
 from src.Tracker.Analytics import Analytics 
 from src.Connector.MA import MA

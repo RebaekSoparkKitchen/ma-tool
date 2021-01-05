@@ -22,4 +22,4 @@ class Uploader(object):
         sql = f"UPDATE {self.table} " \
               f"SET {self.col} = {self.data}, last_modified_time = '{now}' " \
               f"WHERE id = {self.pk_id};"
-        MA().sql_process(sql)
+        MA().query(sql)

@@ -121,7 +121,7 @@ def comments(request: Request, default: str = ''):
 
 def request_id(request: Request):
     ma = MA()
-    max_id = ma.sql_process("SELECT MAX(request_id) FROM Request")
+    max_id = ma.query("SELECT MAX(request_id) FROM Request")
     request.request_id = max_id[0][0] + 1
 
     return request

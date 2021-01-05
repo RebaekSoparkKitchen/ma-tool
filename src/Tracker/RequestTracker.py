@@ -1,4 +1,4 @@
-'''
+"""
 @Description: @Description: Request_Tracker类，顾名思义，是对Request Tracker的excel表格建模。
             但此类本身并不进行数据筛选展示也不进行写入操作，只是提供数据清洗，
             并从内部唯一接受path入口读取excel，作为父类存在。
@@ -7,7 +7,7 @@
 @LastEditors: FlyingRedPig
 @LastEditTime: 2020-08-07 16:04:19
 @FilePath: \EDM\src\Tracker\RequestTracker.py
-'''
+"""
 
 import pandas as pd
 import datetime as dt
@@ -42,10 +42,10 @@ class Request_Tracker(MA):
         return self.__path
 
     def __transDate(self, x):
-        '''
+        """
         辅助函数，从excel读成dataframe的时候是时间戳，需要转换为time.date类型
         这个函数的精彩之处在于：能转date类型转过去，转不过去的仍保留原值，这就使"待定" "取消"等词得以保留
-        '''
+        """
 
         try:
             return x.date()
@@ -53,10 +53,10 @@ class Request_Tracker(MA):
             return x
 
     def turnWeekday(self, x):
-        '''
+        """
         help function
         根据日期添加星期一列
-        '''
+        """
         dic = {
             0: '星期一',
             1: '星期二',
@@ -73,11 +73,11 @@ class Request_Tracker(MA):
             return None
 
     def cleanDate(self):
-        '''
+        """
         input: self.vanillaDf 
         output: self.cleanDf
 
-        '''
+        """
         warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
         # 此函数会报 pandas warning: SettingWithCopyWaring, 经查证，这是一个pandas的bug
         # 即：foo = df['Launch Date']

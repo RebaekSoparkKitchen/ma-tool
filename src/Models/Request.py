@@ -67,7 +67,7 @@ class Request:
         col = tuple(map(lambda x: request_db[x], col))
         values = tuple(map(lambda x: str(x), values))
         sql = f"INSERT INTO Request {str(col)} VALUES {str(values)}"
-        ma.sql_process(sql)
+        ma.query(sql)
         return
 
     def edit(self):
@@ -78,7 +78,7 @@ class Request:
 
         sql = f"UPDATE Request SET request_status = -2 WHERE id={index}"
         ma = MA()
-        ma.sql_process(sql)
+        ma.query(sql)
         return
 
     @staticmethod
@@ -89,7 +89,7 @@ class Request:
         """
 
         sql = f"SELECT * FROM Request WHERE request_status != -2 and id = {index}"
-        result = MA().sql_process(sql)
+        result = MA().query(sql)
 
         if len(result) > 1:
             raise ValueError("请赶快检查：同一个request id不可以有两个wave")
@@ -97,7 +97,7 @@ class Request:
         if not result:
             return None
 
-        values = MA().sql_process(sql)[0][1:]  # index 0 is primary key id
+        values = MA().query(sql)[0][1:]  # index 0 is primary key id
         request = Request(*values)
 
         return request

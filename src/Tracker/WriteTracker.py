@@ -1,11 +1,11 @@
-'''
+"""
 @Description: 提供所有向tracker中写入的服务
 @Author: FlyingRedPig
 @Date: 2020-05-12 13:46:11
 @LastEditors: FlyingRedPig
 @LastEditTime: 2020-08-06 10:37:39
 @FilePath: \EDM\src\Tracker\WriteTracker.py
-'''
+"""
 import sys
 sys.path.append('../..')
 import openpyxl
@@ -19,11 +19,11 @@ class WriteTracker(Request_Tracker):
         self.trackerWs = self.trackerWb.active
 
     def writeCampaignId(self, index:int, campaignId:int or str) -> None:
-        '''
+        """
         @description: 给定df的索引和campaignId，即可写入对应的campaignID
         @index: df对应的索引； campaignId: 对应即将写入的campaignId，会要求用户输入
         @return: 
-        '''
+        """
         campaignId = int(campaignId)
         campaignIdCol = 'K'
         rowNum = index + 2 # 2指openpyxl的行号和dataframe的索引天然的差值

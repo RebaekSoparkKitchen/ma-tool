@@ -1,11 +1,11 @@
-'''
+"""
 @Description: EDM.Analytics的测试文件
 @Author: FlyingRedPig
 @Date: 2020-04-23 21:54:48
 @LastEditors: FlyingRedPig
 @LastEditTime: 2020-08-06 10:35:38
 @FilePath: \EDM\src\tests\test_Analytics.py
-'''
+"""
 import unittest
 import os
 import sys

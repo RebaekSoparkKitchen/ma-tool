@@ -53,10 +53,10 @@ class ExportedData(MA):
         return df
 
     def add_color(self, click_file_path, match_attribute='DB_key'):
-        '''
+        """
         为点击的人添加颜色
         color_file是一个df文件
-        '''
+        """
         if self.get_clean_data() == 0:
             self.clean_data()
         df = self.get_clean_data()
@@ -116,10 +116,10 @@ class Highlight(object):
         return self.df
 
     def add_color(self, click_file_path, match_attribute='Email'):
-        '''
+        """
         为点击的人添加颜色
         color_file是一个df文件
-        '''
+        """
         path = self.get_path()
         df = self.get_df()
         click_file = pd.read_csv(click_file_path, sep=',')

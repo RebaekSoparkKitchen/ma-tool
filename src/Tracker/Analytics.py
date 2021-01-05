@@ -1,11 +1,11 @@
-'''
+"""
 @Description: Analytics是非常重要的类，它是继承于RequestTracker，为report以及界面展示提供服务
 @Author: FlyingRedPig
 @Date: 2020-04-30 18:03:27
 @LastEditors: FlyingRedPig
 @LastEditTime: 2020-11-25 13:55:44
 @FilePath: \MA_tool\src\Tracker\Analytics.py
-'''
+"""
 import sys
 sys.path.append("../..")
 import warnings
@@ -43,9 +43,9 @@ class Analytics(Request_Tracker):
         return self.__ytdData
 
     def __turnWeekday(self, x):
-        '''
+        """
         help function
-        '''
+        """
         try:
             return x.weekday()
         except AttributeError:
@@ -66,11 +66,11 @@ class Analytics(Request_Tracker):
         ]]
 
     def report(self, *args):
-        '''
+        """
         @description: report方法给出我们需要今天report的dataframe
         @param {df:DataFrame, *args:str} *args代表
         @return: DataFrame
-        '''
+        """
 
         df = self.getCleanDf()
 
@@ -138,11 +138,11 @@ class Analytics(Request_Tracker):
                 return x
 
         def transfer_date(x):
-            '''
+            """
             @description: 将参数转为dt.date
             @param {type} 
             @return: 
-            '''
+            """
             if isinstance(x, str):
                 x = x.lower()
             try:
@@ -184,11 +184,11 @@ class Analytics(Request_Tracker):
 
         
     def check(self):
-        '''
+        """
         @description: 
         @param {type} 
         @return: 所有过期的，且没有campaign id的条目 -> DataFrame
-        '''
+        """
         df = self.getCleanDf()
         df = df[(df['Launch Date'] <= dt.date.today()) &
                 (df['Launch Date'] >= self.getStartDate()) &
@@ -199,23 +199,23 @@ class Analytics(Request_Tracker):
         return df[['Campaign Name', 'Owner ', 'Launch Date', 'Campaign ID']]
 
     def waitWork(self):
-        '''
+        """
         @description: 所有待定，临时取消等等的campaign
         @param {type} 
         @return: 
-        '''
-        '''
+        """
+        """
         表示待定的工作
-        '''
+        """
         df = self.getVanillaDf()
         df = df[(df['Launch Date'].apply(lambda x: isinstance(x, str)))]
 
         return df[['Launch Date', 'Campaign Name', 'Owner ']]
 
     def communicationLimitHint(self):
-        '''
+        """
         为第二天的campaign查看一周前的campaign
-        '''
+        """
         # 先检验数据是否被清洗了
 
         df = self.getCleanDf()
@@ -240,11 +240,11 @@ class Analytics(Request_Tracker):
         return df[['Campaign Name', 'Launch Date', 'Weekday', 'Campaign ID']]
 
     def findCol(self, colName) -> object:
-        '''
+        """
         @description: 通过campaign id筛选出对应的attribute，若出现多campaign id的情况，一致取最后一个
         @param {str} 我们想要查找的列名 
         @return: 若我们只有一个参数，则返回一个str/int，若多个，则返回一个字典
-        '''
+        """
 
         dic = {}
         df = self.getCleanDf()

@@ -17,7 +17,7 @@ from rich import box
 class OwnerName(RequestDialogue):
     def __init__(self, request: Request = Request(), question: str = '请输入Owner Name: ', default: str = ''):
         super().__init__(request, question, default)
-        self.name_list = self.sql_process("SELECT first_name, last_name FROM Staff")
+        self.name_list = self.query("SELECT first_name, last_name FROM Staff")
 
         if default == '':
             self.default = self.read_data()['default']['owner_full_name']
@@ -81,7 +81,7 @@ class OwnerName(RequestDialogue):
         """
         return : team , location when input name
         """
-        return self.sql_process(
+        return self.query(
             f"SELECT team, location FROM Staff WHERE first_name = '{name[0]}' AND last_name = '{name[1]}'")
 
 

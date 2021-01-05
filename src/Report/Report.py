@@ -1,11 +1,11 @@
-'''
+"""
 @Description: 在生成报告的时候显示报告相关的信息, eg: time, editor
 @Author: FlyingRedPig
 @Date: 2020-08-07 16:11:11
 @LastEditors: FlyingRedPig
 @LastEditTime: 2020-11-23 12:03:51
 @FlePath: \EDM\src\Report\Report.py
-'''
+"""
 import sys
 sys.path.append("../..")
 from src.Connector.MA import MA
