@@ -57,9 +57,9 @@
     },
     "file_location": {
         "SimpleTracker": "C:/Users/C5293427/Desktop/EDM/Simple_Tracker.xlsx",
-        "reportSave": "C:/Users/C5293427/Desktop/EDM/report/",
+        "report_save": "C:/Users/C5293427/Desktop/EDM/report/",
         "Analytics": "C:/Users/C5293427/Desktop/EDM/analytics_data/",
-        "reportTemplate": "../../config/Report_template.xlsx"
+        "report_template": "../../config/Report_template.xlsx"
     },
     "transfer": {
         "input_path": "C:/Users/C5293427/Desktop/Data_exported/csv_file",

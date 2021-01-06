@@ -13,7 +13,7 @@ class ReportUploader(object):
     def upload(self):
         basic, click = self.gen_data()
         click_performance_list = list(map(ReClick, click))
-        ReBasic(basic, click_performance_list).update()
+        ReBasic(basic).update()
         for item in click_performance_list:
             item.update()
 
@@ -57,3 +57,7 @@ class ReportUploader(object):
 if __name__ == '__main__':
     a = ReportUploader(6414)
     a.upload()
+    # b = ReClick.select(6414)
+    # c = ReBasic.select(6414)
+    # print(b[0].__dict__)
+    # print(c.__dict__)

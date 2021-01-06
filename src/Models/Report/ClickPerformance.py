@@ -16,6 +16,15 @@ class ClickPerformance(object):
         self.if_main_link = data['if_main_link']
 
     @staticmethod
+    def valid_click_number(smc_campaign_id):
+        click_data_list = ClickPerformance.select(smc_campaign_id)
+        valid_click = 0
+        for item in click_data_list:
+            if item.link_name not in MA().read_config()['other_link']:
+                valid_click += int(item.click_number)
+        return valid_click
+
+    @staticmethod
     def select(smc_campaign_id):
         sql = f"select * from ClickPerformance where smc_campaign_id = {smc_campaign_id}"
         rows = MA().query(sql, as_dict=True)
@@ -35,10 +44,23 @@ class ClickPerformance(object):
         sql2 = insert(table, tuple(data_dic.keys()), tuple(data_dic.values()))
         MA().query([sql1, sql2])
 
+    @staticmethod
+    def main_link_list(smc_campaign_id):
+        link_list = ClickPerformance.select(smc_campaign_id)
+        main_list = list(filter(lambda x: x.if_main_link == 1, link_list))
+        main_list.sort(key=lambda x: int(x.click_number), reverse=True)
+        return main_list
+
+    @staticmethod
+    def other_link_list(smc_campaign_id):
+        link_list = ClickPerformance.select(smc_campaign_id)
+        other_list = list(filter(lambda x: x.if_main_link == 0, link_list))
+        other_list.sort(key=lambda x: int(x.click_number), reverse=True)
+        return other_list
+
 
 if __name__ == '__main__':
-    records = {'smc_campaign_id': 0, 'link_name': 'new', 'click_number': 250, 'link_alias': 3, 'if_main_link': 4}
-    c = ClickPerformance(records)
-    r = ClickPerformance.select(4227)
-    print(r[1].link_name)
-    print(r[1].click_number)
+    a = ClickPerformance.other_link_list(6414)
+    for i in a:
+        print(i.link_name)
+        print(i.click_number)
