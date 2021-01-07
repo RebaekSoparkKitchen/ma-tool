@@ -96,7 +96,7 @@ class EDM(object):
         from src.Controller.CampaignIdUploader import upload
         upload()
 
-    def report(self, campaignId, catagory="static", path='../../report/'):
+    def report(self, smc_campaign_id, category="static", path=''):
         """
         此命令提供报告生成功能
         eg:  python edm.py report 1234 static
@@ -104,81 +104,38 @@ class EDM(object):
         static控制是否覆盖已有报告，这个参数只有两个值：static/dynamic，这个值也可以不填，默认为static
 
         """
-        if self.getMA().readConfig()['username'] == "":
+        assert category in ['static', 'dynamic'], "category参数只接收static或者dynamic"
+        from src.Controller.Report import Report
+        if MA().read_config()['username'] == "":
             username = input("此命令将访问数据库，您需要填写username: ")
             self.setting('username', username)
-        l = LocalData()  # 此处硬编码了地址，因为脚本文件和类文件不在同一个位置，那么与campaign_data.json的相对位置也不同
-        w = WriteTracker()
-
-        if catagory == "static":
-            l.request(overwrite=False, campaignId=campaignId)
-            s = SqlWriter(campaignId)  # 一定要在这里初始化，因为sqlWriter初始化的时候要在数据库中找这个campaign id 所以必须要上一行代码执行结束之后才行
-            s.push(overwrite=False)
-        elif catagory == "dynamic":
-            l.request(overwrite=True, campaignId=campaignId)
-            s = SqlWriter(campaignId)
-            s.push(overwrite=True)
+        r = Report(smc_campaign_id)
+        if category == "static" and r.is_exist():
+            r.to_excel(path)
         else:
-            raise ValueError('catagory参数只接收static或者dynamic')
+            r.update()
+            r.to_excel(path)
 
-        r = ReportExcel(
-            campaignId)
-        r.create(path=path)
-        self.getTrackerInput().writePerformanceData(campaignId)
-        self.getTrackerInput().saveTracker()
-        a = Analytics(campaignId)
-        print(f'《{a.name()}》数据报告已创建成功')
-        print(f'campaign id: {campaignId}')
-        print(f'owner: {a.owner()}')
-        print(f'Launch Date: {a.launchDate()}')
-
-        reportInfo = Report(campaignId)
-        time = reportInfo.time()
-        editor = reportInfo.editor()
-        print('报告中的数据由{}创建于{}'.format(editor, time))
+        # print(f'《{a.name()}》数据报告已创建成功')
+        # print(f'campaign id: {campaignId}')
+        # print(f'owner: {a.owner()}')
+        # print(f'Launch Date: {a.launchDate()}')
+        #
+        # reportInfo = Report(campaignId)
+        # time = reportInfo.time()
+        # editor = reportInfo.editor()
+        # print('报告中的数据由{}创建于{}'.format(editor, time))
         return
 
     def routine(self):
         """
         此命令是其他几个命令的大集合（important），每天都需要执行的一个指令，提供信息如：未来工作、今天需发送报告、哪些campaign id需登记等
         """
+        from src.Models.Workflow import report_work
+        r = report_work()
+        for item in r.content:
+            self.report(item[-1], 'static')
 
-        self.workflow()
-        self.write_campaign_id()
-        a = Analytics()
-        reportDf = a.report()
-        # the noId / withId crazy staff is to solve bug like campaign id == null in reportDf
-        noIdReportDf = reportDf[reportDf['Campaign ID'].isna()]
-        withIdReportDf = reportDf[reportDf['Campaign ID'].notna()]
-        reportList = list(withIdReportDf['Campaign ID'])
-        reportList = list(map(int, reportList))  # 此行重要，df中campaign_id是float形式
-        noIdReportList = list(noIdReportDf['Campaign Name'])
-        if len(noIdReportList) > 0:
-            print("以下campaign应该今天发送报告，但没有campaign id，他们包括：\n{campaign}".format(campaign='\n'.join(noIdReportList)))
-
-        if len(reportList) > 0:
-            print('以下campaign应该在今天发送报告')
-            for campaignId in reportList:
-                self.report(campaignId)
-
-        preReportDf = a.report('20200101', 'yesterday')
-        preNoIdReportDf = preReportDf[preReportDf['Campaign ID'].isna()]
-        preWithIdReportDf = preReportDf[preReportDf['Campaign ID'].notna()]
-        preWithIdReportDf = preWithIdReportDf[preWithIdReportDf['Campaign ID'].apply(
-            lambda x: not Report(x).judge())]  # 排除掉数据库中BasicPerformance表中已经有的campaign id
-        preReportList = list(preWithIdReportDf['Campaign ID'])
-        preReportList = list(map(int, preReportList))  # 此行重要，df中campaign_id是float形式
-        preNoIdReportList = list(preNoIdReportDf['Campaign Name'])
-        if len(preNoIdReportList) > 0:
-            print("以下campaign应该今天以前发送报告，但没有campaign id，他们包括：\n{campaign}".format(campaign='\n'.join(preNoIdReportList)))
-
-        if len(preReportList) > 0:
-            print('以下campaign应该在今天以前发送报告')
-            for campaignId in preReportList:
-                self.report(campaignId)
-        # 最后再生成simple_tracker，以便于把刚刚写的campaign id也计算进去
-        self.simple_tracker()
-        return
 
     def transfer(self):
         """

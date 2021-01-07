@@ -14,7 +14,6 @@ from src.Models.Report.ReportData import ReportData
 from src.Models.Report.ClickPerformance import ClickPerformance
 from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 import openpyxl
-from openpyxl.utils.dataframe import dataframe_to_rows
 
 
 class ReportExcel(object):
@@ -149,19 +148,6 @@ class ReportExcel(object):
             current_row += 1
             ws['A' + str(current_row)] = link.link_name
             ws['E' + str(current_row)] = link.click_number
-
-        # link_name = iter(['Main Link Name', 'Other Link Name'])
-        # for df in [mainDf, otherDf]:
-        #     name = next(link_name)
-        #     for i in range(merge_col_numbers - 1):
-        #         df[None] = None
-        #     if df.empty:
-        #         df[name] = None
-        #         df['Click Numbers'] = None
-        #
-        #     df = df[[name, None, None, None, 'Click Numbers']]
-        #     for r in dataframe_to_rows(df, index=False, header=True):
-        #         self.report_ws.append(r)
 
 
         # 合并单元格

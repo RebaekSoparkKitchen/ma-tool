@@ -101,7 +101,6 @@ class CalendarExcel(object):
                 color = switch(color, color_list)
 
         pattern2 = PatternFill('solid', fgColor='f3e8c2')  # header颜色
-
         for i in ws['1']:
             i.fill = pattern2
 

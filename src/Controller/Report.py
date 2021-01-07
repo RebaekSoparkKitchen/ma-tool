@@ -1,21 +1,35 @@
+from src.Connector.MA import MA
 from src.Models.Report.BasicPerformance import BasicPerformance as ReBasic
 from src.Models.Report.ClickPerformance import ClickPerformance as ReClick
+from src.Models.Report.ReportData import ReportData
 from src.Spider.BasicPerformance import BasicPerformance as SpBasic
 from src.Spider.ClickPerformance import ClickPerformance as SpClick
-from src.Connector.MA import MA
+from src.Views.ReportExcel import ReportExcel
 
 
-class ReportUploader(object):
+class Report(object):
 
     def __init__(self, smc_campaign_id):
         self.smc_campaign_id = smc_campaign_id
 
-    def upload(self):
+    def update(self):
+        """
+        api
+        实际上包含两个过程 pull & push
+        pull : 封装在了data()中，spider的两个类负责
+        push : 封装在了update()中，Models.report 中的两个类负责
+        :return:
+        """
         basic, click = self.gen_data()
         click_performance_list = list(map(ReClick, click))
-        ReBasic(basic).update()
+        # 执行顺序最为重要，basic的valid click要从ClickPerformance里面提数据
         for item in click_performance_list:
             item.update()
+        ReBasic(basic).update()
+
+    def to_excel(self, path: str = ''):
+        r = ReportExcel(self.smc_campaign_id)
+        r.save(path)
 
     def gen_data(self):
         """
@@ -40,6 +54,9 @@ class ReportUploader(object):
         data_dic['unique_click'] = data_dic.pop('Unique Click')
         data_dic['click'] = data_dic.pop('Click')
         return data_dic
+
+    def is_exist(self):
+        return ReportData.query_campaign_id(self.smc_campaign_id)
 
     @staticmethod
     def change_click_key(data_dic):
