@@ -27,7 +27,7 @@ class CalendarExcel(object):
 
     @staticmethod
     def set_header(ws):
-        headers = ['Launch Date', 'Weekday', 'Campaign Name', 'Event Date', 'Owner', 'Campaign ID']
+        headers = ['Launch Date', 'Weekday', 'Campaign Name', 'Wave', 'Event Date', 'Owner', 'Campaign ID']
         ws.append(headers)
 
     @staticmethod
@@ -35,9 +35,10 @@ class CalendarExcel(object):
         ws.column_dimensions['A'].width = 12
         ws.column_dimensions['B'].width = 10
         ws.column_dimensions['C'].width = 50
-        ws.column_dimensions['D'].width = 12
-        ws.column_dimensions['E'].width = 25
-        ws.column_dimensions['F'].width = 15
+        ws.column_dimensions['D'].width = 6
+        ws.column_dimensions['E'].width = 12
+        ws.column_dimensions['F'].width = 25
+        ws.column_dimensions['G'].width = 15
 
     @staticmethod
     def set_font(ws):
@@ -107,15 +108,11 @@ class CalendarExcel(object):
         # 开始做今天起倒退五天的渐进色
 
         def one_day_color(ws, color, date):
-
             pattern3 = PatternFill('solid', fgColor=color)
             for i in ws.rows:
-                if isinstance(i[0].value, str) or (i[0].value is None):
-                    continue
-                else:
-                    if i[0].value.strftime('%Y-%m-%d') == str(date):
-                        for j in i:
-                            j.fill = pattern3
+                if i[0].value == str(date):
+                    for j in i:
+                        j.fill = pattern3
 
         today = dt.date.today()
         traffic_range = CalendarExcel.date_range(today, 5)  # 整体转换为列表类型
@@ -182,9 +179,9 @@ class CalendarExcel(object):
         self.set_col_width(ws)  # 0s
         self.set_font(ws)  # 0.018s
         self.set_align(ws)  # 0.007s
-        self.set_border(ws)  # 0.037s
         self.set_color(ws)  # 0.07s
         self.set_merge(ws)  # 0.14s
+        self.set_border(ws)  # 0.037s
         self.set_freeze(ws)
         while True:
             try:

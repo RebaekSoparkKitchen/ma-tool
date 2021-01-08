@@ -55,6 +55,8 @@ class ClickPerformance(object):
     def other_link_list(smc_campaign_id):
         link_list = ClickPerformance.select(smc_campaign_id)
         other_list = list(filter(lambda x: x.if_main_link == 0, link_list))
+        # check if click number are numbers rather than string
+        other_list = list(filter(lambda x: isinstance(x.click_number, int) or x.isdigit(), other_list))
         other_list.sort(key=lambda x: int(x.click_number), reverse=True)
         return other_list
 
