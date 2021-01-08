@@ -36,21 +36,27 @@ class Request:
         self._team = team
         self._mu = mu  # 依据location做一个mapping
         self._location = location
-        try:
-            self._blast_date = dt.datetime.strptime(blast_date, '%Y-%m-%d').date()
-        except ValueError:
+        if not blast_date:
+            self._blast_date = None
+        else:
             try:
-                self._blast_date = dt.datetime.strptime(blast_date, '%Y%m%d').date()
+                self._blast_date = dt.datetime.strptime(blast_date, '%Y-%m-%d').date()
             except ValueError:
-                self._blast_date = blast_date
+                try:
+                    self._blast_date = dt.datetime.strptime(blast_date, '%Y%m%d').date()
+                except ValueError:
+                    self._blast_date = blast_date
 
-        try:
-            self._event_date = dt.datetime.strptime(event_date, '%Y-%m-%d').date()
-        except ValueError:
+        if not event_date:
+            self.event_date = None
+        else:
             try:
-                self._event_date = dt.datetime.strptime(event_date, '%Y%m%d').date()
+                self._event_date = dt.datetime.strptime(event_date, '%Y-%m-%d').date()
             except ValueError:
-                self._event_date = event_date
+                try:
+                    self._event_date = dt.datetime.strptime(event_date, '%Y%m%d').date()
+                except ValueError:
+                    self._event_date = event_date
 
         self._report_date = report_date
         self._creation_time = creation_time
