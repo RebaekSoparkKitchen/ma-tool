@@ -40,13 +40,21 @@ class MA(object):
             json.dump(config, f)
         return
 
-    def query(self, statement: str or Iterator, as_dict=False) -> list:
+    def query(self, statement: str or Iterator, as_dict=False, orm=False):
         """
         sql 操作的简单封装
+        :param orm: if using record to query
         :param statement: could be a single statement or a list of statement
         :param as_dict: if output a dictionary (key : col_names, value: data)
         :return:
         """
+        if orm:
+            import records
+            db = records.Database(f'sqlite:///{self.db_address}')
+            conn = db.get_connection()
+            rows = conn.query(statement)
+            return rows
+
         conn = sqlite3.connect(self.db_address)
 
         def dict_factory(cursor, row):

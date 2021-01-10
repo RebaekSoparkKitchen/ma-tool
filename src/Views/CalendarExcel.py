@@ -117,7 +117,7 @@ class CalendarExcel(object):
         today = dt.date.today()
         traffic_range = CalendarExcel.date_range(today, 5)  # 整体转换为列表类型
         # traffic_range = list(map(lambda x: x.date(), traffic_range))  # 元素转换为date类型
-        gradient_color = ['ff6e54', 'ffa600', 'ffa600', 'ffa600', 'ffa600']
+        gradient_color = ['ff6e54', 'ffa600', 'ffa600', 'ffa600', 'ff6e54']
         color_dict = dict(zip(traffic_range, gradient_color))  # 将日期和颜色对应成字典
         for date in color_dict.keys():
             one_day_color(ws, color_dict[date], date)
