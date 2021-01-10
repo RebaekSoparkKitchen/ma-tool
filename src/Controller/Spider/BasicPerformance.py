@@ -9,7 +9,7 @@
 import sys
 
 sys.path.append('../..')
-from src.Spider.CampaignSpider import CampaignSpider
+from src.Controller.Spider.CampaignSpider import CampaignSpider
 import re
 import selenium
 

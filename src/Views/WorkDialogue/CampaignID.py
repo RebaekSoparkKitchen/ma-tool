@@ -4,7 +4,7 @@ from src.Views.Dialogue import Dialogue
 
 
 class CampaignID(Dialogue):
-    def __init__(self, question: str = '请输入 smc campaign id: ', default: str = ''):
+    def __init__(self, question: str = '请输入 SMC Campaign ID: ', default: str = ''):
         super().__init__(question, default)
 
     def validator(self):

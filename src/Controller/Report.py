@@ -1,9 +1,15 @@
+import sys
+
+sys.path.append('../..')
+
 from src.Connector.MA import MA
+from src.Controller.Spider.BasicPerformance import BasicPerformance as SpBasic
+from src.Controller.Spider.ClickPerformance import ClickPerformance as SpClick
 from src.Models.Report.BasicPerformance import BasicPerformance as ReBasic
 from src.Models.Report.ClickPerformance import ClickPerformance as ReClick
 from src.Models.Report.ReportData import ReportData
-from src.Spider.BasicPerformance import BasicPerformance as SpBasic
-from src.Spider.ClickPerformance import ClickPerformance as SpClick
+from src.Models.TableData import data_producer
+from src.Views.Diagram.Panel import Panel
 from src.Views.ReportExcel import ReportExcel
 
 
@@ -70,11 +76,14 @@ class Report(object):
             data_dic['if_main_link'] = 1
         return data_dic
 
+    def show_introduction(self):
+        sql = f"SELECT campaign_name, wave, owner_full_name, smc_campaign_id, blast_date FROM Request " \
+              f"WHERE smc_campaign_id = '{self.smc_campaign_id}'"
+        panel = Panel(data_producer('', ['Campaign Name', 'Wave', 'Owner Full Name', 'SMC Campaign ID, Blast Date'],
+                                    sql))
+        panel.display()
+
 
 if __name__ == '__main__':
-    a = ReportUploader(6414)
-    a.upload()
-    # b = ReClick.select(6414)
-    # c = ReBasic.select(6414)
-    # print(b[0].__dict__)
-    # print(c.__dict__)
+    r = Report(4227)
+    r.show_introduction()

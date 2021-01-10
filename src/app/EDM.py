@@ -81,11 +81,8 @@ class EDM(object):
         此命令负责跟踪排查我们近期的workflow，包括：未来工作、待定工作、今天需发送报告、哪些条目还没有填写campaign id、我们明天的campaign需要避让哪些campaign
         eg: python edm.py workflow
         """
-        self.work('future')
-        self.work('tbd')
-        self.work('report')
-        self.work('campaign_id')
-        self.work('limit')
+        for command in ['future', 'tbd', 'report', 'campaign_id', 'limit']:
+            self.work(command)
 
     def write_campaign_id(self):
         """
@@ -115,7 +112,7 @@ class EDM(object):
         else:
             r.update()
             r.to_excel(path)
-
+        r.show_introduction()
         # print(f'《{a.name()}》数据报告已创建成功')
         # print(f'campaign id: {campaignId}')
         # print(f'owner: {a.owner()}')
@@ -135,7 +132,6 @@ class EDM(object):
         r = report_work()
         for item in r.content:
             self.report(item[-1], 'static')
-
 
     def transfer(self):
         """

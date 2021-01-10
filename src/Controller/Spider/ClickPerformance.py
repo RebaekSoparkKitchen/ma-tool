@@ -9,8 +9,8 @@
 import sys
 
 sys.path.append('../..')
-from src.Spider.CampaignSpider import CampaignSpider
-from src.Spider.BasicPerformance import BasicPerformance
+from src.Controller.Spider.CampaignSpider import CampaignSpider
+from src.Controller.Spider.BasicPerformance import BasicPerformance
 import time
 import selenium
 from selenium.webdriver.common.keys import Keys

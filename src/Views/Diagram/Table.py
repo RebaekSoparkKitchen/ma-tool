@@ -9,7 +9,7 @@ class Table(Diagram):
     def __init__(self, data: TableData):
         super().__init__(data)
 
-    def display(self, dialogue=None, transfer_data=None) -> None:
+    def display(self) -> None:
         """
         display the table on the console
         :return:

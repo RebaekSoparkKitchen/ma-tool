@@ -9,5 +9,5 @@ class Diagram(object, metaclass=ABCMeta):
         self.content = data.content
 
     @abstractmethod
-    def display(self, dialogue=None, transfer_data=None):
+    def display(self):
         pass

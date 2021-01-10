@@ -7,7 +7,7 @@
 @FilePath: \EDM\src\Spider\Overview.py
 """
 
-from src.Spider.CampaignSpider import CampaignSpider
+from src.Controller.Spider import CampaignSpider
 import time
 
 
