@@ -113,9 +113,7 @@ def report_date(request: Request):
 
 
 def comments(request: Request, default: str = ''):
-    # ask if request.comments is None
-    if not request.comments:
-        request.comments = Comments(request=request, default=default).ask()
+    request.comments = Comments(request=request, default=default).ask()
     return request
 
 

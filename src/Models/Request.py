@@ -37,7 +37,7 @@ class Request:
         self._mu = mu  # 依据location做一个mapping
         self._location = location
         if not blast_date:
-            self._blast_date = None
+            self._blast_date = ''
         else:
             try:
                 self._blast_date = dt.datetime.strptime(blast_date, '%Y-%m-%d').date()
@@ -48,7 +48,7 @@ class Request:
                     self._blast_date = blast_date
 
         if not event_date:
-            self.event_date = None
+            self.event_date = ''
         else:
             try:
                 self._event_date = dt.datetime.strptime(event_date, '%Y-%m-%d').date()
