@@ -11,6 +11,7 @@ from rich import print, box
 from rich.panel import Panel
 from src.Connector.MA import MA
 import src.Utils.AttributeToStr as attr
+from src.Utils.StringProcessor import str_process
 
 
 
@@ -117,20 +118,9 @@ class Request:
                         '_editor', '_report_date']:
                 continue
             if request_vars[item]:
-                info += f'[#E4007F]{self.str_process(item[1:])}:[/#E4007F] [#00FFFF]{request_vars[item]}[/#00FFFF] \n'
+                info += f'[#E4007F]{str_process(item[1:])}:[/#E4007F] [#00FFFF]{request_vars[item]}[/#00FFFF] \n'
         # [:-2]去除最后的一个\n折行
         print(Panel.fit(info[:-2], box=box.DOUBLE))
-
-    @staticmethod
-    def str_process(col_name: str) -> str:
-        """
-        transfer the lower case staff to the first capital words
-        :param col_name: eg. campaign_name
-        :return: eg. Campaign Name
-        """
-        if col_name == 'id':
-            return col_name.upper()
-        return col_name.replace('_', ' ').title()
 
     @property
     def wave(self):
