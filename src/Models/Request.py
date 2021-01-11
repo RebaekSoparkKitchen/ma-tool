@@ -67,6 +67,10 @@ class Request:
         self._request_status = request_status
 
     def create(self):
+        """
+        col, value是按照顺序设置的，这一点如果未来出现数据库的改动，要极为注意！
+        :return:
+        """
         ma = MA()
         db_data = ma.read_data('Database')
         request_db = db_data['Request']
@@ -114,7 +118,8 @@ class Request:
         info = ''
 
         for item in request_vars:
-            if item in ['_owner_first_name', '_owner_last_name', '_mu', '_creation_time', '_last_modified_time',
+            if item in ['_request_id', '_owner_first_name', '_owner_last_name', '_mu', '_creation_time',
+                        '_last_modified_time',
                         '_editor', '_report_date']:
                 continue
             if request_vars[item]:
