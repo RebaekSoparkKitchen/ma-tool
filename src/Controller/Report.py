@@ -79,11 +79,14 @@ class Report(object):
     def show_introduction(self):
         sql = f"SELECT campaign_name, wave, owner_full_name, smc_campaign_id, blast_date FROM Request " \
               f"WHERE smc_campaign_id = '{self.smc_campaign_id}'"
-        panel = Panel(data_producer('', ['Campaign Name', 'Wave', 'Owner Full Name', 'SMC Campaign ID, Blast Date'],
+        panel = Panel(data_producer('', ['Campaign Name', 'Wave', 'Owner Full Name', 'SMC Campaign ID', 'Blast Date'],
                                     sql))
-        panel.display()
+        d = panel.display()
+        d.__next__()
+
 
 
 if __name__ == '__main__':
     r = Report(4227)
-    r.show_introduction()
+    a = r.show_introduction()
+    print(a.content)
