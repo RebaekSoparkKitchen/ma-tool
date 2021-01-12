@@ -7,7 +7,7 @@
 @FilePath: \MA_tool\src\Transfer\gui.py
 """
 import tkinter as tk
-import src.Transfer.transfer_csv_to_excel as ce
+import src.Views.Transfer.transfer_csv_to_excel as ce
 from tkinter import filedialog
 from src.Connector.MA import MA
 
@@ -17,8 +17,8 @@ class DataTransfer(MA):
 
         super().__init__()
 
-        self.input_path = self.readConfig()['transfer']['input_path']
-        self.output_path = self.readConfig()['transfer']['output_path']
+        self.input_path = self.read_config()['transfer']['input_path']
+        self.output_path = self.read_config()['transfer']['output_path']
         
         self.root = tk.Tk()
         self.root.title("Data Transfer Tool")

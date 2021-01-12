@@ -133,7 +133,7 @@ class EDM(object):
         此命令会弹出数据格式转换的用户界面，请注意我们要求模板为GC_STANDARD_EXPORT_EMAIL,
         不建议其他模板的csv文件转换。
         """
-        from src.Transfer.gui import DataTransfer
+        from src.Views.Transfer.TransferGui import DataTransfer
         DataTransfer().execute()
         return
 
