@@ -11,7 +11,6 @@ import sys
 import fire
 
 sys.path.append("../..")
-import time
 
 # from src.Tracker.Analytics import Analytics
 # from src.Tracker.WriteTracker import WriteTracker
@@ -25,13 +24,8 @@ import time
 # from src.Transfer.gui import DataTransfer
 
 from src.Utils.timer import timer
-
-t1 = time.time()
 from src.Connector.MA import MA
 from src.Controller.TableCreator import create_table
-
-t2 = time.time()
-print(t2 - t1)
 
 
 class EDM(object):
@@ -51,12 +45,11 @@ class EDM(object):
         s.main(path=path)
         return
 
-    @timer
     def work(self, type: str):
         """
         此命令可以看到我们关心的一系列工作的情况
         future: 未来需完成的工作
-        tbd: to be decided, 待定的工作
+        tbd: to be determined, 待定的工作
         report: 今天需要发送报告的工作
         campaign id: 今天需要填写smc campaign id的工作
         limit: 明天的campaign需要注意哪些campaign的communication limitation
@@ -75,7 +68,6 @@ class EDM(object):
         else:
             print('Your command is not right, should be in [future, tbd, report, campaign_id, limit]')
 
-    @timer
     def workflow(self):
         """
         此命令负责跟踪排查我们近期的workflow，包括：未来工作、待定工作、今天需发送报告、哪些条目还没有填写campaign id、我们明天的campaign需要避让哪些campaign
@@ -113,25 +105,28 @@ class EDM(object):
             r.update()
             r.to_excel(path)
         r.show_introduction()
-        # print(f'《{a.name()}》数据报告已创建成功')
-        # print(f'campaign id: {campaignId}')
-        # print(f'owner: {a.owner()}')
-        # print(f'Launch Date: {a.launchDate()}')
-        #
-        # reportInfo = Report(campaignId)
-        # time = reportInfo.time()
-        # editor = reportInfo.editor()
-        # print('报告中的数据由{}创建于{}'.format(editor, time))
+
         return
 
     def routine(self):
         """
         此命令是其他几个命令的大集合（important），每天都需要执行的一个指令，提供信息如：未来工作、今天需发送报告、哪些campaign id需登记等
         """
+
+        # write today's smc campaign id
+        self.write_campaign_id()
+
+        # scan works
+        self.workflow()
+
+        # deal with report work
         from src.Models.Workflow import report_work
         r = report_work()
         for item in r.content:
             self.report(item[-1], 'static')
+
+        # generate simple_tracker
+        self.simple_tracker()
 
     def transfer(self):
         """
