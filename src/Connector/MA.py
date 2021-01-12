@@ -69,10 +69,15 @@ class MA(object):
         cur = conn.cursor()
         if isinstance(statement, str):
             cur.execute(statement)
+            result = cur.fetchall()
         elif isinstance(statement, Iterable):
+            result = []
             for item in statement:
                 cur.execute(item)
-        result = cur.fetchall()
+                r = cur.fetchall()
+                result += r
+        else:
+            result = None
         conn.commit()
         conn.close()
         return result

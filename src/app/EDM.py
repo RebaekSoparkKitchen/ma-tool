@@ -142,13 +142,15 @@ class EDM(object):
         DataTransfer().execute()
         return
 
-    def data(self, country: str, time1: int, time2: int):
+    def data(self, country: str, date1: str, date2: str):
         """
         此命令提供一段时间内某一地区的基本数据,并将以excel的形式存在EDM_project/analytics_data中。
         eg: python edm.py data hongkong 20200101 20200630
         """
-        data = DataExtractor()
-        data.save(country, str(time1), str(time2))
+        from src.Controller.MetricsController import MetricsController
+
+        metrics = MetricsController(country, str(date1), str(date2))
+        metrics.export()
         return
 
     def setting(self, attribute: str, data: str):
