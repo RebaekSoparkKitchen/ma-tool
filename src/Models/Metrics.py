@@ -33,6 +33,10 @@ class Metrics(object):
         return MA().query(statement, as_dict=True)[0]
 
     def event_number(self):
+        """
+        noted: 此处给出的request type分类均为 unique 数量
+        :return:
+        """
         if self.mu == 'GC':
             mu = 'IS NOT NULL'
         else:
@@ -67,5 +71,5 @@ class Metrics(object):
 
 
 if __name__ == '__main__':
-    m = Metrics("Taiwan", ('2020-01-01', '2020-12-31'))
-    print(m.tab_data())
+    m = Metrics("China", ('2020-01-01', '2020-12-31'))
+    print(m.total_number())

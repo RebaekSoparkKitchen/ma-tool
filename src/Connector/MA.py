@@ -40,22 +40,28 @@ class MA(object):
             json.dump(config, f)
         return
 
-    def query(self, statement: str or Iterator, as_dict=False, orm=False):
+    def query(self, statement: str or Iterator, as_dict=False, orm=False, production=True):
         """
         sql 操作的简单封装
+        :param production: if in production environment
         :param orm: if using record to query
         :param statement: could be a single statement or a list of statement
         :param as_dict: if output a dictionary (key : col_names, value: data)
         :return:
         """
+        if production:
+            db_address = self.db_address
+        else:
+            db_address = self.read_config()['data_location']['Test_Database']
+
         if orm:
             import records
-            db = records.Database(f'sqlite:///{self.db_address}')
+            db = records.Database(f'sqlite:///{db_address}')
             conn = db.get_connection()
             rows = conn.query(statement)
             return rows
 
-        conn = sqlite3.connect(self.db_address)
+        conn = sqlite3.connect(db_address)
 
         def dict_factory(cursor, row):
             d = {}
