@@ -2,7 +2,7 @@ from src.Models.TableData import data_producer
 
 
 def future_work():
-    cols = ['blast_date', 'campaign_name', 'owner_full_name', 'event_date']
+    cols = ['blast_date', 'campaign_name', 'wave', 'owner_full_name', 'event_date']
     sql = f"SELECT {','.join(cols)} FROM Request " \
           "WHERE DATE(blast_date) > DATE('now', 'localtime') " \
           "ORDER BY DATE(blast_date)"
@@ -21,7 +21,7 @@ def tbd_work():
 
 
 def report_work():
-    cols = ['request_id', 'blast_date', 'campaign_name', 'owner_full_name', 'smc_campaign_id']
+    cols = ['request_id', 'blast_date', 'campaign_name', 'wave', 'owner_full_name', 'smc_campaign_id']
     sql = f"SELECT {','.join(cols)} FROM Request LEFT OUTER JOIN BasicPerformance USING (smc_campaign_id)" \
           f"WHERE DATE(report_date) = DATE('now', 'localtime') OR (sent IS NULL AND DATE(report_date) BETWEEN DATE(" \
           f"'2020-01-01') AND DATE('now', 'localtime')) " \
@@ -31,7 +31,7 @@ def report_work():
 
 
 def campaign_id_work():
-    cols = ['id', 'blast_date', 'campaign_name', 'owner_full_name', 'wave']
+    cols = ['id', 'blast_date', 'campaign_name', 'wave', 'owner_full_name']
     sql = f"SELECT {','.join(cols)} FROM Request " \
           "WHERE (smc_campaign_id IS NULL OR smc_campaign_id = '') AND DATE(blast_date) BETWEEN DATE('2020-01-01') " \
           "AND DATE('now', 'localtime') " \
@@ -51,6 +51,7 @@ def communication_limit_work():
 
 if __name__ == '__main__':
     from src.Connector.MA import MA
+
     a = MA().query('select campaign_name, sent from request left outer join basicperformance using (smc_campaign_id) '
                    'where sent is null limit 10;')
     print(a)

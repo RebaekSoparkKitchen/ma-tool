@@ -4,6 +4,11 @@ from src.Connector.MA import MA
 
 class Metrics(object):
     def __init__(self, mu: str, time_range: tuple):
+        """
+        all parameters are directly inserted into the sql statement
+        :param mu: China / Taiwan / Hong Kong
+        :param time_range:
+        """
         self.mu = mu
         self.start = time_range[0]
         self.end = time_range[1]
