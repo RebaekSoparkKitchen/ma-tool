@@ -31,7 +31,7 @@ def report_work():
 
 
 def campaign_id_work():
-    cols = ['id', 'blast_date', 'campaign_name', 'owner_full_name']
+    cols = ['id', 'blast_date', 'campaign_name', 'owner_full_name', 'wave']
     sql = f"SELECT {','.join(cols)} FROM Request " \
           "WHERE (smc_campaign_id IS NULL OR smc_campaign_id = '') AND DATE(blast_date) BETWEEN DATE('2020-01-01') " \
           "AND DATE('now', 'localtime') " \
