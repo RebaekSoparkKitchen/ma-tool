@@ -6,14 +6,12 @@
 @LastEditTime: 2020-09-03 10:37:13
 @FilePath: \MA_tool_v2\src\Views\ReportExcel.py
 """
-import sys
-
-sys.path.append("../..")
 from src.Connector.MA import MA
 from src.Models.Report.ReportData import ReportData
 from src.Models.Report.ClickPerformance import ClickPerformance
 from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 import openpyxl
+import re
 
 
 class ReportExcel(object):
@@ -189,9 +187,8 @@ class ReportExcel(object):
         while True:
             # 文件名中出现特殊符号，要替换掉
             name = self.report_data.campaign_name
-            name = name.replace(r'/', r'&')
-            name = name.replace(' ', '_')
-            name = name.replace('|', '')
+            invalid_symbol = r"[\/\\\:\*\?\"\<\>\|]"  # '/ \ : * ? " < > |'
+            name = re.sub(invalid_symbol, "_", name)
             try:
                 self.report_wb.save(path + '{}.xlsx'.format(name.strip()))
                 break
