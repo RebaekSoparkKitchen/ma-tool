@@ -23,7 +23,6 @@ sys.path.append("../..")
 # from src.Report.Report import Report
 # from src.Transfer.gui import DataTransfer
 
-from src.Utils.timer import timer
 from src.Connector.MA import MA
 from src.Controller.TableCreator import create_table
 
@@ -33,7 +32,6 @@ class EDM(object):
     def __init__(self):
         super().__init__()
 
-    @timer
     def simple_tracker(self, days=21):
         """
         此命令负责刷新simple_tracker，是我们需求安排的日程版本，

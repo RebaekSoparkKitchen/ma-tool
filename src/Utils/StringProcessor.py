@@ -6,4 +6,5 @@ def str_process(col_name: str) -> str:
     """
     col_name = col_name.replace('_', ' ').title()
     col_name = col_name.replace('Id', 'ID')
+    col_name = col_name.replace('Smc', 'SMC')
     return col_name
