@@ -15,7 +15,24 @@ class DateHelper(object):
         str_p = dt.datetime.strftime(date_p, '%Y-%m-%d')
         return str_p
 
+    @staticmethod
+    def is_date(text: str):
+        """
+        :param text: the user's input, should be a str like yyyymmdd or yyyy-mm-dd
+        :return: true if the input can be translated to a dt.date successfully
+        """
+        if text == '':
+            return True
+        try:
+            dt.datetime.strptime(text, '%Y%m%d').date()
+            return True
+        except ValueError:
+            try:
+                dt.datetime.strptime(text, '%Y-%m-%d').date()
+                return True
+            except ValueError:
+                return False
 
 if __name__ == '__main__':
-    a = DateHelper.str_to_date('20200112')
+    a = DateHelper.is_date('2020-01-112')
     print(a)

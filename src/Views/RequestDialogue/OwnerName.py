@@ -51,7 +51,7 @@ class OwnerName(RequestDialogue):
         name_completer = WordCompleter(list(map(lambda x: ' '.join(x), self.name_list)), ignore_case=True,
                                        match_middle=True)
         ans = prompt('请输入owner的名字: ', completer=name_completer, complete_while_typing=True, key_bindings=short_cut(),
-                     default=self.default)
+                     default=self.default, validator=self.validator())
         ans = self.warning(ans, self.question, self.default)
         ans = self.guess(ans, self.question, self.default)
         return ans

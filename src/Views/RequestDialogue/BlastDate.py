@@ -6,7 +6,7 @@ import datetime as dt
 from rich.prompt import Confirm
 from src.Views.RequestDialogue.RequestDialogue import RequestDialogue
 from src.Models.Request import Request
-
+from src.Utils.DateHelper import DateHelper
 
 class BlastDate(RequestDialogue):
     def __init__(self, request: Request = Request(), question: str = '请输入Blast Date: ', default: str = ''):
@@ -14,22 +14,8 @@ class BlastDate(RequestDialogue):
         if default == '':
             self.default = self.read_data()['default']['blast_date']
         elif isinstance(default, dt.date):
-            self.default = default.strftime('%Y%m%d')
+            self.default = str(default)
 
-    @staticmethod
-    def is_date(text: str):
-        """
-        helper method
-        :param text: the user's input, should be a str like yyyymmdd
-        :return: true if the input can be translated to a dt.date successfully
-        """
-        if text == '':
-            return True
-        try:
-            dt.datetime.strptime(text, '%Y%m%d').date()
-            return True
-        except ValueError:
-            return False
 
     @staticmethod
     def confirm_date(date1: dt.date, date2: dt.date, question: str):
@@ -51,8 +37,8 @@ class BlastDate(RequestDialogue):
         :return: Validator
         """
         return Validator.from_callable(
-            BlastDate.is_date,
-            error_message='The format should be yyyymmdd, eg: 20200305',
+            DateHelper.is_date,
+            error_message='The format should be yyyymmdd / yyyy-mm-dd, eg: 20200305, 2020-03-05',
             move_cursor_to_end=True
         )
 
@@ -73,7 +59,7 @@ class BlastDate(RequestDialogue):
                 # below line means: stop this function, shut down everything, I want to run self.ask() again
                 return self.ask()
 
-        blast_date = dt.datetime.strptime(text, '%Y%m%d').date()
+        blast_date = DateHelper.str_to_date(text)
         while not BlastDate.confirm_date(blast_date, dt.date.today(),
                                          f'[#ffc107]您输入的blast date日期{blast_date}在今天之前，您确定吗？'):
             return self.ask()

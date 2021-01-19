@@ -1,5 +1,5 @@
 from typing import Iterable
-
+import datetime as dt
 
 def insert(table: str, cols: Iterable, values: Iterable) -> str:
     cols = tuple(cols)
@@ -16,7 +16,8 @@ def update(table: str, cols: Iterable[str] or str, values: Iterable[str] or str,
     for i in range(len(cols)):
         statement.append(f"{cols[i]}='{values[i]}'")
     statement = ','.join(statement)
-    sql = f"UPDATE {table} SET {statement} WHERE id = {pk_id}"
+    now = dt.datetime.strftime(dt.datetime.now(), '%Y-%m-%d %H:%M:%S')
+    sql = f"UPDATE {table} SET {statement}, last_modified_time = '{now}' WHERE id = {pk_id}"
     return sql
 
 if __name__ == '__main__':

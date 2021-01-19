@@ -161,14 +161,15 @@ class EDM(object):
         分别对应增删改查
         """
         from src.Controller.Request import create
+        from src.Controller.RequestEditor import RequestEditor
         if type == 'create':
             create()
+        elif type == 'update':
+            RequestEditor().update()
+        elif type == 'read':
+            RequestEditor().read()
         # elif type == 'delete':
         #     Command.delete()
-        # elif type == 'check':
-        #     Command.check()
-        # elif type == 'update':
-        #     Command.update()
         pass
 
 

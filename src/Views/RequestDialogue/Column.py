@@ -1,10 +1,14 @@
 import sys
 
+from prompt_toolkit import prompt
+from prompt_toolkit.completion import WordCompleter
+
+from src.Views.RequestDialogue.Key_bindings import short_cut
+
 sys.path.append("../..")
 from prompt_toolkit.validation import Validator
 from src.Views.RequestDialogue.RequestDialogue import RequestDialogue
 from src.Models.Request import Request
-from src.Connector.MA import MA
 
 
 class Column(RequestDialogue):
@@ -24,6 +28,14 @@ class Column(RequestDialogue):
     def warning(self, text, question, default):
         return text
 
+    def ask(self):
+        col_list = ['blast_date', 'event_date', 'report_date', 'comments']
+        name_completer = WordCompleter(col_list, ignore_case=True, match_middle=True)
+        ans = prompt('请输入Column Name: ', completer=name_completer, complete_while_typing=True, key_bindings=short_cut(),
+                     default=self.default, validator=self.validator())
+        ans = self.warning(ans, self.question, self.default)
+        ans = self.guess(ans, self.question, self.default)
+        return ans
 
 
 if __name__ == '__main__':

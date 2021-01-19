@@ -6,6 +6,7 @@ import datetime as dt
 from rich.prompt import Confirm
 from src.Views.RequestDialogue.RequestDialogue import RequestDialogue
 from src.Models.Request import Request
+from src.Utils.DateHelper import DateHelper
 
 
 class EventDate(RequestDialogue):
@@ -14,7 +15,7 @@ class EventDate(RequestDialogue):
         if default == '':
             self.default = self.read_data()['default']['event_date']
         elif isinstance(default, dt.date):
-            self.default = default.strftime('%Y%m%d')
+            self.default = str(default)
 
     def verify_event_date(self, text: str):
         """
@@ -26,11 +27,7 @@ class EventDate(RequestDialogue):
             return self.request.request_type not in ['Webinar Invitation', 'Offline Event Invitation']
         elif self.request.request_type in ['EDM', 'Newsletter', 'Nurture']:
             return False
-        try:
-            dt.datetime.strptime(text, '%Y%m%d').date()
-            return True
-        except ValueError:
-            return False
+        return True
 
     @staticmethod
     def confirm_date(date1: dt.date, date2: dt.date, question: str):
@@ -52,8 +49,8 @@ class EventDate(RequestDialogue):
         :return: Validator
         """
         return Validator.from_callable(
-            self.verify_event_date,
-            error_message='The format should be yyyymmdd, eg: 20200305',
+            lambda x: DateHelper.is_date(x) and self.verify_event_date(x),
+            error_message='The format should be yyyymmdd / yyyy-mm-dd, eg: 20200305, 2020-03-05',
             move_cursor_to_end=True
         )
 
@@ -66,7 +63,7 @@ class EventDate(RequestDialogue):
         :return:
         """
 
-        event_date = dt.datetime.strptime(text, '%Y%m%d').date()
+        event_date = DateHelper.str_to_date(text)
         if self.request.blast_date:
             blast_date = self.request.blast_date
             while not EventDate.confirm_date(event_date, blast_date,
