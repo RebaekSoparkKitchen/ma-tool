@@ -2,7 +2,7 @@
 import datetime as dt
 
 
-def report_date_gen(blast: dt.date, event: dt.date):
+def report_date_gen(blast: dt.date, event: dt.date) -> dt.date:
     if not blast:
         report_date = None
     elif not event:

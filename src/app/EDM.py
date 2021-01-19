@@ -167,8 +167,8 @@ class EDM(object):
         #     Command.delete()
         # elif type == 'check':
         #     Command.check()
-        # elif type == 'edit':
-        #     Command.edit()
+        # elif type == 'update':
+        #     Command.update()
         pass
 
 

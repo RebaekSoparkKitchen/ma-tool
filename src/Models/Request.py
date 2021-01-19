@@ -12,7 +12,7 @@ from rich.panel import Panel
 from src.Connector.MA import MA
 import src.Utils.AttributeToStr as attr
 from src.Utils.StringProcessor import str_process
-
+from typing import Iterable
 
 
 class Request:
@@ -81,8 +81,6 @@ class Request:
         ma.query(sql)
         return
 
-    def edit(self):
-        pass
 
     @staticmethod
     def delete(index: int):
