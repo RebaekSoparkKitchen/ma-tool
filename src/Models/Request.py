@@ -72,10 +72,7 @@ class Request:
         :return:
         """
         ma = MA()
-        db_data = ma.read_data('Database')
-        request_db = db_data['Request']
         col, values = attr.transfer(self)
-        col = tuple(map(lambda x: request_db[x], col))
         values = tuple(map(lambda x: str(x), values))
         sql = f"INSERT INTO Request {str(col)} VALUES {str(values)}"
         ma.query(sql)
