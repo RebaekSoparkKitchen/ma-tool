@@ -21,11 +21,6 @@ Maketing Automation 工具箱是为 GC MA team 开发的小工具集合，包含
 
 在最初始的时候，这个应用只有一个文件，一百多行代码。所以它最初的设计哲学就是作为一个轻量的工具箱，而绝非一个系统性的应用。我们可以轻易地更改功能，相信这类需求在我们的工作流程中相当常见。当我们在做某些事情，是重复性且费力的，我就希望能够从这个工具箱中取出一个工具来完成。
 
-而到了未来，我们必须面临多人协作的环境。这就要求我们把核心数据库与其他功能隔离开来。比如：在我们以往的认知中，request tracker往往和simple tracker被视为是类似的文档。但实际上，request tracker是主要需求端数据库，而simple tracker只是它的副产品。所以，我们将request tracker和SMC上爬取下来的campaign数据都存在共享文件夹的data文件夹中。
-
-```mermaid
-\\cnshag101.sha.global.corp.sap\Restricted\Marketing\Marketing_Automation\data
-```
 
 同时，这个应用还处于初级阶段，目前还在不断地改版优化，希望 MA team 的成员们能够使用它们并反馈意见。
 
@@ -251,7 +246,7 @@ python edm.py transfer
 ### **data, 提取常见数据**
 
 ```mermaid
-python edm.py data hongkong 20200101 20200630
+python edm.py data hk 20200101 20200630
 ```
 
 此命令接收三个参数：
@@ -274,9 +269,9 @@ python edm.py data hongkong 20200101 20200630
 
 关于地区名，请使用
 
-- china
-- hongkong
-- taiwan
+- cn 
+- hk
+- tw
 
 关于日期，请使用格式：20200515
 
@@ -284,4 +279,4 @@ python edm.py data hongkong 20200101 20200630
 
 ## 联系我们
 
-如有任何issue或comments， 请联系 zinan.xu@sap.com
+如有任何issue或comments， 请联系 Zinan Xu
