@@ -1,6 +1,0 @@
-
-def test(a:str,b:int) -> int:
-    return a+str(b)
-
-print(test('aa',1))
-print(test('aa','bb'))
