@@ -13,7 +13,7 @@ def future_work():
 def tbd_work():
     cols = ['id', 'creation_time', 'campaign_name', 'owner_full_name']
     sql = f"SELECT {','.join(cols)} FROM Request " \
-          f"WHERE blast_date IS NULL " \
+          f"WHERE blast_date IS NULL or blast_date = '' " \
           f"ORDER BY request_id DESC " \
           f"LIMIT 10"
     title = "待定的工作"
