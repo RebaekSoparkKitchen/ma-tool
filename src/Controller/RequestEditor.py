@@ -82,6 +82,8 @@ class RequestEditor(object):
         sql = f"SELECT {','.join(cols)} FROM Request WHERE id = {pk_id}"
         result = MA().query(sql, as_dict=True)[0]
         data = data_producer('', list(result.keys()), sql)
+        print(data.cols)
+        print(data.content)
         panel = Panel(data).display()
         panel.__next__()
 

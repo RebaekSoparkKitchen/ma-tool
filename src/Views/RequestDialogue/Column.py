@@ -1,11 +1,11 @@
 import sys
 
+sys.path.append("../..")
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 
 from src.Views.RequestDialogue.Key_bindings import short_cut
 
-sys.path.append("../..")
 from prompt_toolkit.validation import Validator
 from src.Views.RequestDialogue.RequestDialogue import RequestDialogue
 from src.Models.Request import Request

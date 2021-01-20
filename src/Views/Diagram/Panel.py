@@ -17,10 +17,9 @@ class Panel(Diagram):
         for item in self.content:
             info = ''
             for i in range(len(self.cols)):
-                if item[i]:
-                    info += f'[#E4007F]{str_process(self.cols[i])}:[/#E4007F] [#00FFFF]{item[i]}[/#00FFFF]'
-                    if i != len(self.cols) - 1:
-                        info += '\n'
+                info += f'[#E4007F]{str_process(self.cols[i])}:[/#E4007F] [#00FFFF]{item[i]}[/#00FFFF]'
+                if i != len(self.cols) - 1:
+                    info += '\n'
             yield print(rp.Panel.fit(info, box=box.DOUBLE))
 
 
