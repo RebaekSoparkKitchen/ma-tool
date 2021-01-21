@@ -14,6 +14,7 @@ from src.Utils.ReportDate import report_date_gen
 import datetime as dt
 from rich.prompt import Confirm
 from src.Connector.MA import MA
+from src.Utils.DateHelper import DateHelper
 
 
 def register(request: Request):
@@ -94,7 +95,7 @@ def blast_date(request: Request, default: str = ''):
     ans = BlastDate(request=request, default=default).ask()
     if not ans:
         return comments(request=request, default=request.comments)
-    request.blast_date = dt.datetime.strptime(ans, '%Y%m%d').date()
+    request.blast_date = DateHelper.str_to_date(ans)
     return request
 
 
@@ -103,7 +104,7 @@ def event_date(request: Request, default: str = ''):
         request.event_date = ''
         return request
     ans = EventDate(request=request, default=default).ask()
-    request.event_date = dt.datetime.strptime(ans, '%Y%m%d').date()
+    request.event_date = DateHelper.str_to_date(ans)
     return request
 
 
