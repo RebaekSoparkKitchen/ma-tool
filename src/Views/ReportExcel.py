@@ -189,6 +189,7 @@ class ReportExcel(object):
             name = self.report_data.campaign_name
             invalid_symbol = r"[\/\\\:\*\?\"\<\>\|]"  # '/ \ : * ? " < > |'
             name = re.sub(invalid_symbol, "_", name)
+            name = f"{name.strip()}_W{str(self.report_data.wave)}"
             try:
                 self.report_wb.save(path + '{}.xlsx'.format(name.strip()))
                 break

@@ -20,6 +20,9 @@ class ClickPerformance(object):
         click_data_list = ClickPerformance.select(smc_campaign_id)
         valid_click = 0
         for item in click_data_list:
+            # 排除空值的情况
+            if not item:
+                continue
             if item.link_name not in MA().read_config()['other_link']:
                 valid_click += int(item.click_number)
         return valid_click
