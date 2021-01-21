@@ -55,17 +55,25 @@ class RequestEditor(object):
         :return:
         """
         self.value = BlastDate(request, default=request.blast_date).ask()
-        blast = DateHelper.str_to_date(self.value)
-        event = request.event_date
-        new_report_date = report_date_gen(blast, event)
+        if self.value:
+            blast = DateHelper.str_to_date(self.value)
+            event = request.event_date
+            new_report_date = report_date_gen(blast, event)
+        else:
+            blast = ''
+            new_report_date = ''
         self.col = ['blast_date', 'report_date']
         self.value = [blast, new_report_date]
 
     def event_date_process(self, request: Request) -> None:
         self.value = EventDate(request, default=request.event_date).ask()
         blast = request.blast_date
-        event = DateHelper.str_to_date(self.value)
+        if self.value:
+            event = DateHelper.str_to_date(self.value)
+        else:
+            event = ''
         new_report_date = report_date_gen(blast, event)
+
         self.col = ['event_date', 'report_date']
         self.value = [event, new_report_date]
 
@@ -82,7 +90,7 @@ class RequestEditor(object):
         sql = f"SELECT {','.join(cols)} FROM Request WHERE id = {pk_id}"
         result = MA().query(sql, as_dict=True)[0]
         data = data_producer('', list(result.keys()), sql)
-        
+
         panel = Panel(data).display()
         panel.__next__()
 
