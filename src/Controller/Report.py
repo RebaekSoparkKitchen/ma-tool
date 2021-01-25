@@ -46,6 +46,7 @@ class Report(object):
         basic_data_dic = b.data()
         c = SpClick(self.smc_campaign_id, b.driver)
         click_data_list = c.data()
+        c.driver.close()
         basic_data_dic = self.change_basic_key(basic_data_dic)
         click_data_list = list(map(self.change_click_key, click_data_list))
         return basic_data_dic, click_data_list

@@ -150,9 +150,9 @@ class EDM(object):
         """
         此命令负责更改个人设置，目前仅支持修改用户名，建议只在开始使用时设置一次即可。
         """
-        config = self.getMA().readConfig()
+        config = MA().read_config()
         assert attribute == "username"
-        self.getMA().setConfig('username', data)
+        MA().set_config('username', data)
         return
 
     def request(self, type: str = 'create'):
