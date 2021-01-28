@@ -12,12 +12,13 @@ from src.Utils.Similarity import Similarity
 from rich.panel import Panel
 from rich import print
 from rich import box
+from src.Models.Staff import Staff
 
 
 class OwnerName(RequestDialogue):
     def __init__(self, request: Request = Request(), question: str = '请输入Owner Name: ', default: str = ''):
         super().__init__(request, question, default)
-        self.name_list = self.query("SELECT first_name, last_name FROM Staff")
+        self.staffs = Staff.get_all_staffs()
 
         if default == '':
             self.default = self.read_data()['default']['owner_full_name']
@@ -33,39 +34,27 @@ class OwnerName(RequestDialogue):
         return text
 
     def guess(self, text, question, default):
-        for item in self.search_name(text):
-            guess_name = item[0]
-            team = self.info(guess_name)[0][0]
-            location = self.info(guess_name)[0][1]
+        # sort the Staff list according to the text
+        staff_list = sorted(self.staffs, key=lambda x: OwnerName.compare_name((x.first_name, x.last_name), 'ivy'),
+                            reverse=True)
+        for staff in staff_list:
             print(Panel.fit(
-                '[#00FFFF]' + guess_name[0] + ' ' + guess_name[1] + '\n' + '[#E4007F]' + team + '\n' + '[#E4007F]' +
-                location, box=box.DOUBLE_EDGE))
-
+                '[#00FFFF]' + staff.first_name + ' ' + staff.last_name + '\n' + '[#E4007F]' + staff.team + '\n' + '['
+                                                                                                                  '#E4007F]' +
+                staff.location, box=box.DOUBLE_EDGE))
             command = Confirm.ask('您是指上面这个员工吗？', default=True)
-
             if command:
-                return {'owner_first_name': guess_name[0], 'owner_last_name': guess_name[1], 'owner_full_name':
-                    ' '.join(guess_name), 'team': team, 'location': location}
+                return staff
 
     def ask(self):
-        name_completer = WordCompleter(list(map(lambda x: ' '.join(x), self.name_list)), ignore_case=True,
-                                       match_middle=True)
+        names = list(map(lambda x: x.first_name + ' ' + x.last_name, self.staffs))
+        names = list(set(names))
+        name_completer = WordCompleter(names, ignore_case=True, match_middle=True)
         ans = prompt('请输入owner的名字: ', completer=name_completer, complete_while_typing=True, key_bindings=short_cut(),
                      default=self.default, validator=self.validator())
         ans = self.warning(ans, self.question, self.default)
         ans = self.guess(ans, self.question, self.default)
         return ans
-
-    def search_name(self, input_name: str) -> list:
-        """
-        name: the input name
-        """
-        new_name = []
-        for name in self.name_list:
-            new_name.append([name, OwnerName.compare_name(name, input_name)])
-
-        new_name.sort(key=lambda x: x[1], reverse=True)
-        return new_name
 
     @staticmethod
     def compare_name(standard_name: tuple, input_name: str) -> float:
@@ -77,15 +66,12 @@ class OwnerName(RequestDialogue):
         standard_full_name = standard_name[0] + ' ' + standard_name[1]
         return Similarity.compare(standard_full_name, input_name)
 
-    def info(self, name: tuple):
-        """
-        return : team , location when input name
-        """
-        return self.query(
-            f"SELECT team, location FROM Staff WHERE first_name = '{name[0]}' AND last_name = '{name[1]}'")
-
 
 if __name__ == '__main__':
     r = Request()
     o = OwnerName(r)
-    print(o.ask())
+    staff_list = sorted(o.staffs, key=lambda x: OwnerName.compare_name((x.first_name, x.last_name), 'ivy'),
+                        reverse=True)
+    print(o.staffs[0])
+    print(OwnerName.compare_name((o.staffs[0].first_name, o.staffs[0].last_name), 'ivy'))
+    print(staff_list)

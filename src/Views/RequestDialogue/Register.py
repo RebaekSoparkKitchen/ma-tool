@@ -82,12 +82,12 @@ def request_type(request: Request, default: str = ''):
 
 def owner_name(request: Request, default: str = ''):
     ans = OwnerName(request=request, default=default).ask()
-    request.owner_first_name = ans['owner_first_name']
-    request.owner_last_name = ans['owner_last_name']
-    request.owner_full_name = ans['owner_full_name']
-    request.location = ans['location']
-    request.mu = ans['location'].split(',')[1][1:]
-    request.team = ans['team']
+    request.owner_first_name = ans.first_name
+    request.owner_last_name = ans.last_name
+    request.owner_full_name = ans.first_name + ' ' + ans.last_name
+    request.location = ans.location
+    request.mu = ans.location.split(',')[1][1:]
+    request.team = ans.team
     return request
 
 

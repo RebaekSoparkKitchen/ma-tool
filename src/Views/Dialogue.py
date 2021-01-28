@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 from typing import Union
 from prompt_toolkit import prompt
 from src.Connector.MA import MA
-
+from src.Models.Staff import Staff
 
 class Dialogue(MA, metaclass=ABCMeta):
     def __init__(self, question: str, default: str):
@@ -16,7 +16,7 @@ class Dialogue(MA, metaclass=ABCMeta):
         self.question = question
         self.default = default
 
-    def ask(self) -> Union[str, dict]:
+    def ask(self) -> Union[str, dict, Staff]:
         ans = prompt(self.question, default=self.default, validator=self.validator())
         ans = self.warning(ans, self.question, self.default)
         ans = self.guess(ans, self.question, self.default)
