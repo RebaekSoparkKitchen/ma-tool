@@ -35,7 +35,7 @@ class OwnerName(RequestDialogue):
 
     def guess(self, text, question, default):
         # sort the Staff list according to the text
-        staff_list = sorted(self.staffs, key=lambda x: OwnerName.compare_name((x.first_name, x.last_name), 'ivy'),
+        staff_list = sorted(self.staffs, key=lambda x: OwnerName.compare_name((x.first_name, x.last_name), text),
                             reverse=True)
         for staff in staff_list:
             print(Panel.fit(
