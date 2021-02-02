@@ -13,6 +13,7 @@ from src.Views.RequestDialogue.ReportDate import ReportDate
 from src.Views.RequestDialogue.BlastDate import BlastDate
 from src.Views.RequestDialogue.EventDate import EventDate
 from src.Views.RequestDialogue.Comments import Comments
+from src.Views.WorkDialogue.CampaignID import CampaignID
 from src.Models.TableData import data_producer
 
 
@@ -22,7 +23,6 @@ class RequestEditor(object):
         self.pk_id = ''
         self.col = ''
         self.value = ''
-
 
     def read(self) -> None:
         request = Request()
@@ -47,6 +47,8 @@ class RequestEditor(object):
             self.report_date_process(request)
         elif column == 'comments':
             self.comments_process(request)
+        elif column == 'smc_campaign_id':
+            self.smc_campaign_id_process(request)
 
     def blast_date_process(self, request: Request) -> None:
         """
@@ -83,6 +85,8 @@ class RequestEditor(object):
     def comments_process(self, request: Request) -> None:
         self.value = Comments(request, default=request.comments).ask()
 
+    def smc_campaign_id_process(self, request: Request) -> None:
+        self.value = CampaignID().ask()
 
     def display(self, pk_id: int):
         cols = ['id', 'wave', 'campaign_name', 'owner_full_name', 'team', 'mu', 'blast_date', 'event_date',
@@ -102,6 +106,7 @@ class RequestEditor(object):
         self.dialogue()
         statement = sql_helper.update(self.table, self.col, self.value, int(self.pk_id))
         MA().query(statement)
+
 
 if __name__ == '__main__':
     r = RequestEditor()

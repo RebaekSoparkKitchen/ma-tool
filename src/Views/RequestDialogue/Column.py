@@ -17,8 +17,8 @@ class Column(RequestDialogue):
 
     def validator(self):
         return Validator.from_callable(
-            lambda x: x in ['blast_date', 'event_date', 'report_date', 'comments'],
-            error_message='You can only edit blast_date, event_date, report_date, comments',
+            lambda x: x in ['blast_date', 'event_date', 'report_date', 'comments', 'smc_campaign_id'],
+            error_message='You can only edit blast_date, event_date, report_date, comments, smc_campaign_id',
             move_cursor_to_end=True
         )
 
@@ -29,7 +29,7 @@ class Column(RequestDialogue):
         return text
 
     def ask(self):
-        col_list = ['blast_date', 'event_date', 'report_date', 'comments']
+        col_list = ['blast_date', 'event_date', 'report_date', 'comments', 'smc_campaign_id']
         name_completer = WordCompleter(col_list, ignore_case=True, match_middle=True)
         ans = prompt('请输入Column Name: ', completer=name_completer, complete_while_typing=True, key_bindings=short_cut(),
                      default=self.default, validator=self.validator())
