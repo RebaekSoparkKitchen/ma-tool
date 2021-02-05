@@ -10,6 +10,7 @@ import sys
 
 import fire
 
+
 sys.path.append("../..")
 
 # from src.Tracker.Analytics import Analytics
@@ -42,6 +43,13 @@ class EDM(object):
         s = SimpleTracker(days_diff=days)
         s.main(path=path)
         return
+
+    def request_tracker(self):
+        from src.Controller.ExcelExporter import ExcelExporter
+        e = ExcelExporter("select * from request left outer join BasicPerformance using (smc_campaign_id) where "
+                          "date(blast_date) >= date('2020-01-01') ",
+                          MA().read_config()["data_location"]["RequestTracker"])
+        e.export()
 
     def work(self, type: str):
         """

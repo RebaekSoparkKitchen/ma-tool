@@ -100,7 +100,7 @@ def blast_date(request: Request, default: str = ''):
 
 
 def event_date(request: Request, default: str = ''):
-    if request.request_type in ['EDM', 'Newsletter']:
+    if request.request_type in ['EDM', 'Newsletter', 'Nurture']:
         request.event_date = ''
         return request
     ans = EventDate(request=request, default=default).ask()
