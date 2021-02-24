@@ -20,7 +20,7 @@ class BasicPerformance(CampaignSpider):
 
         super().__init__(campaign_id, driver)
 
-        self.box_list = list(map(lambda x: '__box7-' + str(x), range(12)))
+        self.box_list = list(map(lambda x: 'ext_tile_fragment--measuresWithoutTargetsContainerFlexBox-' + str(x), range(12)))
         self.index_list = [
             'Sent', 'Hard Bounces', 'Soft Bounces', 'Delivered', 'Opened',
             'Unique Click', 'Click'
@@ -53,7 +53,7 @@ class BasicPerformance(CampaignSpider):
 
         self.init_driver()
         self.driver.get(self.url)
-        self.if_load_page('__box7-0')  # 通过这个方法来判断是否真正加载出来了这些box
+        self.if_load_page(self.box_list[0])  # 通过这个方法来判断是否真正加载出来了这些box
 
         # data_dic 这里得到基本数据
         data_dic = {}  # 初始化数据字典

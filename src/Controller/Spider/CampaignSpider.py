@@ -67,11 +67,11 @@ class CampaignSpider(MA):
               r'/000000' + self.campaign_id + '/1'
         return url
 
-    def if_load_page(self, id, attemptNum=30, intervalTime=5) -> None:
+    def if_load_page(self, id, attempt_num=30, interval_time=5) -> None:
         """
         :param id: 新页面特有的id，通过判断它来判断页面是否跳转了
-        :param attemptNum: 尝试次数，到达上限后放弃，并报错
-        :param intervalTime: 尝试的间隔时间
+        :param attempt_num: 尝试次数，到达上限后放弃，并报错
+        :param interval_time: 尝试的间隔时间
         :return: 若通过则无返回，若不通过则raise error
         """
         count = 0
@@ -80,16 +80,16 @@ class CampaignSpider(MA):
                 self.driver.find_element_by_id(id)
                 break
             except selenium.common.exceptions.NoSuchElementException:
-                time.sleep(intervalTime)
+                time.sleep(interval_time)
             count += 1
-            if count == attemptNum:
+            if count == attempt_num:
                 raise RuntimeError('未跳转异常，请检查跳转操作！')
 
-    def click(self, id, attemptNum=60, intervalTime=1):
+    def click(self, id, attempt_num=60, interval_time=1):
         """
         :param id: 要点击的按钮
-        :param attemptNum:
-        :param intervalTime:
+        :param attempt_num:
+        :param interval_time:
         :return: 原理与if_load_page一样，不再赘述
         """
         count = 0
@@ -98,9 +98,9 @@ class CampaignSpider(MA):
                 self.driver.find_element_by_id(id).click()
                 break
             except:
-                time.sleep(intervalTime)
+                time.sleep(interval_time)
             count += 1
-            if count == attemptNum:
+            if count == attempt_num:
                 raise RuntimeError('点击操作异常，点不到按钮，请检查点击操作！')
 
 
